@@ -1,0 +1,59 @@
+:root {
+  /* Color / Light Mode (Material 3 Expressive Inspired) */
+  --color-primary: #006493;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #cae6ff;
+  --color-on-primary-container: #001e30;
+
+  --color-secondary: #50606e;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #d3e5f5;
+  --color-on-secondary-container: #0c1d29;
+
+  --color-surface: #fcfcff;
+  --color-on-surface: #1a1c1e;
+  --color-surface-container: #f0f4f8;
+  --color-surface-container-high: #e2e8ec;
+
+  --color-outline: #72777f;
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+
+  /* Shape */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Motion */
+  --motion-fast: 150ms;
+  --motion-medium: 300ms;
+  --motion-slow: 500ms;
+
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --easing-emphasized: cubic-bezier(0.2, 0, 0, 1.0); /* Adjust to spring-like if needed */
+  --easing-decelerate: cubic-bezier(0, 0, 0, 1);
+  --easing-accelerate: cubic-bezier(0.3, 0, 1, 1);
+}
+
+.dark {
+  --color-primary: #8dcdff;
+  --color-on-primary: #00344f;
+  --color-primary-container: #004b70;
+  --color-on-primary-container: #cae6ff;
+
+  --color-secondary: #b7c9d9;
+  --color-on-secondary: #22323f;
+  --color-secondary-container: #384956;
+  --color-on-secondary-container: #d3e5f5;
+
+  --color-surface: #1a1c1e;
+  --color-on-surface: #e2e2e5;
+  --color-surface-container: #2b2e30;
+  --color-surface-container-high: #36393b;
+
+  --color-outline: #8c9198;
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+}

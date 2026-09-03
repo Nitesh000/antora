@@ -1,0 +1,9 @@
+{
+  "extends": "@antora/config/tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "module": "commonjs"
+  },
+  "include": ["src/**/*"]
+}
