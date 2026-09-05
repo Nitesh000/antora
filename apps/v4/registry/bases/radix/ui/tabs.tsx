@@ -3,28 +3,52 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
+import { motion } from "motion/react"
 import { Tabs as TabsPrimitive } from "radix-ui"
+
+const TabsContext = React.createContext<{ value?: string }>({
+  value: undefined,
+})
 
 function Tabs({
   className,
   orientation = "horizontal",
+  value: valueProp,
+  defaultValue,
+  onValueChange,
+  children,
   ...props
 }: React.ComponentProps<typeof TabsPrimitive.Root>) {
+  const [value, setValue] = React.useState(valueProp || defaultValue)
+  const isControlled = valueProp !== undefined
+  const currentValue = isControlled ? valueProp : value
+
+  const handleValueChange = (val: string) => {
+    if (!isControlled) setValue(val)
+    onValueChange?.(val)
+  }
+
   return (
     <TabsPrimitive.Root
       data-slot="tabs"
       data-orientation={orientation}
+      value={currentValue}
+      onValueChange={handleValueChange}
       className={cn(
         "cn-tabs group/tabs flex data-horizontal:flex-col",
         className
       )}
       {...props}
-    />
+    >
+      <TabsContext.Provider value={{ value: currentValue }}>
+        {children}
+      </TabsContext.Provider>
+    </TabsPrimitive.Root>
   )
 }
 
 const tabsListVariants = cva(
-  "cn-tabs-list group/tabs-list inline-flex w-fit items-center justify-center text-muted-foreground group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col",
+  "cn-tabs-list group/tabs-list relative inline-flex w-fit items-center justify-center rounded-2xl bg-muted p-1.5 text-muted-foreground group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col",
   {
     variants: {
       variant: {
@@ -56,20 +80,33 @@ function TabsList({
 
 function TabsTrigger({
   className,
+  children,
+  value,
   ...props
 }: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
+  const { value: activeValue } = React.useContext(TabsContext)
+  const isActive = activeValue === value
+
   return (
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
+      value={value}
       className={cn(
-        "cn-tabs-trigger relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center whitespace-nowrap text-foreground/60 transition-all group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 dark:text-muted-foreground dark:hover:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0",
-        "group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent",
-        "data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground",
-        "after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:bottom-[-5px] group-data-horizontal/tabs:after:h-0.5 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100",
+        "cn-tabs-trigger relative z-10 inline-flex h-full flex-1 items-center justify-center gap-1.5 rounded-xl border border-transparent px-4 py-2 text-sm font-medium whitespace-nowrap text-foreground/70 transition-colors group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+        isActive && "text-foreground",
         className
       )}
       {...props}
-    />
+    >
+      {isActive && (
+        <motion.div
+          layoutId="activeTabIndicator"
+          className="absolute inset-0 z-[-1] rounded-xl border border-border/30 bg-background shadow-sm"
+          transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
+        />
+      )}
+      {children}
+    </TabsPrimitive.Trigger>
   )
 }
 
@@ -80,7 +117,7 @@ function TabsContent({
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
-      className={cn("cn-tabs-content flex-1 outline-none", className)}
+      className={cn("cn-tabs-content mt-2 flex-1 outline-none", className)}
       {...props}
     />
   )

@@ -996,17 +996,14 @@ Establish:
 
 The goal is to prove the architecture.
 
-### Stage 2 — Interaction Layer Re-implementation
+### Stage 2 — The Liquid Expressive Overhaul (Cross-Base)
 
-Add:
+**Goal**: Implement the "Liquid Glass" motion effect and M3 Expressive bold visuals across **all** Shadcn primitive bases (Radix, React Aria, Base UI) while maintaining strict performance and minimal bundle size.
 
-- Dialog
-- Tabs
-- Button
-- Card
-- Input
-
-This stage should demonstrate the expressive and spatial motion system *inside* the Shadcn registry format, proving we can export our own components perfectly.
+*   Read `.agent/motion-and-aesthetics.md` for exact physics profiles and CSS vs JS routing.
+*   Update `style-expressive.css` to remove all translucent/frosted glass and use bold, opaque M3 colors.
+*   Add custom Tailwind `ease-liquid` for zero-JS CSS micro-interactions.
+*   Rewrite `Tabs`, `Dialog`, `Checkbox`, `Radio`, and `Switch` across `bases/radix`, `bases/aria`, and `bases/base` to use the `liquidLayout` and `liquidPop` profiles.
 
 ### Stage 3 — Forms & Layout
 

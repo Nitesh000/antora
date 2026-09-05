@@ -867,6 +867,7 @@ export const ui: Registry["items"] = [
   {
     name: "tabs",
     type: "registry:ui",
+    dependencies: ["motion/react"],
     files: [
       {
         path: "ui/tabs.tsx",
