@@ -185,6 +185,24 @@ export const STYLES = [
       </svg>
     ),
   },
+  {
+    name: "expressive",
+    title: "Expressive",
+    description: "Material 3 Expressive UI with motion",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="128"
+        height="128"
+        viewBox="0 0 24 24"
+        fill="none"
+        role="img"
+        color="currentColor"
+      >
+        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+      </svg>
+    ),
+  },
 ] as const
 
 export type Style = (typeof STYLES)[number]
