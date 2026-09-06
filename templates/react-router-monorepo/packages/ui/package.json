@@ -12,7 +12,7 @@
     "@remixicon/react": "^4.9.0",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.2.4",
-    "radix-ui": "^1.4.3",
+    "radix-ui": "^1.6.7",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "shadcn": "^4.8.1",
