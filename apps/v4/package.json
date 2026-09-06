@@ -114,7 +114,7 @@
     "@types/react-dom": "19.2.2",
     "@typescript-eslint/parser": "^8.31.0",
     "@vercel/blob": "^2.8.0",
-    "agentation": "^2.2.1",
+    "agentation": "^3.0.2",
     "baseline-browser-mapping": "^2.10.0",
     "eslint": "^9",
     "eslint-config-next": "16.0.0",
