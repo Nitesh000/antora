@@ -4,6 +4,9 @@ import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
 import { Toggle as TogglePrimitive } from "radix-ui"
+import { motion } from "motion/react"
+
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 }
 
 const toggleVariants = cva(
   "cn-toggle group/toggle inline-flex items-center justify-center whitespace-nowrap outline-none hover:bg-muted focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
@@ -35,10 +38,15 @@ function Toggle({
   VariantProps<typeof toggleVariants>) {
   return (
     <TogglePrimitive.Root
+      asChild
       data-slot="toggle"
-      className={cn(toggleVariants({ variant, size, className }))}
       {...props}
-    />
+    >
+      <motion.button
+        whileTap={{ scale: 0.95, transition: fluidPress }}
+        className={cn(toggleVariants({ variant, size, className }))}
+      />
+    </TogglePrimitive.Root>
   )
 }
 

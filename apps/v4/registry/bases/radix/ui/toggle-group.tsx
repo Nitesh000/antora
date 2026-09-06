@@ -4,8 +4,11 @@ import * as React from "react"
 import { type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
 import { ToggleGroup as ToggleGroupPrimitive } from "radix-ui"
+import { motion } from "motion/react"
 
 import { toggleVariants } from "@/registry/bases/radix/ui/toggle"
+
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 }
 
 const ToggleGroupContext = React.createContext<
   VariantProps<typeof toggleVariants> & {
@@ -67,21 +70,26 @@ function ToggleGroupItem({
 
   return (
     <ToggleGroupPrimitive.Item
+      asChild
       data-slot="toggle-group-item"
       data-variant={context.variant || variant}
       data-size={context.size || size}
       data-spacing={context.spacing}
-      className={cn(
-        "cn-toggle-group-item shrink-0 focus:z-10 focus-visible:z-10 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:border-l-0 group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:border-t-0 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-l group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-t",
-        toggleVariants({
-          variant: context.variant || variant,
-          size: context.size || size,
-        }),
-        className
-      )}
       {...props}
     >
-      {children}
+      <motion.button
+        whileTap={{ scale: 0.95, transition: fluidPress }}
+        className={cn(
+          "cn-toggle-group-item shrink-0 focus:z-10 focus-visible:z-10 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:border-l-0 group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:border-t-0 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-l group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-t",
+          toggleVariants({
+            variant: context.variant || variant,
+            size: context.size || size,
+          }),
+          className
+        )}
+      >
+        {children}
+      </motion.button>
     </ToggleGroupPrimitive.Item>
   )
 }

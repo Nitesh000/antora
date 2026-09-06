@@ -147,7 +147,7 @@
 
   /* MARK: Button */
   .cn-button {
-    @apply focus-visible:border-primary focus-visible:ring-primary/20 aria-invalid:ring-destructive/20 aria-invalid:border-destructive rounded-full border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-4 aria-invalid:ring-3 active:not-aria-[haspopup]:scale-[0.98] transition-[transform,color,box-shadow,background-color] duration-200 [&_svg:not([class*='size-'])]:size-5;
+    @apply focus-visible:border-primary focus-visible:ring-primary/20 aria-invalid:ring-destructive/20 aria-invalid:border-destructive rounded-full border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-4 aria-invalid:ring-3 transition-[color,box-shadow,background-color] duration-200 [&_svg:not([class*='size-'])]:size-5;
   }
 
   .cn-button-variant-default {
@@ -297,7 +297,7 @@
   }
 
   .cn-checkbox-indicator {
-    @apply [&>svg]:size-4 [&>svg]:animate-in [&>svg]:zoom-in-50 [&>svg]:duration-300 [&>svg]:ease-[cubic-bezier(0.2,1,0.3,1)];
+    @apply [&>svg]:size-4;
   }
 
   /* MARK: Combobox */
@@ -986,7 +986,7 @@
   }
 
   .cn-radio-group-indicator {
-    @apply flex size-5 items-center justify-center animate-in zoom-in-50 duration-300 ease-[cubic-bezier(0.2,1,0.3,1)];
+    @apply flex size-5 items-center justify-center;
   }
 
   .cn-radio-group-indicator-icon {
@@ -1246,7 +1246,7 @@
   }
 
   .cn-slider-thumb {
-    @apply border-primary bg-primary ring-primary/20 relative size-5 rounded-full border-2 transition-[transform,box-shadow] duration-200 hover:scale-110 focus-visible:scale-110 focus-visible:ring-4 focus-visible:outline-hidden active:scale-110 active:ring-4;
+    @apply border-primary bg-primary ring-primary/20 relative size-5 rounded-full border-2 focus-visible:ring-4 focus-visible:outline-hidden active:ring-4;
   }
 
   /* MARK: Toast */
@@ -1264,7 +1264,7 @@
   }
 
   .cn-switch-thumb {
-    @apply bg-background shadow-lg transition-transform duration-300 ease-[cubic-bezier(0.2,1,0.3,1)] rounded-full group-data-[size=default]/switch:size-5 group-data-[size=sm]/switch:size-4 group-data-[size=default]/switch:data-checked:translate-x-[calc(100%+0.25rem)] group-data-[size=sm]/switch:data-checked:translate-x-[calc(100%+0.125rem)] group-data-[size=default]/switch:data-unchecked:translate-x-0.5 group-data-[size=sm]/switch:data-unchecked:translate-x-0.5;
+    @apply bg-background shadow-lg rounded-full group-data-[size=default]/switch:size-5 group-data-[size=sm]/switch:size-4 group-data-[size=default]/switch:data-checked:translate-x-[calc(100%+0.25rem)] group-data-[size=sm]/switch:data-checked:translate-x-[calc(100%+0.125rem)] group-data-[size=default]/switch:data-unchecked:translate-x-0.5 group-data-[size=sm]/switch:data-unchecked:translate-x-0.5;
   }
 
   .cn-switch-thumb-aria {

@@ -12,14 +12,14 @@ This document tracks the migration of components to the **Fluid iOS Physics** ar
 
 ## Phase 2: Interactive Micro-Springs
 *Replacing CSS scales with `whileTap` springs.*
-- [ ] Button
-- [ ] Badge
-- [ ] Checkbox
-- [ ] Radio Group
-- [ ] Switch
-- [ ] Slider
-- [ ] Toggle / Toggle Group
-- [ ] Input / Textarea (Focus rings with spring layout)
+- [x] Button
+- [x] Badge
+- [x] Checkbox
+- [x] Radio Group
+- [x] Switch
+- [x] Slider
+- [x] Toggle / Toggle Group
+- [x] Input / Textarea (Focus rings with spring layout)
 
 ## Phase 3: Spatial Overlays (Pop & Travel)
 *Using `AnimatePresence` with spring entrances.*

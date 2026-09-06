@@ -3,6 +3,9 @@
 import * as React from "react"
 import { cn } from "cn"
 import { Slider as SliderPrimitive } from "radix-ui"
+import { motion } from "motion/react"
+
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 }
 
 function Slider({
   className,
@@ -45,11 +48,14 @@ function Slider({
         />
       </SliderPrimitive.Track>
       {Array.from({ length: _values.length }, (_, index) => (
-        <SliderPrimitive.Thumb
-          data-slot="slider-thumb"
-          key={index}
-          className="cn-slider-thumb block shrink-0 select-none disabled:pointer-events-none disabled:opacity-50"
-        />
+        <SliderPrimitive.Thumb asChild key={index}>
+          <motion.span
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 1.2, transition: fluidPress }}
+            data-slot="slider-thumb"
+            className="cn-slider-thumb block shrink-0 select-none disabled:pointer-events-none disabled:opacity-50"
+          />
+        </SliderPrimitive.Thumb>
       ))}
     </SliderPrimitive.Root>
   )
