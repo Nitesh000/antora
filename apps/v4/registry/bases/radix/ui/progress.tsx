@@ -3,6 +3,9 @@
 import * as React from "react"
 import { cn } from "cn"
 import { Progress as ProgressPrimitive } from "radix-ui"
+import { motion } from "motion/react"
+
+const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 }
 
 function Progress({
   className,
@@ -19,10 +22,16 @@ function Progress({
       {...props}
     >
       <ProgressPrimitive.Indicator
+        asChild
         data-slot="progress-indicator"
-        className="cn-progress-indicator size-full flex-1 transition-all"
-        style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
-      />
+        className="cn-progress-indicator size-full flex-1"
+      >
+        <motion.div
+          initial={false}
+          animate={{ x: `-${100 - (value || 0)}%` }}
+          transition={fluidLayout}
+        />
+      </ProgressPrimitive.Indicator>
     </ProgressPrimitive.Root>
   )
 }

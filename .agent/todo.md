@@ -34,19 +34,19 @@ This document tracks the migration of components to the **Fluid iOS Physics** ar
 - [x] Sonner (Toast) (Delegated to Sonner's internal physics engine)
 
 ## Phase 4: Data & Display
-- [ ] Avatar
-- [ ] Breadcrumb
-- [ ] Calendar (Date Picker)
-- [ ] Carousel
-- [ ] Pagination
-- [ ] Resizable
-- [ ] Scroll Area
-- [ ] Separator
-- [ ] Table
-- [ ] Skeleton
-- [ ] Progress
-- [ ] Spinner
-- [ ] Alert / Alert Dialog
+- [x] Avatar
+- [x] Breadcrumb
+- [x] Calendar (Date Picker)
+- [x] Carousel
+- [x] Pagination
+- [x] Resizable
+- [x] Scroll Area
+- [x] Separator
+- [x] Table
+- [x] Skeleton
+- [x] Progress
+- [x] Spinner
+- [x] Alert / Alert Dialog
 
 ## Phase 5: Site Build & Homepage UIs
 *Once all components are physics-enabled, we will build the actual Antora documentation site and homepage using these components.*
