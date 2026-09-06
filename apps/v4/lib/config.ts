@@ -1,7 +1,7 @@
 export const siteConfig = {
-  name: "Expressive UI",
-  url: "https://antora.ui",
-  ogImage: "https://antora.ui/og.jpg",
+  name: "Antora UI",
+  url: "https://antora.thecodintant.in",
+  ogImage: "https://antora.thecodintant.in/og.jpg",
   description:
     "A Material 3 Expressive-Inspired React Web UI System built on top of Shadcn. Motion-rich, accessible, and neighbor-aware.",
   links: {

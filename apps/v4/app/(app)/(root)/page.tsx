@@ -14,7 +14,7 @@ import { Button } from "@/styles/radix-luma/ui/button"
 
 import { CardsDemo } from "./cards"
 
-const title = "The Foundation for your Design System"
+const title = "The Physics-First React UI Library"
 const metadataTitle = `${siteConfig.name} - ${title}`
 const description = siteConfig.description
 
@@ -24,7 +24,7 @@ const websiteJsonLd = {
   "@id": `${siteConfig.url}/#website`,
   url: siteConfig.url,
   name: siteConfig.name,
-  alternateName: ["shadcn", "ui.shadcn.com"],
+  alternateName: ["antora", "antora.thecodintant.in"],
   description: siteConfig.description,
   inLanguage: "en-US",
   sameAs: [siteConfig.links.github, siteConfig.links.twitter],
