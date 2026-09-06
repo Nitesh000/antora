@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
@@ -32,13 +34,21 @@ function Badge({
   ...props
 }: React.ComponentProps<typeof motion.span> &
   VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
-  const Comp = asChild ? motion.create(Slot.Root) : motion.span
+  const isInteractive = props.onClick !== undefined
 
-  // Only apply tap physics if it's interactive (has onClick or is a link/button via asChild)
-  const isInteractive = asChild || props.onClick !== undefined
+  if (asChild) {
+    return (
+      <Slot.Root
+        data-slot="badge"
+        data-variant={variant}
+        className={cn(badgeVariants({ variant }), className)}
+        {...props}
+      />
+    )
+  }
 
   return (
-    <Comp
+    <motion.span
       layout
       whileTap={isInteractive ? { scale: 0.96, transition: fluidPress } : undefined}
       data-slot="badge"
