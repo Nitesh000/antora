@@ -69,7 +69,7 @@
     }
   },
   "devDependencies": {
-    "@tanstack/ai": "0.40.0",
+    "@tanstack/ai": "0.52.3",
     "@tanstack/ai-client": "0.20.0",
     "ai": "7.0.0-canary.159",
     "zod": "3.25.76",
