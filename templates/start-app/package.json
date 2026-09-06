@@ -22,7 +22,7 @@
     "@tanstack/router-plugin": "latest",
     "cn": "^0.2.4",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6",
+    "react-dom": "^19.2.8",
     "tailwindcss": "^4"
   },
   "devDependencies": {
