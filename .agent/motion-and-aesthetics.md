@@ -2,62 +2,63 @@
 
 ## Core Philosophy
 **Visuals**: Material 3 Expressive (Bold, opaque, vibrant, high-contrast, thick focus rings). *No frosted glass or transparency.*
-**Motion**: Liquid Glass (Fluid, viscous, organic, snappy, zero jitter).
+**Motion**: Native iOS Fluidity (Squash and stretch, heavy spring physics, neighbor-aware momentum).
 
-## 1. Performance & Bundle Size Strategy
+## 1. The Framer Motion Pivot (Physics Engine)
 
-To remain heavily optimized and maintain a minimal bundle size, we strictly divide motion responsibilities between **CSS** and **JS**.
+CSS `transition` and `cubic-bezier` are fundamentally incapable of creating the "squash-and-stretch" and neighbor-pushing momentum the user requires. To achieve a truly native iOS-like fluid interface on the web, we are pivoting to a **Framer Motion (`motion/react`) deep-integration architecture**.
 
-### CSS-First Micro-interactions (Zero JS Bundle)
-Hover states, focus rings, background color changes, and simple scaling (`active:scale-[0.98]`) must use CSS.
-We will define a custom Tailwind easing curve that perfectly mimics the "liquid glass" spring:
+Every interactive structural component (Accordion, Cards, Lists) must be wrapped in `<motion.div layout>` to ensure that when it expands, its neighbors are pushed with a physical spring momentum rather than linearly sliding.
 
-*   **`ease-liquid`**: `cubic-bezier(0.2, 1, 0.3, 1)` (or similar highly calibrated curve).
-*   **Usage**: `transition-all duration-300 ease-liquid`
+### Framer Motion for Everything Structural
+1. Import from `"motion/react"`.
+2. Use `<motion.div layout>` for containers that change size (Accordion items, Collapsibles).
+3. Use `whileTap` and `whileHover` with spring physics for interactive elements instead of CSS `:active` states.
 
-### Framer Motion for Spatial Awareness (JS)
-We only use `motion/react` when elements physically travel across the screen, morph their layout, or require unmount animations.
-To minimize bundle size:
-1. Import from `"motion/react"` (which is modern Framer Motion v12, heavily tree-shakeable).
-2. For extremely complex pages, consumers can use `LazyMotion` (we will document this).
+## 2. The "Fluid iOS" Physics Profiles
 
-## 2. The "Liquid Glass" Physics Profiles
+Centralized in our minds (and code), we use heavy spring physics that allow for bouncing, squashing, and momentum.
 
-Centralized in `lib/motion.ts` (or similar utility file), we define standard physics profiles so every component moves identically across Radix, Aria, and Base UI.
-
-### Profile A: `liquidLayout`
-Used for traveling elements (Tabs indicator, moving focus states). Behaves like a bead of mercury.
+### Profile A: `fluidLayout`
+Used for structural changes (Accordion expanding, items being pushed down). 
+High stiffness and low damping allows the element to bounce slightly, creating a squash-and-stretch effect as the layout settles.
 ```ts
-export const liquidLayout = {
+export const fluidLayout = {
   type: "spring",
-  stiffness: 400,
-  damping: 30,
-  mass: 0.8,
+  stiffness: 500,
+  damping: 25,
+  mass: 1,
 }
 ```
 
-### Profile B: `liquidPop`
-Used for elements entering the screen (Dialog, Checkbox, Radio, Tooltip). 
-Expands organically without bouncing past 100% scale.
+### Profile B: `fluidPress`
+Used for buttons, cards, and interactive elements.
 ```ts
-export const liquidPop = {
+export const fluidPress = {
+  scale: 0.95,
+  transition: {
+    type: "spring",
+    stiffness: 600,
+    damping: 20,
+    mass: 1
+  }
+}
+```
+
+### Profile C: `fluidPop`
+Used for elements entering the screen (Dialog, Checkbox, Radio, Tooltip). 
+```ts
+export const fluidPop = {
   type: "spring",
-  stiffness: 350,
+  stiffness: 400,
   damping: 25,
   mass: 0.9,
 }
 ```
 
-## 3. Implementation Across All Bases
+## 3. Implementation Focus
 
-Shadcn v4 uses three distinct UI primitives. We must ensure parity across all of them:
-
-1. **`bases/radix`**: (Radix UI)
-2. **`bases/aria`**: (React Aria Components)
-3. **`bases/base`**: (Base UI)
-
-**Action Plan per Component:**
-*   **Tabs**: Inject `framer-motion` `liquidLayout` into all three base `tabs.tsx` files.
-*   **Dialog/Popover/Tooltip**: Inject `liquidPop` spatial animations into all three bases.
-*   **Button/Input**: Apply `ease-liquid` and `active:scale-[0.98]` purely via `style-expressive.css` to hit all bases automatically without altering JS.
-*   **Checkbox/Radio/Switch**: Inject `liquidPop` scale animations into all three bases.
+**Action Plan:**
+*   **Accordion / Collapsible**: Rewrite with `<motion.div layout>` and `<AnimatePresence>`. When an item expands, the surrounding items will be pushed with `fluidLayout` physics, causing them to visually accelerate and decelerate natively.
+*   **Button/Cards**: Replace CSS scaling with Framer Motion `whileTap` strings.
+*   **Tabs**: Enhance the indicator to ensure it squashes and stretches while traveling.

@@ -1,59 +1,49 @@
-# Antora Expressive UI - Component Upgrade Tracker
+# Antora Expressive UI - Full Framer Motion Pivot Tracker
 
-This document tracks the migration of Shadcn base components to the **Liquid Expressive** design system (Material 3 bold aesthetics + `cubic-bezier(0.2,1,0.3,1)` liquid motion).
+This document tracks the migration of components to the **Fluid iOS Physics** architecture (deep Framer Motion integration for layout, squash-and-stretch, and neighbor momentum).
 
-## Completed ✅
-- [x] Accordion
-- [x] Badge
-- [x] Button
-- [x] Card
-- [x] Checkbox
-- [x] Command (Combobox foundation)
-- [x] Dialog
-- [x] Dropdown Menu
-- [x] Hover Card
-- [x] Input
-- [x] Navigation Menu
-- [x] Popover
-- [x] Radio Group
-- [x] Select
-- [x] Sheet
-- [x] Slider
-- [x] Switch
-- [x] Table
-- [x] Tabs (Includes `framer-motion` layout layout indicator)
-- [x] Tooltip
+## Phase 1: Structural & Layout Components (High Priority)
+*These components require `<motion.div layout>` to push neighbors natively.*
+- [ ] Accordion
+- [ ] Collapsible
+- [ ] Navigation Menu
+- [ ] Card (Expandable states)
+- [ ] Tabs (Content area height morphing)
 
-## Pending ⏳
+## Phase 2: Interactive Micro-Springs
+*Replacing CSS scales with `whileTap` springs.*
+- [ ] Button
+- [ ] Badge
+- [ ] Checkbox
+- [ ] Radio Group
+- [ ] Switch
+- [ ] Slider
+- [ ] Toggle / Toggle Group
+- [ ] Input / Textarea (Focus rings with spring layout)
 
-### Overlays & Menus
-- [ ] Alert Dialog
+## Phase 3: Spatial Overlays (Pop & Travel)
+*Using `AnimatePresence` with spring entrances.*
+- [ ] Dialog
+- [ ] Sheet
+- [ ] Popover
+- [ ] Dropdown Menu
 - [ ] Context Menu
-- [ ] Drawer
-- [ ] Menubar
-
-### Forms & Inputs
-- [ ] Form (Layout/Spacing)
-- [ ] Input OTP
-- [ ] Label
-- [ ] Textarea
-- [ ] Toggle
-- [ ] Toggle Group
-
-### Feedback & Status
-- [ ] Alert
-- [ ] Progress
-- [ ] Skeleton
+- [ ] Hover Card
+- [ ] Tooltip
+- [ ] Command / Combobox
 - [ ] Sonner (Toast)
-- [ ] Spinner
 
-### Data Display & Navigation
+## Phase 4: Data & Display
 - [ ] Avatar
 - [ ] Breadcrumb
 - [ ] Calendar (Date Picker)
 - [ ] Carousel
-- [ ] Collapsible
 - [ ] Pagination
 - [ ] Resizable
 - [ ] Scroll Area
 - [ ] Separator
+- [ ] Table
+- [ ] Skeleton
+- [ ] Progress
+- [ ] Spinner
+- [ ] Alert / Alert Dialog

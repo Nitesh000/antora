@@ -996,14 +996,15 @@ Establish:
 
 The goal is to prove the architecture.
 
-### Stage 2 — The Liquid Expressive Overhaul (Cross-Base)
+### Stage 2 — The Full Framer Motion Physics Pivot
 
-**Goal**: Implement the "Liquid Glass" motion effect and M3 Expressive bold visuals across **all** Shadcn primitive bases (Radix, React Aria, Base UI) while maintaining strict performance and minimal bundle size.
+**Goal**: CSS transitions (`cubic-bezier`) are insufficient for the "squash-and-stretch" spring physics and neighbor-aware momentum the user desires (similar to native iOS fluid components). We must pivot to using **Framer Motion (`motion/react`)** deeply across all interactive components.
 
-*   Read `.agent/motion-and-aesthetics.md` for exact physics profiles and CSS vs JS routing.
-*   Update `style-expressive.css` to remove all translucent/frosted glass and use bold, opaque M3 colors.
-*   Add custom Tailwind `ease-liquid` for zero-JS CSS micro-interactions.
-*   Rewrite `Tabs`, `Dialog`, `Checkbox`, `Radio`, and `Switch` across `bases/radix`, `bases/aria`, and `bases/base` to use the `liquidLayout` and `liquidPop` profiles.
+*   Read `.agent/motion-and-aesthetics.md` for the updated Framer Motion spring physics profiles.
+*   Abandon CSS-only `transition` for structural layout shifts (like Accordion expanding, lists moving).
+*   Wrap layout-shifting components (Accordion, Cards, Lists) in `<motion.div layout>` to ensure neighbors are pushed with momentum and squash/stretch physically.
+*   Update interactive states (hover, press, expand) to use `whileTap` and `whileHover` with spring physics instead of CSS `transform`.
+*   Rewrite `Accordion`, `Button`, `Tabs`, and other interactive components to fully utilize this engine.
 
 ### Stage 3 — Forms & Layout
 
