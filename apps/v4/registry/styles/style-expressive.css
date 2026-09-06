@@ -43,11 +43,11 @@
 
   /* MARK: Alert Dialog */
   .cn-alert-dialog-overlay {
-    @apply data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 bg-black/40 duration-100 ;
+    @apply data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 bg-black/40 duration-300;
   }
 
   .cn-alert-dialog-content {
-    @apply data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 bg-popover text-popover-foreground ring-foreground/10 gap-4 rounded-xl p-4 ring-1 duration-100 data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-sm;
+    @apply data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 bg-popover text-popover-foreground gap-6 rounded-[2rem] p-8 shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-border/40 duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-sm;
   }
 
   .cn-alert-dialog-header {
@@ -237,15 +237,15 @@
 
   /* MARK: Calendar */
   .cn-calendar {
-    @apply p-2 [--cell-radius:var(--radius-md)] [--cell-size:--spacing(7)];
+    @apply p-4 [--cell-radius:var(--radius-xl)] [--cell-size:--spacing(10)];
   }
 
   .cn-calendar-dropdown-root {
-    @apply has-focus:border-ring border-input has-focus:ring-ring/50 border has-focus:ring-3;
+    @apply has-focus:border-primary border-border border-2 has-focus:ring-primary/20 has-focus:ring-4 rounded-xl;
   }
 
   .cn-calendar-caption-label {
-    @apply h-6 pr-1 pl-1.5;
+    @apply h-8 pr-2 pl-3 font-semibold text-base;
   }
 
   /* MARK: Card */
@@ -420,7 +420,7 @@
 
   /* MARK: Context Menu */
   .cn-context-menu-content {
-    @apply data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-36 rounded-lg p-1 shadow-md ring-1 duration-100;
+    @apply data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 bg-popover text-popover-foreground min-w-36 rounded-2xl p-2 shadow-[0_4px_16px_rgba(0,0,0,0.08)] border border-border/40 duration-300 ease-[cubic-bezier(0.2,1,0.3,1)];
   }
 
   .cn-context-menu-content-logical {
@@ -428,15 +428,15 @@
   }
 
   .cn-context-menu-item {
-    @apply focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive focus:*:[svg]:text-accent-foreground gap-1.5 rounded-md px-1.5 py-1 text-sm data-inset:pl-7 [&_svg:not([class*='size-'])]:size-4;
+    @apply focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive focus:*:[svg]:text-accent-foreground gap-2 rounded-xl px-4 py-2 text-sm data-inset:pl-7 transition-colors [&_svg:not([class*='size-'])]:size-4;
   }
 
   .cn-context-menu-checkbox-item {
-    @apply focus:bg-accent focus:text-accent-foreground gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm data-inset:pl-7 [&_svg:not([class*='size-'])]:size-4;
+    @apply focus:bg-accent focus:text-accent-foreground gap-2 rounded-xl py-2 pr-8 pl-4 text-sm data-inset:pl-7 transition-colors [&_svg:not([class*='size-'])]:size-4;
   }
 
   .cn-context-menu-radio-item {
-    @apply focus:bg-accent focus:text-accent-foreground gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm data-inset:pl-7 [&_svg:not([class*='size-'])]:size-4;
+    @apply focus:bg-accent focus:text-accent-foreground gap-2 rounded-xl py-2 pr-8 pl-4 text-sm data-inset:pl-7 transition-colors [&_svg:not([class*='size-'])]:size-4;
   }
 
   .cn-context-menu-item-indicator {
@@ -688,19 +688,19 @@
 
   /* MARK: Input OTP */
   .cn-input-otp {
-    @apply gap-2;
+    @apply gap-3;
   }
 
   .cn-input-otp-group {
-    @apply has-aria-invalid:ring-destructive/20 dark:has-aria-invalid:ring-destructive/40 has-aria-invalid:border-destructive rounded-lg has-aria-invalid:ring-3;
+    @apply has-aria-invalid:ring-destructive/20 dark:has-aria-invalid:ring-destructive/40 has-aria-invalid:border-destructive rounded-xl has-aria-invalid:ring-4;
   }
 
   .cn-input-otp-slot {
-    @apply dark:bg-input/30 border-input data-[active=true]:border-ring data-[active=true]:ring-ring/50 data-[active=true]:aria-invalid:ring-destructive/20 dark:data-[active=true]:aria-invalid:ring-destructive/40 aria-invalid:border-destructive data-[active=true]:aria-invalid:border-destructive size-8 border-y border-r text-sm transition-all outline-none first:rounded-l-lg first:border-l last:rounded-r-lg data-[active=true]:ring-3;
+    @apply bg-background border-border data-[active=true]:border-primary data-[active=true]:ring-primary/20 data-[active=true]:aria-invalid:ring-destructive/20 dark:data-[active=true]:aria-invalid:ring-destructive/40 aria-invalid:border-destructive data-[active=true]:aria-invalid:border-destructive size-12 border-y-2 border-r-2 text-lg font-semibold transition-[color,box-shadow,border-color] outline-none first:rounded-l-xl first:border-l-2 last:rounded-r-xl data-[active=true]:ring-4;
   }
 
   .cn-input-otp-caret-line {
-    @apply animate-caret-blink bg-foreground h-4 w-px duration-1000;
+    @apply animate-caret-blink bg-primary h-6 w-0.5 duration-1000 rounded-full;
   }
 
   .cn-input-otp-separator {
@@ -795,7 +795,7 @@
 
   /* MARK: Label */
   .cn-label {
-    @apply gap-2 text-sm leading-none font-medium group-data-[disabled=true]:opacity-50 peer-disabled:opacity-50;
+    @apply gap-2 text-sm leading-none font-semibold text-foreground group-data-[disabled=true]:opacity-50 peer-disabled:opacity-50;
   }
 
   .cn-label-aria {
@@ -804,15 +804,15 @@
 
   /* MARK: Menubar */
   .cn-menubar {
-    @apply h-8 gap-0.5 rounded-lg border p-[3px];
+    @apply h-12 gap-1 rounded-2xl border-2 border-border/40 p-1.5 shadow-[0_2px_8px_rgba(0,0,0,0.04)];
   }
 
   .cn-menubar-trigger {
-    @apply hover:bg-muted aria-expanded:bg-muted rounded-sm px-1.5 py-[2px] text-sm font-medium;
+    @apply hover:bg-muted aria-expanded:bg-muted/80 rounded-xl px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-4 focus-visible:ring-primary/20;
   }
 
   .cn-menubar-content {
-    @apply bg-popover text-popover-foreground data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 min-w-36 rounded-lg p-1 shadow-md ring-1 duration-100;
+    @apply bg-popover text-popover-foreground data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 min-w-36 rounded-2xl p-2 shadow-[0_4px_16px_rgba(0,0,0,0.08)] border border-border/40 duration-300 ease-[cubic-bezier(0.2,1,0.3,1)];
   }
 
   .cn-menubar-content-logical {
@@ -820,7 +820,7 @@
   }
 
   .cn-menubar-item {
-    @apply focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive! not-data-[variant=destructive]:focus:**:text-accent-foreground gap-1.5 rounded-md px-1.5 py-1 text-sm data-disabled:opacity-50 data-inset:pl-7 [&_svg:not([class*='size-'])]:size-4;
+    @apply focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive! not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2 rounded-xl px-4 py-2 text-sm data-disabled:opacity-50 data-inset:pl-7 transition-colors [&_svg:not([class*='size-'])]:size-4;
   }
 
   .cn-menubar-checkbox-item {
@@ -1343,28 +1343,28 @@
 
   /* MARK: Textarea */
   .cn-textarea {
-    @apply border-input dark:bg-input/30 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 disabled:bg-input/50 dark:disabled:bg-input/80 rounded-lg border bg-transparent px-2.5 py-2 text-base transition-colors focus-visible:ring-3 aria-invalid:ring-3 md:text-sm;
+    @apply w-full min-h-[120px] rounded-xl border-2 border-border bg-background px-4 py-3 text-sm shadow-sm transition-[color,box-shadow,border-color] outline-none selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-primary focus-visible:ring-4 focus-visible:ring-primary/20 aria-invalid:border-destructive aria-invalid:ring-destructive/20;
   }
 
   /* MARK: Toggle */
   .cn-toggle {
-    @apply hover:text-foreground aria-pressed:bg-muted focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive data-[state=on]:bg-muted gap-1 rounded-lg text-sm font-medium transition-all [&_svg:not([class*='size-'])]:size-4;
+    @apply hover:text-foreground aria-pressed:bg-primary/20 aria-pressed:text-primary focus-visible:border-primary focus-visible:ring-primary/20 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive data-[state=on]:bg-primary/20 data-[state=on]:text-primary gap-1 rounded-xl text-sm font-medium transition-[background-color,color,box-shadow,transform] duration-200 active:scale-[0.98] [&_svg:not([class*='size-'])]:size-5;
   }
 
   .cn-toggle-aria {
-    @apply data-selected:bg-muted;
+    @apply data-selected:bg-primary/20 data-selected:text-primary;
   }
 
   .cn-toggle-variant-default {
-    @apply bg-transparent;
+    @apply bg-transparent hover:bg-muted;
   }
 
   .cn-toggle-variant-outline {
-    @apply border-input hover:bg-muted border bg-transparent;
+    @apply border-2 border-border hover:bg-muted bg-transparent;
   }
 
   .cn-toggle-size-default {
-    @apply h-8 min-w-8 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2;
+    @apply h-11 min-w-11 px-4 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3;
   }
 
   .cn-toggle-size-sm {

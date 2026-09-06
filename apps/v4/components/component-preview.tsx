@@ -13,7 +13,7 @@ export function ComponentPreview({
   align = "center",
   hideCode = false,
   chromeLessOnMobile = false,
-  styleName = "radix-expressive",
+  styleName = "radix-nova",
   direction = "ltr",
   caption,
   ...props
