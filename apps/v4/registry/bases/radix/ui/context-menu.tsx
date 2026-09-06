@@ -3,13 +3,28 @@
 import * as React from "react"
 import { cn } from "cn"
 import { ContextMenu as ContextMenuPrimitive } from "radix-ui"
+import { motion, AnimatePresence } from "motion/react"
 
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
+
+const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 }
+
+const ContextMenuContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
 
 function ContextMenu({
   ...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.Root>) {
-  return <ContextMenuPrimitive.Root data-slot="context-menu" {...props} />
+  const [isOpen, setIsOpen] = React.useState(false)
+
+  return (
+    <ContextMenuContext.Provider value={{ isOpen }}>
+      <ContextMenuPrimitive.Root
+        data-slot="context-menu"
+        onOpenChange={setIsOpen}
+        {...props}
+      />
+    </ContextMenuContext.Provider>
+  )
 }
 
 function ContextMenuTrigger({
@@ -64,17 +79,32 @@ function ContextMenuContent({
 }: React.ComponentProps<typeof ContextMenuPrimitive.Content> & {
   side?: "top" | "right" | "bottom" | "left"
 }) {
+  const context = React.useContext(ContextMenuContext)
+
   return (
-    <ContextMenuPrimitive.Portal>
-      <ContextMenuPrimitive.Content
-        data-slot="context-menu-content"
-        className={cn(
-          "cn-context-menu-content cn-menu-target cn-menu-translucent z-50 max-h-(--radix-context-menu-content-available-height) origin-(--radix-context-menu-content-transform-origin) overflow-x-hidden overflow-y-auto",
-          className
-        )}
-        {...props}
-      />
-    </ContextMenuPrimitive.Portal>
+    <AnimatePresence>
+      {context.isOpen && (
+        <ContextMenuPrimitive.Portal forceMount>
+          <ContextMenuPrimitive.Content
+            asChild
+            forceMount
+            data-slot="context-menu-content"
+            {...props}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 4 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 4 }}
+              transition={fluidPop}
+              className={cn(
+                "cn-context-menu-content cn-menu-target cn-menu-translucent z-50 max-h-(--radix-context-menu-content-available-height) origin-(--radix-context-menu-content-transform-origin) overflow-x-hidden overflow-y-auto",
+                className
+              )}
+            />
+          </ContextMenuPrimitive.Content>
+        </ContextMenuPrimitive.Portal>
+      )}
+    </AnimatePresence>
   )
 }
 

@@ -23,15 +23,15 @@ This document tracks the migration of components to the **Fluid iOS Physics** ar
 
 ## Phase 3: Spatial Overlays (Pop & Travel)
 *Using `AnimatePresence` with spring entrances.*
-- [ ] Dialog
-- [ ] Sheet
-- [ ] Popover
-- [ ] Dropdown Menu
-- [ ] Context Menu
-- [ ] Hover Card
-- [ ] Tooltip
-- [ ] Command / Combobox
-- [ ] Sonner (Toast)
+- [x] Dialog
+- [x] Sheet
+- [x] Popover
+- [x] Dropdown Menu
+- [x] Context Menu
+- [x] Hover Card
+- [x] Tooltip
+- [x] Command / Combobox (Covered by Dialog/Popover)
+- [x] Sonner (Toast) (Delegated to Sonner's internal physics engine)
 
 ## Phase 4: Data & Display
 - [ ] Avatar

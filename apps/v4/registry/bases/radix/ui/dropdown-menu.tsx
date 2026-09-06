@@ -3,13 +3,39 @@
 import * as React from "react"
 import { cn } from "cn"
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui"
+import { motion, AnimatePresence } from "motion/react"
 
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
+const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 }
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 }
+
+const DropdownMenuContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
+
 function DropdownMenu({
+  open: controlledOpen,
+  defaultOpen,
+  onOpenChange,
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
-  return <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} />
+  const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false)
+  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
+
+  return (
+    <DropdownMenuContext.Provider value={{ isOpen }}>
+      <DropdownMenuPrimitive.Root
+        data-slot="dropdown-menu"
+        open={isOpen}
+        onOpenChange={(val) => {
+          if (controlledOpen === undefined) {
+            setInternalOpen(val)
+          }
+          onOpenChange?.(val)
+        }}
+        {...props}
+      />
+    </DropdownMenuContext.Provider>
+  )
 }
 
 function DropdownMenuPortal({
@@ -37,19 +63,34 @@ function DropdownMenuContent({
   sideOffset = 4,
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) {
+  const context = React.useContext(DropdownMenuContext)
+
   return (
-    <DropdownMenuPrimitive.Portal>
-      <DropdownMenuPrimitive.Content
-        data-slot="dropdown-menu-content"
-        sideOffset={sideOffset}
-        align={align}
-        className={cn(
-          "cn-dropdown-menu-content cn-menu-target cn-menu-translucent z-50 max-h-(--radix-dropdown-menu-content-available-height) w-(--radix-dropdown-menu-trigger-width) origin-(--radix-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto data-[state=closed]:overflow-hidden",
-          className
-        )}
-        {...props}
-      />
-    </DropdownMenuPrimitive.Portal>
+    <AnimatePresence>
+      {context.isOpen && (
+        <DropdownMenuPrimitive.Portal forceMount>
+          <DropdownMenuPrimitive.Content
+            asChild
+            forceMount
+            data-slot="dropdown-menu-content"
+            sideOffset={sideOffset}
+            align={align}
+            {...props}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 4 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 4 }}
+              transition={fluidPop}
+              className={cn(
+                "cn-dropdown-menu-content cn-menu-target cn-menu-translucent z-50 max-h-(--radix-dropdown-menu-content-available-height) w-(--radix-dropdown-menu-trigger-width) origin-(--radix-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto",
+                className
+              )}
+            />
+          </DropdownMenuPrimitive.Content>
+        </DropdownMenuPrimitive.Portal>
+      )}
+    </AnimatePresence>
   )
 }
 
