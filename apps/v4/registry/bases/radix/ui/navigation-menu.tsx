@@ -2,8 +2,11 @@ import * as React from "react"
 import { cva } from "class-variance-authority"
 import { cn } from "cn"
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui"
+import { motion } from "motion/react"
 
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
+
+const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 }
 
 function NavigationMenu({
   className,
@@ -58,6 +61,8 @@ function NavigationMenuItem({
   )
 }
 
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 }
+
 const navigationMenuTriggerStyle = cva(
   "cn-navigation-menu-trigger group/navigation-menu-trigger inline-flex h-9 w-max items-center justify-center outline-none disabled:pointer-events-none"
 )
@@ -69,20 +74,25 @@ function NavigationMenuTrigger({
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Trigger>) {
   return (
     <NavigationMenuPrimitive.Trigger
+      asChild
       data-slot="navigation-menu-trigger"
-      className={cn(navigationMenuTriggerStyle(), "group", className)}
       {...props}
     >
-      {children}{" "}
-      <IconPlaceholder
-        lucide="ChevronDownIcon"
-        tabler="IconChevronDown"
-        hugeicons="ArrowDown01Icon"
-        phosphor="CaretDownIcon"
-        remixicon="RiArrowDownSLine"
-        className="cn-navigation-menu-trigger-icon"
-        aria-hidden="true"
-      />
+      <motion.button
+        whileTap={{ scale: 0.98, transition: fluidPress }}
+        className={cn(navigationMenuTriggerStyle(), "group", className)}
+      >
+        {children}{" "}
+        <IconPlaceholder
+          lucide="ChevronDownIcon"
+          tabler="IconChevronDown"
+          hugeicons="ArrowDown01Icon"
+          phosphor="CaretDownIcon"
+          remixicon="RiArrowDownSLine"
+          className="cn-navigation-menu-trigger-icon"
+          aria-hidden="true"
+        />
+      </motion.button>
     </NavigationMenuPrimitive.Trigger>
   )
 }
@@ -114,13 +124,19 @@ function NavigationMenuViewport({
       )}
     >
       <NavigationMenuPrimitive.Viewport
+        asChild
         data-slot="navigation-menu-viewport"
-        className={cn(
-          "cn-navigation-menu-viewport origin-top-center relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden md:w-(--radix-navigation-menu-viewport-width)",
-          className
-        )}
         {...props}
-      />
+      >
+        <motion.div
+          layout
+          transition={fluidLayout}
+          className={cn(
+            "cn-navigation-menu-viewport origin-top-center relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden md:w-(--radix-navigation-menu-viewport-width)",
+            className
+          )}
+        />
+      </NavigationMenuPrimitive.Viewport>
     </div>
   )
 }
@@ -131,10 +147,17 @@ function NavigationMenuLink({
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Link>) {
   return (
     <NavigationMenuPrimitive.Link
+      asChild
       data-slot="navigation-menu-link"
-      className={cn("cn-navigation-menu-link", className)}
       {...props}
-    />
+    >
+      <motion.a
+        whileTap={{ scale: 0.98, transition: fluidPress }}
+        className={cn("cn-navigation-menu-link cursor-pointer", className)}
+      >
+        {props.children}
+      </motion.a>
+    </NavigationMenuPrimitive.Link>
   )
 }
 
@@ -144,14 +167,20 @@ function NavigationMenuIndicator({
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Indicator>) {
   return (
     <NavigationMenuPrimitive.Indicator
+      asChild
       data-slot="navigation-menu-indicator"
-      className={cn(
-        "cn-navigation-menu-indicator top-full z-1 flex h-1.5 items-end justify-center overflow-hidden",
-        className
-      )}
       {...props}
     >
-      <div className="cn-navigation-menu-indicator-arrow relative top-[60%] h-2 w-2 rotate-45" />
+      <motion.div
+        layout
+        transition={fluidLayout}
+        className={cn(
+          "cn-navigation-menu-indicator top-full z-1 flex h-1.5 items-end justify-center overflow-hidden",
+          className
+        )}
+      >
+        <div className="cn-navigation-menu-indicator-arrow relative top-[60%] h-2 w-2 rotate-45" />
+      </motion.div>
     </NavigationMenuPrimitive.Indicator>
   )
 }
