@@ -39,7 +39,6 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   experimental: {
-    cpus: 1,
     // optimizePackageImports removed to prevent 45-minute Webpack/Turbopack hangs on massive icon libraries
   },
   outputFileTracingIncludes: {
