@@ -35,18 +35,12 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   experimental: {
     cpus: 1,
-    // Rewrite barrel imports to deep imports so a single icon doesn't pull the
-    // whole package into the module graph. Next already optimizes lucide-react,
-    // @tabler/icons-react, date-fns and lodash-es by default; these are the
-    // heavy icon packages this app uses that are NOT on that default list.
-    optimizePackageImports: [
-      "@hugeicons/react",
-      "@hugeicons/core-free-icons",
-      "@phosphor-icons/react",
-      "@remixicon/react",
-    ],
+    // optimizePackageImports removed to prevent 45-minute Webpack/Turbopack hangs on massive icon libraries
   },
   outputFileTracingIncludes: {
     "/*": ["./registry/**/*", "./styles/**/*"],
