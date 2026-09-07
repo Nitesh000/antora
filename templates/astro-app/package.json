@@ -16,13 +16,13 @@
     "typecheck": "astro check"
   },
   "dependencies": {
-    "@astrojs/react": "^5",
+    "@astrojs/react": "^6",
     "@tailwindcss/vite": "^4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "astro": "^7",
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "tailwindcss": "^4"
   },
   "devDependencies": {
@@ -30,12 +30,12 @@
     "@eslint/js": "^10",
     "eslint": "^10",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.2",
+    "eslint-plugin-react-refresh": "^0.5.6",
     "globals": "^17",
-    "prettier": "^3.8.3",
+    "prettier": "^3.9.6",
     "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-tailwindcss": "^0.8.0",
-    "typescript": "~6",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "typescript": "~7",
     "typescript-eslint": "^8"
   }
 }
