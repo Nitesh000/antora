@@ -35,14 +35,13 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   experimental: {
-    // optimizePackageImports removed to prevent 45-minute Webpack/Turbopack hangs on massive icon libraries
+    // Vercel's two-core builders otherwise spawn too many static-generation
+    // workers for this app and can exhaust the build container's memory.
+    cpus: 1,
   },
   outputFileTracingIncludes: {
-    "/*": ["./registry/**/*", "./styles/**/*"],
+    "/*": ["./examples/**/*", "./registry/**/*", "./styles/**/*"],
   },
   images: {
     remotePatterns: [

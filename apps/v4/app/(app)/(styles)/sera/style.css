@@ -490,6 +490,6 @@
   }
 }
 
-@utility font-heading {
+.font-heading {
   font-family: var(--font-serif);
 }

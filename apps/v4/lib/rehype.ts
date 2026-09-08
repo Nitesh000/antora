@@ -166,7 +166,10 @@ export function rehypeComponent() {
             return
           }
 
-          const raw = fs.readFileSync(path.join(process.cwd(), src), "utf8")
+          const raw = fs.readFileSync(
+            /*turbopackIgnore: true*/ path.join(process.cwd(), src),
+            "utf8"
+          )
           const source = await formatCode(raw, item.styleName)
 
           item.node.children?.push(
