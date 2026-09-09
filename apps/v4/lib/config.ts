@@ -5,8 +5,8 @@ export const siteConfig = {
   description:
     "A Material 3 Expressive-Inspired React Web UI System built on top of Shadcn. Motion-rich, accessible, and neighbor-aware.",
   links: {
-    twitter: "https://twitter.com/antora",
-    github: "https://github.com/antora/ui",
+    twitter: "https://x.com/nitesh_tudu040",
+    github: "https://github.com/Nitesh000/antora.git",
   },
   navItems: [
     {

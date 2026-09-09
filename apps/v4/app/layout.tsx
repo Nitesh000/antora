@@ -27,11 +27,11 @@ export const metadata: Metadata = {
   keywords: ["Next.js", "React", "Tailwind CSS", "Components", "shadcn"],
   authors: [
     {
-      name: "shadcn",
-      url: "https://shadcn.com",
+      name: "Nitesh000",
+      url: "https://me.thecodingant.in",
     },
   ],
-  creator: "shadcn",
+  creator: "Nitesh000",
   openGraph: {
     type: "website",
     locale: "en_US",

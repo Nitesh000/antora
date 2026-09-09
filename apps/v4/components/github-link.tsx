@@ -20,7 +20,7 @@ export function GitHubLink() {
 }
 
 export async function StarsCount() {
-  const data = await fetch("https://api.github.com/repos/shadcn-ui/ui", {
+  const data = await fetch("https://api.github.com/repos/Nitesh000/antora", {
     next: { revalidate: 86400 },
   })
   const json = await data.json()
@@ -31,7 +31,7 @@ export async function StarsCount() {
       : json.stargazers_count?.toLocaleString()
 
   return (
-    <span className="w-fit text-xs text-muted-foreground tabular-nums">
+    <span className="text-xs tabular-nums w-fit text-muted-foreground">
       {formattedCount}
     </span>
   )
