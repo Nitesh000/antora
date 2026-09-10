@@ -58,3 +58,4 @@ CONTEXT.md
 docs/adr
 
 .env
+.env*
