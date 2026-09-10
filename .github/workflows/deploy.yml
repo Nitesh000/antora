@@ -38,13 +38,9 @@ jobs:
             "projectId": "$VERCEL_PROJECT_ID"
           }
           EOF
-          echo "Written project.json:"
-          cat .vercel/project.json
-          echo "---"
-          python3 -c "import json; json.load(open('.vercel/project.json'))" && echo "Valid JSON" || echo "INVALID JSON"
 
       - name: Pull project settings
-        run: vercel pull --yes --environment=production --debug --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Build
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
