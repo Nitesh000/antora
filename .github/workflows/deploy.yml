@@ -29,30 +29,22 @@ jobs:
       - name: Install Vercel CLI
         run: pnpm add -g vercel@latest
 
-      - name: Debug secrets
-        run: |
-          echo "VERCEL_ORG_ID length: $(echo -n "$VERCEL_ORG_ID" | wc -c)"
-          echo "VERCEL_PROJECT_ID length: $(echo -n "$VERCEL_PROJECT_ID" | wc -c)"
-          echo "VERCEL_TOKEN length: $(echo -n "${{ secrets.VERCEL_TOKEN }}" | wc -c)"
-          echo "ORG_ID prefix: $(echo "$VERCEL_ORG_ID" | cut -c1-5)"
-          echo "PROJECT_ID prefix: $(echo "$VERCEL_PROJECT_ID" | cut -c1-5)"
-
       - name: Link Vercel project
         run: |
           mkdir -p .vercel
-          echo '{"orgId":"'"$VERCEL_ORG_ID"'","projectId":"'"$VERCEL_PROJECT_ID"'"}' > .vercel/project.json
-          echo "project.json content:"
+          cat <<EOF > .vercel/project.json
+          {
+            "orgId": "$VERCEL_ORG_ID",
+            "projectId": "$VERCEL_PROJECT_ID"
+          }
+          EOF
+          echo "Written project.json:"
           cat .vercel/project.json
-
-      - name: Test API access
-        run: |
-          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" https://api.vercel.com/v2/user)
-          echo "API auth check: HTTP $HTTP_CODE"
-          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID")
-          echo "Project lookup: HTTP $HTTP_CODE"
+          echo "---"
+          python3 -c "import json; json.load(open('.vercel/project.json'))" && echo "Valid JSON" || echo "INVALID JSON"
 
       - name: Pull project settings
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --yes --environment=production --debug --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Build
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
