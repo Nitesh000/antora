@@ -56,3 +56,5 @@ __screenshots__
 
 CONTEXT.md
 docs/adr
+
+.env
