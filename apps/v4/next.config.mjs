@@ -35,11 +35,7 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  experimental: {
-    // Vercel's two-core builders otherwise spawn too many static-generation
-    // workers for this app and can exhaust the build container's memory.
-    cpus: 1,
-  },
+  experimental: {},
   outputFileTracingIncludes: {
     "/*": ["./examples/**/*", "./registry/**/*", "./styles/**/*"],
   },
