@@ -3,12 +3,15 @@
 import type * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
+import { motion } from "motion/react"
 import {
   Button as ButtonPrimitive,
   Link as LinkPrimitive,
   type ButtonProps as ButtonPrimitiveProps,
   type LinkProps as LinkPrimitiveProps,
 } from "react-aria-components"
+
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
 
 const buttonVariants = cva(
   "cn-button group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-all outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
@@ -51,13 +54,19 @@ function Button({
     className?: string
   }) {
   return (
-    <ButtonPrimitive
-      data-slot="button"
-      data-variant={variant}
-      data-size={size}
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
+    <motion.span
+      whileTap={{ scale: 0.96 }}
+      transition={fluidPress}
+      style={{ display: "inline-flex" }}
+    >
+      <ButtonPrimitive
+        data-slot="button"
+        data-variant={variant}
+        data-size={size}
+        className={cn(buttonVariants({ variant, size, className }))}
+        {...props}
+      />
+    </motion.span>
   )
 }
 
@@ -71,13 +80,19 @@ function LinkButton({
     className?: string
   }) {
   return (
-    <LinkPrimitive
-      data-slot="button"
-      data-variant={variant}
-      data-size={size}
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
+    <motion.span
+      whileTap={{ scale: 0.96 }}
+      transition={fluidPress}
+      style={{ display: "inline-flex" }}
+    >
+      <LinkPrimitive
+        data-slot="button"
+        data-variant={variant}
+        data-size={size}
+        className={cn(buttonVariants({ variant, size, className }))}
+        {...props}
+      />
+    </motion.span>
   )
 }
 

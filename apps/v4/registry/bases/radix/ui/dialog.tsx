@@ -8,8 +8,8 @@ import { motion, AnimatePresence } from "motion/react"
 import { Button } from "@/registry/bases/radix/ui/button"
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
-const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 }
-const fluidOverlay = { type: "spring", stiffness: 300, damping: 30, mass: 1 }
+const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
+const fluidOverlay = { type: "spring", stiffness: 300, damping: 30, mass: 1 } as const
 
 const DialogContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
 

@@ -5,7 +5,7 @@ import { cn } from "cn"
 import { Popover as PopoverPrimitive } from "radix-ui"
 import { motion, AnimatePresence } from "motion/react"
 
-const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 }
+const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
 
 const PopoverContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
 

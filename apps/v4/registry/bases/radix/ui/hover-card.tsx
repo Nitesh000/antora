@@ -5,7 +5,7 @@ import { cn } from "cn"
 import { HoverCard as HoverCardPrimitive } from "radix-ui"
 import { motion, AnimatePresence } from "motion/react"
 
-const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 }
+const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
 
 const HoverCardContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
 

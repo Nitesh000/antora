@@ -5,10 +5,12 @@ import { cn } from "cn"
 import { RadioGroup as RadioGroupPrimitive } from "radix-ui"
 import { motion, AnimatePresence } from "motion/react"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 }
-const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 }
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
+const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
 
-const RadioGroupContext = React.createContext<{ value: string }>({ value: "" })
+const RadioGroupContext = React.createContext<{ value: string | null }>({
+  value: null,
+})
 
 function RadioGroup({
   className,
@@ -17,7 +19,9 @@ function RadioGroup({
   onValueChange,
   ...props
 }: React.ComponentProps<typeof RadioGroupPrimitive.Root>) {
-  const [internalValue, setInternalValue] = React.useState(defaultValue ?? "")
+  const [internalValue, setInternalValue] = React.useState<string | null>(
+    defaultValue ?? null
+  )
   const value = controlledValue !== undefined ? controlledValue : internalValue
 
   return (

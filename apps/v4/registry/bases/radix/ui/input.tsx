@@ -4,7 +4,7 @@ import * as React from "react"
 import { cn } from "cn"
 import { motion } from "motion/react"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 }
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
 
 function Input({ className, type, ...props }: React.ComponentProps<typeof motion.input>) {
   return (

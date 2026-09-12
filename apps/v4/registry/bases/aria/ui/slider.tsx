@@ -47,7 +47,7 @@ function Slider<T extends SliderValue = SliderValue>({
                 data-slot="slider-thumb"
                 key={index}
                 index={index}
-                className="cn-slider-thumb block shrink-0 select-none group-data-horizontal:top-[50%] group-data-vertical:left-[50%] disabled:pointer-events-none disabled:opacity-50"
+                className="cn-slider-thumb block shrink-0 scale-100 select-none transition-transform duration-200 ease-out group-data-horizontal:top-[50%] group-data-vertical:left-[50%] hover:scale-110 active:scale-125 disabled:pointer-events-none disabled:opacity-50"
               />
             ))}
           </>

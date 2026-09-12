@@ -1,7 +1,6 @@
 import { type Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-
 import { siteConfig } from "@/lib/config"
 import { Announcement } from "@/components/announcement"
 import {
@@ -11,6 +10,8 @@ import {
   PageHeaderHeading,
 } from "@/components/page-header"
 import { Button } from "@/styles/radix-luma/ui/button"
+
+import { HeroSection } from "@/components/hero-section"
 
 import { CardsDemo } from "./cards"
 
@@ -91,7 +92,7 @@ export default function IndexPage() {
           </Button>
         </PageActions>
       </PageHeader>
-      <div className="container-wrapper flex-1 p-0">
+      <HeroSection>
         <div className="container overflow-hidden md:px-0 lg:max-w-none">
           <section className="-mx-4 w-[140vw] overflow-hidden md:hidden">
             <Image
@@ -115,7 +116,7 @@ export default function IndexPage() {
             <CardsDemo />
           </section>
         </div>
-      </div>
+      </HeroSection>
     </div>
   )
 }

@@ -5,6 +5,9 @@ import { Toggle as TogglePrimitive } from "@base-ui/react/toggle"
 import { ToggleGroup as ToggleGroupPrimitive } from "@base-ui/react/toggle-group"
 import { type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
+import { motion } from "motion/react"
+
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
 
 import { toggleVariants } from "@/registry/bases/base/ui/toggle"
 
@@ -79,6 +82,9 @@ function ToggleGroupItem({
         }),
         className
       )}
+      render={
+        <motion.button whileTap={{ scale: 0.95 }} transition={fluidPress} />
+      }
       {...props}
     >
       {children}

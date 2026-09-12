@@ -6,7 +6,7 @@ import { cn } from "cn"
 import { Slot } from "radix-ui"
 import { motion } from "motion/react"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 }
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
 
 const badgeVariants = cva(
   "cn-badge group/badge inline-flex w-fit shrink-0 items-center justify-center overflow-hidden whitespace-nowrap focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none",
@@ -42,7 +42,7 @@ function Badge({
         data-slot="badge"
         data-variant={variant}
         className={cn(badgeVariants({ variant }), className)}
-        {...props}
+        {...(props as React.ComponentProps<"span">)}
       />
     )
   }

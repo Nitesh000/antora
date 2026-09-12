@@ -7,6 +7,7 @@ import { useTheme } from "next-themes"
 
 import { useMetaColor } from "@/hooks/use-meta-color"
 import { Button } from "@/registry/new-york-v4/ui/button"
+import { SpringWrap } from "@/components/spring-wrap"
 
 export const DARK_MODE_FORWARD_TYPE = "dark-mode-forward"
 
@@ -29,6 +30,7 @@ export function ModeSwitcher({
   }, [resolvedTheme, setTheme])
 
   return (
+    <SpringWrap>
     <Button
       variant={variant}
       size="icon"
@@ -56,6 +58,7 @@ export function ModeSwitcher({
       </svg>
       <span className="sr-only">Toggle theme</span>
     </Button>
+    </SpringWrap>
   )
 }
 

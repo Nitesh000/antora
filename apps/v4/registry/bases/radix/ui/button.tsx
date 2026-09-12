@@ -6,7 +6,7 @@ import { cn } from "cn"
 import { Slot } from "radix-ui"
 import { motion } from "motion/react"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 }
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
 
 const buttonVariants = cva(
   "cn-button group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-all outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
@@ -55,7 +55,7 @@ function Button({
         data-variant={variant}
         data-size={size}
         className={cn(buttonVariants({ variant, size, className }))}
-        {...props}
+        {...(props as React.ComponentProps<"button">)}
       />
     )
   }

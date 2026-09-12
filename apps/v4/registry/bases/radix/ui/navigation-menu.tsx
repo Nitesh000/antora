@@ -6,7 +6,7 @@ import { motion } from "motion/react"
 
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 }
+const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
 
 function NavigationMenu({
   className,
@@ -61,7 +61,7 @@ function NavigationMenuItem({
   )
 }
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 }
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
 
 const navigationMenuTriggerStyle = cva(
   "cn-navigation-menu-trigger group/navigation-menu-trigger inline-flex h-9 w-max items-center justify-center outline-none disabled:pointer-events-none"

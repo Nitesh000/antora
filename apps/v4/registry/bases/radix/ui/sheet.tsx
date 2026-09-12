@@ -8,8 +8,8 @@ import { motion, AnimatePresence } from "motion/react"
 import { Button } from "@/registry/bases/radix/ui/button"
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
-const fluidSheet = { type: "spring", stiffness: 350, damping: 30, mass: 1 }
-const fluidOverlay = { type: "spring", stiffness: 300, damping: 30, mass: 1 }
+const fluidSheet = { type: "spring", stiffness: 350, damping: 30, mass: 1 } as const
+const fluidOverlay = { type: "spring", stiffness: 300, damping: 30, mass: 1 } as const
 
 const SheetContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
 

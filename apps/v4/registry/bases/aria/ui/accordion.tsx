@@ -2,11 +2,13 @@
 
 import * as React from "react"
 import { cn } from "cn"
+import { motion, AnimatePresence } from "motion/react"
 import {
   DisclosurePanel as AccordionContentPrimitive,
   Heading as AccordionHeaderPrimitive,
   Disclosure as AccordionItemPrimitive,
   DisclosureGroup as AccordionPrimitive,
+  DisclosureStateContext,
   Button as AccordionTriggerPrimitive,
   type ButtonProps,
   type DisclosureGroupProps,
@@ -15,6 +17,9 @@ import {
 } from "react-aria-components"
 
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
+
+const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
 
 function Accordion({ className, ...props }: DisclosureGroupProps) {
   return (
@@ -26,13 +31,17 @@ function Accordion({ className, ...props }: DisclosureGroupProps) {
   )
 }
 
-function AccordionItem({ className, ...props }: DisclosureProps) {
+function AccordionItem({ className, children, ...props }: DisclosureProps) {
   return (
     <AccordionItemPrimitive
       data-slot="accordion-item"
       className={cn("cn-accordion-item", className)}
       {...props}
-    />
+    >
+      <motion.div layout transition={fluidLayout}>
+        {children as React.ReactNode}
+      </motion.div>
+    </AccordionItemPrimitive>
   )
 }
 
@@ -41,37 +50,44 @@ function AccordionTrigger({
   children,
   ...props
 }: Omit<ButtonProps, "children"> & { children: React.ReactNode }) {
+  const state = React.useContext(DisclosureStateContext)
+  const isOpen = state?.isExpanded ?? false
+
   return (
-    <AccordionHeaderPrimitive className="flex">
-      <AccordionTriggerPrimitive
-        slot="trigger"
-        data-slot="accordion-trigger"
-        className={cn(
-          "cn-accordion-trigger group/accordion-trigger relative flex flex-1 items-start justify-between border border-transparent transition-all outline-none disabled:pointer-events-none disabled:opacity-50",
-          className
-        )}
-        {...props}
+    <AccordionHeaderPrimitive className="flex flex-1">
+      <motion.div
+        className="flex flex-1"
+        whileTap={{ scale: 0.98 }}
+        transition={fluidPress}
       >
-        {children}
-        <IconPlaceholder
-          lucide="ChevronDownIcon"
-          tabler="IconChevronDown"
-          data-slot="accordion-trigger-icon"
-          hugeicons="ArrowDown01Icon"
-          phosphor="CaretDownIcon"
-          remixicon="RiArrowDownSLine"
-          className="cn-accordion-trigger-icon pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden"
-        />
-        <IconPlaceholder
-          lucide="ChevronUpIcon"
-          tabler="IconChevronUp"
-          data-slot="accordion-trigger-icon"
-          hugeicons="ArrowUp01Icon"
-          phosphor="CaretUpIcon"
-          remixicon="RiArrowUpSLine"
-          className="cn-accordion-trigger-icon pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline"
-        />
-      </AccordionTriggerPrimitive>
+        <AccordionTriggerPrimitive
+          slot="trigger"
+          data-slot="accordion-trigger"
+          className={cn(
+            "cn-accordion-trigger group/accordion-trigger relative flex flex-1 items-start justify-between border border-transparent outline-none disabled:pointer-events-none disabled:opacity-50",
+            className
+          )}
+          {...props}
+        >
+          {children}
+          <motion.div
+            layout
+            animate={{ rotate: isOpen ? 180 : 0 }}
+            transition={fluidLayout}
+            className="pointer-events-none shrink-0"
+          >
+            <IconPlaceholder
+              lucide="ChevronDownIcon"
+              tabler="IconChevronDown"
+              data-slot="accordion-trigger-icon"
+              hugeicons="ArrowDown01Icon"
+              phosphor="CaretDownIcon"
+              remixicon="RiArrowDownSLine"
+              className="cn-accordion-trigger-icon"
+            />
+          </motion.div>
+        </AccordionTriggerPrimitive>
+      </motion.div>
     </AccordionHeaderPrimitive>
   )
 }
@@ -81,21 +97,32 @@ function AccordionContent({
   children,
   ...props
 }: DisclosurePanelProps) {
+  const state = React.useContext(DisclosureStateContext)
+  const isOpen = state?.isExpanded ?? false
+
   return (
-    <AccordionContentPrimitive
-      data-slot="accordion-content"
-      className="cn-accordion-content h-(--disclosure-panel-height) overflow-clip transition-[height]"
-      {...props}
-    >
-      <div
-        className={cn(
-          "cn-accordion-content-inner [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4",
-          className
-        )}
-      >
-        {children}
-      </div>
-    </AccordionContentPrimitive>
+    <AnimatePresence initial={false}>
+      {isOpen && (
+        <AccordionContentPrimitive
+          data-slot="accordion-content"
+          className="cn-accordion-content overflow-hidden"
+          {...props}
+        >
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={fluidLayout}
+            className={cn(
+              "cn-accordion-content-inner [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4",
+              className
+            )}
+          >
+            {children}
+          </motion.div>
+        </AccordionContentPrimitive>
+      )}
+    </AnimatePresence>
   )
 }
 

@@ -1,8 +1,11 @@
 import { NavigationMenu as NavigationMenuPrimitive } from "@base-ui/react/navigation-menu"
 import { cva } from "class-variance-authority"
+import { motion } from "motion/react"
 import { cn } from "cn"
 
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
+
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
 
 function NavigationMenu({
   align = "start",
@@ -68,6 +71,9 @@ function NavigationMenuTrigger({
     <NavigationMenuPrimitive.Trigger
       data-slot="navigation-menu-trigger"
       className={cn(navigationMenuTriggerStyle(), "group", className)}
+      render={
+        <motion.button whileTap={{ scale: 0.98 }} transition={fluidPress} />
+      }
       {...props}
     >
       {children}{" "}
@@ -137,6 +143,9 @@ function NavigationMenuLink({
     <NavigationMenuPrimitive.Link
       data-slot="navigation-menu-link"
       className={cn("cn-navigation-menu-link", className)}
+      render={
+        <motion.a whileTap={{ scale: 0.98 }} transition={fluidPress} />
+      }
       {...props}
     />
   )

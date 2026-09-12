@@ -5,17 +5,20 @@ import { siteConfig } from "@/lib/config"
 import { Icons } from "@/components/icons"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import { Skeleton } from "@/registry/new-york-v4/ui/skeleton"
+import { SpringWrap } from "@/components/spring-wrap"
 
 export function GitHubLink() {
   return (
-    <Button asChild size="sm" variant="ghost" className="h-8 shadow-none">
-      <Link href={siteConfig.links.github} target="_blank" rel="noreferrer">
-        <Icons.gitHub />
-        <React.Suspense fallback={<Skeleton className="h-4 w-[42px]" />}>
-          <StarsCount />
-        </React.Suspense>
-      </Link>
-    </Button>
+    <SpringWrap>
+      <Button asChild size="sm" variant="ghost" className="h-8 shadow-none">
+        <Link href={siteConfig.links.github} target="_blank" rel="noreferrer">
+          <Icons.gitHub />
+          <React.Suspense fallback={<Skeleton className="h-4 w-[42px]" />}>
+            <StarsCount />
+          </React.Suspense>
+        </Link>
+      </Button>
+    </SpringWrap>
   )
 }
 

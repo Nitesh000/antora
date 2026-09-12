@@ -7,8 +7,8 @@ import { motion, AnimatePresence } from "motion/react"
 
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 }
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 }
+const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
 
 const AccordionContext = React.createContext<{
   value: string | string[]

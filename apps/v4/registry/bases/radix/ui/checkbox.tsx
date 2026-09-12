@@ -7,8 +7,8 @@ import { motion, AnimatePresence } from "motion/react"
 
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 }
-const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 }
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
+const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
 
 function Checkbox({
   className,

@@ -6,8 +6,8 @@ import { cn } from "cn"
 import { motion, AnimatePresence } from "motion/react"
 import { Tabs as TabsPrimitive } from "radix-ui"
 
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 }
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 }
+const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
 
 const TabsContext = React.createContext<{ value?: string }>({
   value: undefined,

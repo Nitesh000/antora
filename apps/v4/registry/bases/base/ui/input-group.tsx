@@ -129,7 +129,10 @@ function InputGroupInput({
 function InputGroupTextarea({
   className,
   ...props
-}: React.ComponentProps<"textarea">) {
+}: Omit<
+  React.ComponentProps<"textarea">,
+  "onDrag" | "onDragStart" | "onDragEnd" | "onAnimationStart" | "onAnimationEnd"
+>) {
   return (
     <Textarea
       data-slot="input-group-control"

@@ -4,7 +4,7 @@ import * as React from "react"
 import { cn } from "cn"
 import { motion } from "motion/react"
 
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 }
+const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
 
 function Card({
   className,

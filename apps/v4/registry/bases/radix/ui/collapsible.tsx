@@ -5,7 +5,7 @@ import { Collapsible as CollapsiblePrimitive } from "radix-ui"
 import { motion, AnimatePresence } from "motion/react"
 import { cn } from "cn"
 
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 }
+const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
 
 const CollapsibleContext = React.createContext<{ isOpen: boolean } | null>(null)
 

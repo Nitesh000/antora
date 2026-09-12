@@ -3,12 +3,15 @@
 import * as React from "react"
 import { type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
+import { motion } from "motion/react"
 import {
   ToggleButtonGroup as ToggleGroupPrimitive,
   ToggleButton as TogglePrimitive,
   type ToggleButtonGroupProps,
   type ToggleButtonProps,
 } from "react-aria-components"
+
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
 
 import { toggleVariants } from "@/registry/bases/aria/ui/toggle"
 
@@ -73,23 +76,29 @@ function ToggleGroupItem({
   const context = React.useContext(ToggleGroupContext)
 
   return (
-    <TogglePrimitive
-      data-slot="toggle-group-item"
-      data-variant={context.variant || variant}
-      data-size={context.size || size}
-      data-spacing={context.spacing}
-      className={cn(
-        "cn-toggle-group-item shrink-0 focus:z-10 focus-visible:z-10 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:border-l-0 group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:border-t-0 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-l group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-t",
-        toggleVariants({
-          variant: context.variant || variant,
-          size: context.size || size,
-        }),
-        className
-      )}
-      {...props}
+    <motion.span
+      whileTap={{ scale: 0.95 }}
+      transition={fluidPress}
+      style={{ display: "inline-flex" }}
     >
-      {children}
-    </TogglePrimitive>
+      <TogglePrimitive
+        data-slot="toggle-group-item"
+        data-variant={context.variant || variant}
+        data-size={context.size || size}
+        data-spacing={context.spacing}
+        className={cn(
+          "cn-toggle-group-item shrink-0 focus:z-10 focus-visible:z-10 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:border-l-0 group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:border-t-0 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-l group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-t",
+          toggleVariants({
+            variant: context.variant || variant,
+            size: context.size || size,
+          }),
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </TogglePrimitive>
+    </motion.span>
   )
 }
 

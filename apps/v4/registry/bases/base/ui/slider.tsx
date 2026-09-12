@@ -1,5 +1,8 @@
 import { Slider as SliderPrimitive } from "@base-ui/react/slider"
+import { motion } from "motion/react"
 import { cn } from "cn"
+
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
 
 function Slider({
   className,
@@ -41,6 +44,13 @@ function Slider({
             data-slot="slider-thumb"
             key={index}
             className="cn-slider-thumb block shrink-0 select-none disabled:pointer-events-none disabled:opacity-50"
+            render={
+              <motion.span
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 1.2 }}
+                transition={fluidPress}
+              />
+            }
           />
         ))}
       </SliderPrimitive.Control>

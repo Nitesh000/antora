@@ -8,7 +8,7 @@ import { motion } from "motion/react"
 
 import { toggleVariants } from "@/registry/bases/radix/ui/toggle"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 }
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
 
 const ToggleGroupContext = React.createContext<
   VariantProps<typeof toggleVariants> & {

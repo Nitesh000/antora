@@ -5,8 +5,8 @@ import { cn } from "cn"
 import { Switch as SwitchPrimitive } from "radix-ui"
 import { motion } from "motion/react"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 }
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 }
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
+const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
 
 function Switch({
   className,
