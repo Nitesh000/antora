@@ -11,6 +11,32 @@ description: Here you can find all the components available in the library. We a
 
 <ComponentsList />
 
+## Installing with the shadcn CLI
+
+Every component on this site is served from our own registry, and installs with the **stock, unmodified `shadcn` CLI** — no fork or extra tooling required. Each component's "Command" tab already gives you the full command:
+
+```bash
+npx shadcn@latest add https://antora.thecodintant.in/r/styles/radix-nova/button.json
+```
+
+If you're installing components often, you can register a shorthand once in your project's `components.json` instead of pasting full URLs:
+
+```json title="components.json"
+{
+  "registries": {
+    "@antora": "https://antora.thecodintant.in/r/styles/{name}.json"
+  }
+}
+```
+
+Then install with:
+
+```bash
+npx shadcn@latest add @antora/radix-nova/button
+```
+
+This only works after you've added the `registries` entry above — it isn't something we can enable globally, since it lives in your project's own config.
+
 ---
 
 Can't find what you need? Try the [registry directory](/docs/directory) for community-maintained components.
