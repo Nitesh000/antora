@@ -1,3 +1,5 @@
+"use client"
+
 import { Slider as SliderPrimitive } from "@base-ui/react/slider"
 import { motion } from "motion/react"
 import { cn } from "cn"

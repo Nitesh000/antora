@@ -1,3 +1,5 @@
+"use client"
+
 import { ArrowUpRightIcon } from "lucide-react"
 
 import { Badge } from "@/styles/aria-nova/ui/badge"
