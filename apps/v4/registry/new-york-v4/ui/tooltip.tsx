@@ -2,7 +2,10 @@
 
 import * as React from "react"
 import { cn } from "cn"
+import { motion, AnimatePresence } from "motion/react"
 import { Tooltip as TooltipPrimitive } from "radix-ui"
+
+const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
 
 function TooltipProvider({
   delayDuration = 0,
@@ -17,10 +20,32 @@ function TooltipProvider({
   )
 }
 
+const TooltipContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
+
 function Tooltip({
+  open: controlledOpen,
+  defaultOpen,
+  onOpenChange,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Root>) {
-  return <TooltipPrimitive.Root data-slot="tooltip" {...props} />
+  const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false)
+  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
+
+  return (
+    <TooltipContext.Provider value={{ isOpen }}>
+      <TooltipPrimitive.Root
+        data-slot="tooltip"
+        open={isOpen}
+        onOpenChange={(val) => {
+          if (controlledOpen === undefined) {
+            setInternalOpen(val)
+          }
+          onOpenChange?.(val)
+        }}
+        {...props}
+      />
+    </TooltipContext.Provider>
+  )
 }
 
 function TooltipTrigger({
@@ -35,21 +60,36 @@ function TooltipContent({
   children,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Content>) {
+  const context = React.useContext(TooltipContext)
+
   return (
-    <TooltipPrimitive.Portal>
-      <TooltipPrimitive.Content
-        data-slot="tooltip-content"
-        sideOffset={sideOffset}
-        className={cn(
-          "z-50 w-fit origin-(--radix-tooltip-content-transform-origin) animate-in rounded-md bg-foreground px-3 py-1.5 text-xs text-balance text-background fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
-          className
-        )}
-        {...props}
-      >
-        {children}
-        <TooltipPrimitive.Arrow className="z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px] bg-foreground fill-foreground" />
-      </TooltipPrimitive.Content>
-    </TooltipPrimitive.Portal>
+    <AnimatePresence>
+      {context.isOpen && (
+        <TooltipPrimitive.Portal forceMount>
+          <TooltipPrimitive.Content
+            asChild
+            forceMount
+            data-slot="tooltip-content"
+            sideOffset={sideOffset}
+            {...props}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 4 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 4 }}
+              transition={fluidPop}
+              className={cn(
+                "z-50 w-fit max-w-xs origin-(--radix-tooltip-content-transform-origin) rounded-md bg-foreground px-3 py-1.5 text-xs text-balance text-background",
+                className
+              )}
+            >
+              {children}
+              <TooltipPrimitive.Arrow className="z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px] bg-foreground fill-foreground" />
+            </motion.div>
+          </TooltipPrimitive.Content>
+        </TooltipPrimitive.Portal>
+      )}
+    </AnimatePresence>
   )
 }
 

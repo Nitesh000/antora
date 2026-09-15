@@ -28,14 +28,14 @@ Legend: ✅ done this pass · ⬜ still CSS-only, needs motion · — not applic
 ## Phase 3: Spatial Overlays (Pop & Travel)
 | Component | base | aria | radix | ny |
 |---|---|---|---|---|
-| Dialog | ⬜ | ⬜ | ✅ | ✅ |
-| Sheet | ⬜ | ⬜ | ✅ | ⬜ |
-| Popover | ⬜ | ⬜ | ✅ | ⬜ |
-| Dropdown Menu | ⬜ | ⬜ | ✅ | ⬜ |
-| Context Menu | ⬜ | ⬜ | ✅ | ⬜ |
-| Hover Card | ⬜ | ⬜ | ✅ | ⬜ |
-| Tooltip | ⬜ | ⬜ | ✅ | ⬜ |
-| Command / Combobox | ⬜ | ⬜ | — | ⬜ |
+| Dialog | ✅ | ✅ (CSS spring-easing; RAC's Modal owns its own exit-detection lifecycle, forcing AnimatePresence would break focus-trap teardown) | ✅ | ✅ |
+| Sheet | ⬜ | ⬜ | ✅ | ✅ |
+| Popover | ⬜ | ⬜ | ✅ | ✅ |
+| Dropdown Menu | ⬜ | ⬜ | ✅ | ✅ (SubContent left CSS-only, matches radix precedent) |
+| Context Menu | ⬜ | ⬜ | ✅ | ✅ (SubContent left CSS-only, matches radix precedent) |
+| Hover Card | ⬜ | ⬜ | ✅ | ✅ |
+| Tooltip | ⬜ | ⬜ | ✅ | ✅ |
+| Command / Combobox | ⬜ | ⬜ | — | ✅ (CommandDialog wraps the now-animated Dialog, inherits pop/overlay springs for free) |
 | Sonner (Toast) | — | — | — | (delegated to library) |
 
 ## Phase 4: Data & Display
