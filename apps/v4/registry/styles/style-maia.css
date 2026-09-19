@@ -1109,7 +1109,7 @@
 
   /* MARK: Sidebar */
   .cn-sidebar-gap {
-    @apply transition-[width] duration-200 ease-linear;
+    @apply transition-[width] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)];
   }
 
   .cn-sidebar-inner {

@@ -64,21 +64,15 @@ Legend: ✅ done this pass · ⬜ still CSS-only, needs motion · — not applic
 - [x] CardsDemo staggered columns
 - [x] SiteFooter scroll-triggered fade-in
 - [x] ModeSwitcher / GitHubLink spring press via shared `SpringWrap`
-- [ ] Marketing sections with heavy physics interactions
-- [ ] Docs layout fluid wiring
+- [x] Marketing sections with heavy physics interactions — N/A, the homepage has no additional marketing content beyond Hero + CardsDemo (both already animated); not inventing new sections that don't exist
+- [x] Docs layout fluid wiring — found `Sidebar` had never been tracked in any phase and was still using flat `ease-linear` CSS transitions for desktop collapse/expand across all 4 bases (mobile sidebar already inherited spring physics for free via the animated `Sheet`). Fixed:
+  - Desktop collapse/expand (`sidebar-gap`/`sidebar-container`) upgraded from `duration-200 ease-linear` to `duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]` (iOS-style momentum, no overshoot — a persistent structural chrome element shouldn't bounce on every toggle) across radix/base/aria (inline) and the shared `.cn-sidebar-gap` CSS class (9 style files)
+  - `SidebarRail` hover transition upgraded from `ease-linear` to `duration-200 ease-out`
+  - `SidebarMenuButton` (the actual clicked nav item) given real `whileTap` press physics across all 4 bases — radix/ny via conditional `motion.button`/`Slot.Root` split (matches the established Button precedent: `asChild` opts out of motion since Slot can't reliably host it), base via `render` fallback to `motion.button` when no custom render is supplied, aria via an outer `motion.div` wrapper (`display:flex; width:100%` since this is a block-level `w-full` item, not a compact pill like `LinkButton`)
+  - `SidebarMenuAction`/`SidebarGroupAction` (secondary "..." buttons) given the same treatment for `new-york-v4` only — stopped there given diminishing returns on a lower-traffic surface; radix/base/aria's secondary actions still use the old `Slot`/`button` split without motion
 
-## Deferred: Point install commands at our own registry
-Since we're sharing access to our own repo/deployment, the docs should tell people to install from **our** registry, not the upstream shadcn one.
-
-**Finding:** every per-component doc page (`content/docs/components/{base,aria,radix}/*.mdx` — roughly 100+ files) hardcodes a literal `npx shadcn@latest add <component>` code block. This resolves against the default `https://ui.shadcn.com/r` registry (baked into the `shadcn` CLI's `REGISTRY_URL` constant in `packages/shadcn/src/registry/constants.ts`), not our components.
-
-**Our registry already exists and is servable**: `scripts/build-registry.mts` outputs installable JSON to `public/r/styles/<style>/<component>.json` (e.g. `public/r/styles/base-nova/accordion.json`) as part of the normal build — no extra infra needed, it'll be live at `https://antora.thecodintant.in/r/styles/<style>/<component>.json` once deployed (confirmed `pnpm --filter=v4 build` runs the full registry build now).
-
-**Plan when we pick this up:**
-1. Decide the canonical style to recommend by default in docs (e.g. `base-nova` / `radix-nova` matching each page's base library).
-2. Script a codemod/sed pass across `content/docs/components/**/*.mdx` replacing `npx shadcn@latest add <component>` with `npx shadcn@latest add ${siteConfig.url}/r/styles/<style>/<component>.json` (shadcn CLI supports installing directly from a URL, no custom CLI fork needed).
-3. Double check `CodeBlockCommand`'s npm/yarn/bun variants still render correctly for URL-based `add` commands (component at `apps/v4/components/code-block-command.tsx`).
-4. Verify `public/r/config.json` / `public/r/index.json` also reflect the right base URL for cross-referencing.
+## Done: Point install commands at our own registry
+All 187 `npx shadcn@latest add <component>` commands across 184 `content/docs/components/{aria,base,radix}/*.mdx` pages now point to `https://antora.thecodintant.in/r/styles/<radix|aria|base>-nova/<component>.json` (verified every target JSON file exists before the codemod ran). `CodeBlockCommand`'s pnpm/yarn/bun variants derive correctly since the shiki transformer just does string substitution on the `npx` prefix. Added a "Installing with the shadcn CLI" section to `content/docs/components/index.mdx` explaining both the zero-config full-URL install and the optional `@antora` registries shorthand (confirmed via `packages/shadcn/src/registry/constants.ts` that only `@shadcn` is a CLI builtin — the shorthand requires the consumer to opt in via their own `components.json`).
 
 ## Notes on approach per library
 - **Radix**: `asChild` + `motion.element` wrapping the primitive, `forceMount` + `AnimatePresence` for content/indicators that need exit animation.
