@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "motion/react"
 import { cn } from "cn"
 
 const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
+const fluidHeight = { type: "spring", stiffness: 500, damping: 45, mass: 1 } as const
 
 const CollapsibleContext = React.createContext<{ isOpen: boolean } | null>(null)
 
@@ -62,7 +63,7 @@ function CollapsibleContent({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={fluidLayout}
+            transition={fluidHeight}
             data-slot="collapsible-content"
             className={cn("overflow-hidden", className)}
           >

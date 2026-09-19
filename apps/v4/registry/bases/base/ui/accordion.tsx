@@ -8,6 +8,7 @@ import { cn } from "cn"
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
 const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
+const fluidHeight = { type: "spring", stiffness: 500, damping: 45, mass: 1 } as const
 const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
 
 const AccordionContext = React.createContext<{ value: unknown[] } | null>(
@@ -130,7 +131,7 @@ function AccordionContent({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={fluidLayout}
+            transition={fluidHeight}
             className={cn(
               "cn-accordion-content-inner [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4",
               className

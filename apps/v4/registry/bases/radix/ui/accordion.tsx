@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "motion/react"
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
 const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
+const fluidHeight = { type: "spring", stiffness: 500, damping: 45, mass: 1 } as const
 const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
 
 const AccordionContext = React.createContext<{
@@ -135,7 +136,7 @@ function AccordionContent({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={fluidLayout}
+            transition={fluidHeight}
             data-slot="accordion-content"
             className="cn-accordion-content overflow-hidden"
           >

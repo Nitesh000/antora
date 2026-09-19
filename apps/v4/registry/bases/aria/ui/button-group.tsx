@@ -9,9 +9,9 @@ const buttonGroupVariants = cva(
     variants: {
       orientation: {
         horizontal:
-          "cn-button-group-orientation-horizontal **:data-slot:rounded-r-none [&_[data-slot]~[data-slot]]:rounded-l-none [&_[data-slot]~[data-slot]]:border-l-0",
+          "cn-button-group-orientation-horizontal **:data-slot:rounded-r-none [&>*:not(:first-child)_[data-slot]]:rounded-l-none [&>*:not(:first-child)_[data-slot]]:border-l-0",
         vertical:
-          "cn-button-group-orientation-vertical flex-col **:data-slot:rounded-b-none [&_[data-slot]~[data-slot]]:rounded-t-none [&_[data-slot]~[data-slot]]:border-t-0",
+          "cn-button-group-orientation-vertical flex-col **:data-slot:rounded-b-none [&>*:not(:first-child)_[data-slot]]:rounded-t-none [&>*:not(:first-child)_[data-slot]]:border-t-0",
       },
     },
     defaultVariants: {

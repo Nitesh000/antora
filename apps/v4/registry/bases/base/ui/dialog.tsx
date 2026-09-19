@@ -5,11 +5,12 @@ import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 import { cn } from "cn"
 import { motion, AnimatePresence } from "motion/react"
 
-import { Button } from "@/registry/bases/base/ui/button"
+import { buttonVariants } from "@/registry/bases/base/ui/button"
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
 const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
 const fluidOverlay = { type: "spring", stiffness: 300, damping: 30, mass: 1 } as const
+const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
 
 const DialogContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
 
@@ -113,12 +114,14 @@ function DialogContent({
               <DialogPrimitive.Close
                 data-slot="dialog-close"
                 render={
-                  <Button
-                    variant="ghost"
-                    className="cn-dialog-close"
-                    size="icon-sm"
+                  <motion.button
+                    whileTap={{ scale: 0.96, transition: fluidPress }}
                   />
                 }
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "icon-sm" }),
+                  "cn-dialog-close"
+                )}
               >
                 <IconPlaceholder
                   lucide="XIcon"

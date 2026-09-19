@@ -14,6 +14,7 @@ import {
 import { cn } from "cn"
 
 const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
+const fluidHeight = { type: "spring", stiffness: 500, damping: 45, mass: 1 } as const
 
 function Collapsible({ ...props }: DisclosureProps) {
   return <CollapsiblePrimitive data-slot="collapsible" {...props} />
@@ -48,7 +49,7 @@ function CollapsibleContent({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={fluidLayout}
+            transition={fluidHeight}
             className={cn("overflow-hidden", className)}
           >
             {children}
