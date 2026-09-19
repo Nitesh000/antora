@@ -51,7 +51,7 @@ function SheetOverlay({
       data-slot="sheet-overlay"
       isDismissable
       className={cn(
-        "cn-sheet-overlay fixed inset-0 z-50 transition-opacity duration-150 data-entering:opacity-0 data-exiting:opacity-0",
+        "cn-sheet-overlay fixed inset-0 z-50 transition-opacity data-entering:opacity-0 data-entering:duration-300 data-entering:ease-out data-exiting:opacity-0 data-exiting:duration-200 data-exiting:ease-in",
         className
       )}
       {...props}
@@ -80,7 +80,7 @@ function Sheet({
         data-slot="sheet-content"
         data-side={side}
         className={cn(
-          "cn-sheet-content data-entering:opacity-0 data-exiting:opacity-0 data-[side=bottom]:data-entering:translate-y-[2.5rem] data-[side=bottom]:data-exiting:translate-y-[2.5rem] data-[side=left]:data-entering:translate-x-[-2.5rem] data-[side=left]:data-exiting:translate-x-[-2.5rem] data-[side=right]:data-entering:translate-x-[2.5rem] data-[side=right]:data-exiting:translate-x-[2.5rem] data-[side=top]:data-entering:translate-y-[-2.5rem] data-[side=top]:data-exiting:translate-y-[-2.5rem]",
+          "cn-sheet-content transition-[transform,opacity] data-entering:opacity-0 data-entering:duration-300 data-entering:ease-[cubic-bezier(0.34,1.56,0.64,1)] data-exiting:opacity-0 data-exiting:duration-200 data-exiting:ease-in data-[side=bottom]:data-entering:translate-y-full data-[side=bottom]:data-exiting:translate-y-full data-[side=left]:data-entering:-translate-x-full data-[side=left]:data-exiting:-translate-x-full data-[side=right]:data-entering:translate-x-full data-[side=right]:data-exiting:translate-x-full data-[side=top]:data-entering:-translate-y-full data-[side=top]:data-exiting:-translate-y-full",
           className
         )}
       >

@@ -3,9 +3,36 @@
 import * as React from "react"
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover"
 import { cn } from "cn"
+import { motion, AnimatePresence } from "motion/react"
 
-function Popover({ ...props }: PopoverPrimitive.Root.Props) {
-  return <PopoverPrimitive.Root data-slot="popover" {...props} />
+const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
+
+const PopoverContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
+
+function Popover({
+  open: controlledOpen,
+  defaultOpen,
+  onOpenChange,
+  ...props
+}: PopoverPrimitive.Root.Props) {
+  const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false)
+  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
+
+  return (
+    <PopoverContext.Provider value={{ isOpen }}>
+      <PopoverPrimitive.Root
+        data-slot="popover"
+        open={isOpen}
+        onOpenChange={(val, eventDetails) => {
+          if (controlledOpen === undefined) {
+            setInternalOpen(val)
+          }
+          onOpenChange?.(val, eventDetails)
+        }}
+        {...props}
+      />
+    </PopoverContext.Provider>
+  )
 }
 
 function PopoverTrigger({ ...props }: PopoverPrimitive.Trigger.Props) {
@@ -24,25 +51,39 @@ function PopoverContent({
     PopoverPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
   >) {
+  const context = React.useContext(PopoverContext)
+
   return (
-    <PopoverPrimitive.Portal>
-      <PopoverPrimitive.Positioner
-        align={align}
-        alignOffset={alignOffset}
-        side={side}
-        sideOffset={sideOffset}
-        className="isolate z-50"
-      >
-        <PopoverPrimitive.Popup
-          data-slot="popover-content"
-          className={cn(
-            "cn-popover-content cn-popover-content-logical z-50 w-72 origin-(--transform-origin) outline-hidden",
-            className
-          )}
-          {...props}
-        />
-      </PopoverPrimitive.Positioner>
-    </PopoverPrimitive.Portal>
+    <AnimatePresence>
+      {context.isOpen && (
+        <PopoverPrimitive.Portal>
+          <PopoverPrimitive.Positioner
+            align={align}
+            alignOffset={alignOffset}
+            side={side}
+            sideOffset={sideOffset}
+            className="isolate z-50"
+          >
+            <PopoverPrimitive.Popup
+              data-slot="popover-content"
+              render={
+                <motion.div
+                  initial={{ scale: 0.95, opacity: 0, y: 4 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  exit={{ scale: 0.95, opacity: 0, y: 4 }}
+                  transition={fluidPop}
+                />
+              }
+              className={cn(
+                "cn-popover-content cn-popover-content-logical z-50 w-72 origin-(--transform-origin) outline-hidden",
+                className
+              )}
+              {...props}
+            />
+          </PopoverPrimitive.Positioner>
+        </PopoverPrimitive.Portal>
+      )}
+    </AnimatePresence>
   )
 }
 

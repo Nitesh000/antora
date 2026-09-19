@@ -2,14 +2,40 @@
 
 import * as React from "react"
 import { cn } from "cn"
+import { motion, AnimatePresence } from "motion/react"
 import { AlertDialog as AlertDialogPrimitive } from "radix-ui"
 
 import { Button } from "@/registry/new-york-v4/ui/button"
 
+const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
+const fluidOverlay = { type: "spring", stiffness: 300, damping: 30, mass: 1 } as const
+
+const AlertDialogContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
+
 function AlertDialog({
+  open: controlledOpen,
+  defaultOpen,
+  onOpenChange,
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Root>) {
-  return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />
+  const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false)
+  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
+
+  return (
+    <AlertDialogContext.Provider value={{ isOpen }}>
+      <AlertDialogPrimitive.Root
+        data-slot="alert-dialog"
+        open={isOpen}
+        onOpenChange={(val) => {
+          if (controlledOpen === undefined) {
+            setInternalOpen(val)
+          }
+          onOpenChange?.(val)
+        }}
+        {...props}
+      />
+    </AlertDialogContext.Provider>
+  )
 }
 
 function AlertDialogTrigger({
@@ -32,15 +58,26 @@ function AlertDialogOverlay({
   className,
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Overlay>) {
+  const context = React.useContext(AlertDialogContext)
   return (
-    <AlertDialogPrimitive.Overlay
-      data-slot="alert-dialog-overlay"
-      className={cn(
-        "fixed inset-0 z-50 bg-black/50 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0",
-        className
+    <AnimatePresence>
+      {context.isOpen && (
+        <AlertDialogPrimitive.Overlay
+          asChild
+          forceMount
+          data-slot="alert-dialog-overlay"
+          {...props}
+        >
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={fluidOverlay}
+            className={cn("fixed inset-0 z-50 bg-black/50", className)}
+          />
+        </AlertDialogPrimitive.Overlay>
       )}
-      {...props}
-    />
+    </AnimatePresence>
   )
 }
 
@@ -51,18 +88,33 @@ function AlertDialogContent({
 }: React.ComponentProps<typeof AlertDialogPrimitive.Content> & {
   size?: "default" | "sm"
 }) {
+  const context = React.useContext(AlertDialogContext)
+
   return (
     <AlertDialogPortal>
       <AlertDialogOverlay />
-      <AlertDialogPrimitive.Content
-        data-slot="alert-dialog-content"
-        data-size={size}
-        className={cn(
-          "group/alert-dialog-content fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 data-[size=sm]:max-w-xs data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[size=default]:sm:max-w-lg",
-          className
+      <AnimatePresence>
+        {context.isOpen && (
+          <AlertDialogPrimitive.Content
+            asChild
+            forceMount
+            data-slot="alert-dialog-content"
+            data-size={size}
+            {...props}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: "-50%", x: "-50%" }}
+              animate={{ scale: 1, opacity: 1, y: "-50%", x: "-50%" }}
+              exit={{ scale: 0.95, opacity: 0, y: "-50%", x: "-50%" }}
+              transition={fluidPop}
+              className={cn(
+                "group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] gap-4 rounded-lg border bg-background p-6 shadow-lg data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-lg",
+                className
+              )}
+            />
+          </AlertDialogPrimitive.Content>
         )}
-        {...props}
-      />
+      </AnimatePresence>
     </AlertDialogPortal>
   )
 }

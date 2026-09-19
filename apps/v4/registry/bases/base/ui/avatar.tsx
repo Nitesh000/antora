@@ -3,6 +3,9 @@
 import * as React from "react"
 import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar"
 import { cn } from "cn"
+import { motion } from "motion/react"
+
+const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
 
 function Avatar({
   className,
@@ -28,6 +31,13 @@ function AvatarImage({ className, ...props }: AvatarPrimitive.Image.Props) {
   return (
     <AvatarPrimitive.Image
       data-slot="avatar-image"
+      render={
+        <motion.img
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={fluidPop}
+        />
+      }
       className={cn(
         "cn-avatar-image aspect-square size-full object-cover",
         className
@@ -44,6 +54,13 @@ function AvatarFallback({
   return (
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
+      render={
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={fluidPop}
+        />
+      }
       className={cn(
         "cn-avatar-fallback flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs",
         className

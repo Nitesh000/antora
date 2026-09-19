@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Combobox as ComboboxPrimitive } from "@base-ui/react"
 import { cn } from "cn"
+import { motion, AnimatePresence } from "motion/react"
 
 import { Button } from "@/registry/bases/base/ui/button"
 import {
@@ -13,7 +14,34 @@ import {
 } from "@/registry/bases/base/ui/input-group"
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
-const Combobox = ComboboxPrimitive.Root
+const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
+
+const ComboboxContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
+
+function Combobox<Value, Multiple extends boolean | undefined = false>({
+  open: controlledOpen,
+  defaultOpen,
+  onOpenChange,
+  ...props
+}: React.ComponentProps<typeof ComboboxPrimitive.Root<Value, Multiple>>) {
+  const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false)
+  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
+
+  return (
+    <ComboboxContext.Provider value={{ isOpen }}>
+      <ComboboxPrimitive.Root
+        open={isOpen}
+        onOpenChange={(val, eventDetails) => {
+          if (controlledOpen === undefined) {
+            setInternalOpen(val)
+          }
+          onOpenChange?.(val, eventDetails)
+        }}
+        {...props}
+      />
+    </ComboboxContext.Provider>
+  )
+}
 
 function ComboboxValue({ ...props }: ComboboxPrimitive.Value.Props) {
   return <ComboboxPrimitive.Value data-slot="combobox-value" {...props} />
@@ -111,27 +139,41 @@ function ComboboxContent({
     ComboboxPrimitive.Positioner.Props,
     "side" | "align" | "sideOffset" | "alignOffset" | "anchor"
   >) {
+  const context = React.useContext(ComboboxContext)
+
   return (
-    <ComboboxPrimitive.Portal>
-      <ComboboxPrimitive.Positioner
-        side={side}
-        sideOffset={sideOffset}
-        align={align}
-        alignOffset={alignOffset}
-        anchor={anchor}
-        className="isolate z-50"
-      >
-        <ComboboxPrimitive.Popup
-          data-slot="combobox-content"
-          data-chips={!!anchor}
-          className={cn(
-            "cn-combobox-content cn-combobox-content-logical cn-menu-target cn-menu-translucent group/combobox-content relative max-h-(--available-height) w-(--anchor-width) max-w-(--available-width) min-w-[calc(var(--anchor-width)+--spacing(7))] origin-(--transform-origin) data-[chips=true]:min-w-(--anchor-width)",
-            className
-          )}
-          {...props}
-        />
-      </ComboboxPrimitive.Positioner>
-    </ComboboxPrimitive.Portal>
+    <AnimatePresence>
+      {context.isOpen && (
+        <ComboboxPrimitive.Portal>
+          <ComboboxPrimitive.Positioner
+            side={side}
+            sideOffset={sideOffset}
+            align={align}
+            alignOffset={alignOffset}
+            anchor={anchor}
+            className="isolate z-50"
+          >
+            <ComboboxPrimitive.Popup
+              data-slot="combobox-content"
+              data-chips={!!anchor}
+              render={
+                <motion.div
+                  initial={{ scale: 0.95, opacity: 0, y: 4 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  exit={{ scale: 0.95, opacity: 0, y: 4 }}
+                  transition={fluidPop}
+                />
+              }
+              className={cn(
+                "cn-combobox-content cn-combobox-content-logical cn-menu-target cn-menu-translucent group/combobox-content relative max-h-(--available-height) w-(--anchor-width) max-w-(--available-width) min-w-[calc(var(--anchor-width)+--spacing(7))] origin-(--transform-origin) data-[chips=true]:min-w-(--anchor-width)",
+                className
+              )}
+              {...props}
+            />
+          </ComboboxPrimitive.Positioner>
+        </ComboboxPrimitive.Portal>
+      )}
+    </AnimatePresence>
   )
 }
 

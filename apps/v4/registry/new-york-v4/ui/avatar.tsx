@@ -2,7 +2,10 @@
 
 import * as React from "react"
 import { cn } from "cn"
+import { motion } from "motion/react"
 import { Avatar as AvatarPrimitive } from "radix-ui"
+
+const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
 
 function Avatar({
   className,
@@ -29,11 +32,14 @@ function AvatarImage({
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
   return (
-    <AvatarPrimitive.Image
-      data-slot="avatar-image"
-      className={cn("aspect-square size-full", className)}
-      {...props}
-    />
+    <AvatarPrimitive.Image asChild data-slot="avatar-image" {...props}>
+      <motion.img
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={fluidPop}
+        className={cn("aspect-square size-full", className)}
+      />
+    </AvatarPrimitive.Image>
   )
 }
 
@@ -42,14 +48,17 @@ function AvatarFallback({
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {
   return (
-    <AvatarPrimitive.Fallback
-      data-slot="avatar-fallback"
-      className={cn(
-        "flex size-full items-center justify-center rounded-full bg-muted text-sm text-muted-foreground group-data-[size=sm]/avatar:text-xs",
-        className
-      )}
-      {...props}
-    />
+    <AvatarPrimitive.Fallback asChild data-slot="avatar-fallback" {...props}>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={fluidPop}
+        className={cn(
+          "flex size-full items-center justify-center rounded-full bg-muted text-sm text-muted-foreground group-data-[size=sm]/avatar:text-xs",
+          className
+        )}
+      />
+    </AvatarPrimitive.Fallback>
   )
 }
 

@@ -3,11 +3,38 @@
 import * as React from "react"
 import { Menu as MenuPrimitive } from "@base-ui/react/menu"
 import { cn } from "cn"
+import { motion, AnimatePresence } from "motion/react"
 
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
-function DropdownMenu({ ...props }: MenuPrimitive.Root.Props) {
-  return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />
+const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
+
+const DropdownMenuContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
+
+function DropdownMenu({
+  open: controlledOpen,
+  defaultOpen,
+  onOpenChange,
+  ...props
+}: MenuPrimitive.Root.Props) {
+  const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false)
+  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
+
+  return (
+    <DropdownMenuContext.Provider value={{ isOpen }}>
+      <MenuPrimitive.Root
+        data-slot="dropdown-menu"
+        open={isOpen}
+        onOpenChange={(val, eventDetails) => {
+          if (controlledOpen === undefined) {
+            setInternalOpen(val)
+          }
+          onOpenChange?.(val, eventDetails)
+        }}
+        {...props}
+      />
+    </DropdownMenuContext.Provider>
+  )
 }
 
 function DropdownMenuPortal({ ...props }: MenuPrimitive.Portal.Props) {
@@ -30,25 +57,39 @@ function DropdownMenuContent({
     MenuPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
   >) {
+  const context = React.useContext(DropdownMenuContext)
+
   return (
-    <MenuPrimitive.Portal>
-      <MenuPrimitive.Positioner
-        className="isolate z-50 outline-none"
-        align={align}
-        alignOffset={alignOffset}
-        side={side}
-        sideOffset={sideOffset}
-      >
-        <MenuPrimitive.Popup
-          data-slot="dropdown-menu-content"
-          className={cn(
-            "cn-dropdown-menu-content cn-dropdown-menu-content-logical cn-menu-target cn-menu-translucent z-50 max-h-(--available-height) w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto outline-none data-closed:overflow-hidden",
-            className
-          )}
-          {...props}
-        />
-      </MenuPrimitive.Positioner>
-    </MenuPrimitive.Portal>
+    <AnimatePresence>
+      {context.isOpen && (
+        <MenuPrimitive.Portal>
+          <MenuPrimitive.Positioner
+            className="isolate z-50 outline-none"
+            align={align}
+            alignOffset={alignOffset}
+            side={side}
+            sideOffset={sideOffset}
+          >
+            <MenuPrimitive.Popup
+              data-slot="dropdown-menu-content"
+              render={
+                <motion.div
+                  initial={{ scale: 0.95, opacity: 0, y: 4 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  exit={{ scale: 0.95, opacity: 0, y: 4 }}
+                  transition={fluidPop}
+                />
+              }
+              className={cn(
+                "cn-dropdown-menu-content cn-dropdown-menu-content-logical cn-menu-target cn-menu-translucent z-50 max-h-(--available-height) w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto outline-none",
+                className
+              )}
+              {...props}
+            />
+          </MenuPrimitive.Positioner>
+        </MenuPrimitive.Portal>
+      )}
+    </AnimatePresence>
   )
 }
 
@@ -138,20 +179,30 @@ function DropdownMenuSubContent({
   sideOffset = 0,
   className,
   ...props
-}: React.ComponentProps<typeof DropdownMenuContent>) {
+}: MenuPrimitive.Popup.Props &
+  Pick<
+    MenuPrimitive.Positioner.Props,
+    "align" | "alignOffset" | "side" | "sideOffset"
+  >) {
   return (
-    <DropdownMenuContent
-      data-slot="dropdown-menu-sub-content"
-      className={cn(
-        "cn-dropdown-menu-sub-content cn-menu-target cn-menu-translucent w-auto",
-        className
-      )}
-      align={align}
-      alignOffset={alignOffset}
-      side={side}
-      sideOffset={sideOffset}
-      {...props}
-    />
+    <MenuPrimitive.Portal>
+      <MenuPrimitive.Positioner
+        className="isolate z-50 outline-none"
+        align={align}
+        alignOffset={alignOffset}
+        side={side}
+        sideOffset={sideOffset}
+      >
+        <MenuPrimitive.Popup
+          data-slot="dropdown-menu-sub-content"
+          className={cn(
+            "cn-dropdown-menu-sub-content cn-menu-target cn-menu-translucent w-auto origin-(--transform-origin) outline-none data-closed:overflow-hidden",
+            className
+          )}
+          {...props}
+        />
+      </MenuPrimitive.Positioner>
+    </MenuPrimitive.Portal>
   )
 }
 

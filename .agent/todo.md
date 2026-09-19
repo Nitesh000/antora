@@ -29,31 +29,33 @@ Legend: ✅ done this pass · ⬜ still CSS-only, needs motion · — not applic
 | Component | base | aria | radix | ny |
 |---|---|---|---|---|
 | Dialog | ✅ | ✅ (CSS spring-easing; RAC's Modal owns its own exit-detection lifecycle, forcing AnimatePresence would break focus-trap teardown) | ✅ | ✅ |
-| Sheet | ⬜ | ⬜ | ✅ | ✅ |
-| Popover | ⬜ | ⬜ | ✅ | ✅ |
-| Dropdown Menu | ⬜ | ⬜ | ✅ | ✅ (SubContent left CSS-only, matches radix precedent) |
-| Context Menu | ⬜ | ⬜ | ✅ | ✅ (SubContent left CSS-only, matches radix precedent) |
-| Hover Card | ⬜ | ⬜ | ✅ | ✅ |
-| Tooltip | ⬜ | ⬜ | ✅ | ✅ |
-| Command / Combobox | ⬜ | ⬜ | — | ✅ (CommandDialog wraps the now-animated Dialog, inherits pop/overlay springs for free) |
+| Sheet | ✅ | ✅ (CSS spring-easing, same rationale as Dialog) | ✅ | ✅ |
+| Popover | ✅ | ✅ (CSS spring-easing) | ✅ | ✅ |
+| Dropdown Menu | ✅ (SubContent kept CSS-only — it reused the animated Content internally, which broke since Submenu's own open state isn't in the top-level context; unrolled into a standalone impl) | ✅ (CSS spring-easing; also added missing entrance/exit animation to SubContent, which previously had no animate-in/out at all) | ✅ | ✅ (SubContent left CSS-only, matches radix precedent) |
+| Context Menu | ✅ (same SubContent fix as Dropdown Menu) | ✅ (CSS spring-easing + SubContent entrance/exit added) | ✅ | ✅ (SubContent left CSS-only, matches radix precedent) |
+| Hover Card | ✅ | ✅ (CSS spring-easing) | ✅ | ✅ |
+| Tooltip | ✅ | ✅ (CSS spring-easing; also added missing duration, previously had animate-in/out but no timing) | ✅ | ✅ |
+| Command / Combobox | ✅ (CommandDialog inherits Dialog springs for free; Combobox popup wrapped in its own AnimatePresence + fluidPop) | ✅ (CommandDialog inherits Dialog CSS springs for free; Combobox popup gets CSS spring-easing) | ✅ (uses Base UI Combobox primitive under the hood — same treatment as `base`) | ✅ (Combobox popup wrapped in AnimatePresence + fluidPop; CommandDialog inherits Dialog springs) |
 | Sonner (Toast) | — | — | — | (delegated to library) |
+
+**Phase 3 complete across all 4 bases.**
 
 ## Phase 4: Data & Display
 | Component | base | aria | radix | ny |
 |---|---|---|---|---|
-| Avatar | ⬜ | ⬜ | — | ⬜ |
-| Breadcrumb | ⬜ | ⬜ | — | ⬜ |
-| Calendar | ⬜ | ⬜ | — | ⬜ |
-| Carousel | ⬜ | ⬜ | — | ⬜ |
-| Pagination | ⬜ | ⬜ | — | ⬜ |
-| Resizable | ⬜ | ⬜ | — | ⬜ |
-| Scroll Area | ⬜ | ⬜ | — | ⬜ |
-| Separator | ⬜ | ⬜ | — | ⬜ |
-| Table | ⬜ | ⬜ | — | ⬜ |
-| Skeleton | ⬜ | ⬜ | — | ⬜ |
-| Progress | ⬜ | ⬜ | ✅ | ⬜ |
-| Spinner | ⬜ | ⬜ | — | ⬜ |
-| Alert / Alert Dialog | ⬜ | ⬜ | — | ⬜ |
+| Avatar | ✅ (Image/Fallback via `render` + fade-scale pop) | ✅ (hand-rolled img/div, animated directly via load-state) | ✅ (Image/Fallback via `asChild` + fade-scale pop) | ✅ |
+| Breadcrumb | skipped — pure static links, no interactive state; forcing `"use client"` for zero real motion isn't worth losing RSC compatibility | | | |
+| Calendar | ✅ (nav + day cells reuse animated Button) | ✅ (nav reuses Button; day cells got `active:scale-90` CSS since RAC CalendarCell can't be `motion`-wrapped without breaking date semantics) | ✅ (reuses Button) | ✅ (reuses Button) |
+| Carousel | ✅ (nav buttons reuse animated Button; track itself intentionally left to Embla — fighting its own transform engine with Motion would break drag) | ✅ | ✅ | ✅ |
+| Pagination | ✅ (reuses Button via asChild) | ✅ (LinkButton already had press physics) | ✅ (reuses Button via asChild) | ✅ (was rendering a static `buttonVariants()` class string on a raw `<a>` — upgraded to real `Button asChild`, matching radix) |
+| Resizable | ✅ (CSS-only hover/active grip scale — the drag itself must stay 1:1 with the pointer, so no spring physics on the actual resize, matching the library's own guidance to use plain hover/active styles) | ✅ | ✅ | ✅ |
+| Scroll Area | ✅ (thumb tracks the pointer 1:1 during drag — no spring; added a subtle hover/active color-deepen instead) | ✅ | ✅ | ✅ |
+| Separator | skipped — purely decorative, no interactive state to animate |
+| Table | skipped — rows already use appropriate CSS `hover:` transitions; no discrete state change that would benefit from spring physics |
+| Skeleton | skipped — needs a continuous ambient CSS pulse, not physics triggered by a state change; CSS is the correct tool here |
+| Progress | ✅ (CSS spring-easing on width — Base UI's Indicator computes+re-applies its own inline `width` style every render, which would fight a Motion-controlled width; safer to keep CSS here) | ✅ (indicator is our own plain `<span>`, no library-owned style merge, so real spring motion applies safely) | ✅ | ✅ |
+| Spinner | skipped — CSS rotation is the correct tool for a continuous loading indicator, not spring physics |
+| Alert / Alert Dialog | ✅ | ✅ (CSS spring-easing, same rationale as Dialog) | ✅ | ✅ |
 
 ## Phase 5: Site Build & Homepage UIs
 - [x] Homepage hero: staggered entrance (header, badge, heading, description, CTAs, cards) with spring physics

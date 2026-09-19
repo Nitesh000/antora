@@ -2,12 +2,15 @@
 
 import * as React from "react"
 import { cn } from "cn"
+import { motion } from "motion/react"
 import {
   Label as LabelPrimitive,
   ProgressBar as ProgressPrimitive,
   type LabelProps,
   type ProgressBarProps as ProgressPrimitiveProps,
 } from "react-aria-components"
+
+const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
 
 type ProgressContextValue = {
   percentage?: number
@@ -91,19 +94,17 @@ function ProgressTrack({ className, ...props }: React.ComponentProps<"span">) {
 
 function ProgressIndicator({
   className,
-  style,
   ...props
 }: React.ComponentProps<"span">) {
   const { percentage, isIndeterminate } = useProgress()
 
   return (
-    <span
+    <motion.span
       data-slot="progress-indicator"
-      className={cn("cn-progress-indicator h-full transition-all", className)}
-      style={{
-        ...style,
-        width: `${isIndeterminate ? 100 : (percentage ?? 0)}%`,
-      }}
+      className={cn("cn-progress-indicator h-full", className)}
+      initial={false}
+      animate={{ width: `${isIndeterminate ? 100 : (percentage ?? 0)}%` }}
+      transition={fluidLayout}
       {...props}
     />
   )

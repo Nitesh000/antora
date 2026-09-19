@@ -2,6 +2,9 @@
 
 import * as React from "react"
 import { cn } from "cn"
+import { motion } from "motion/react"
+
+const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
 
 function Avatar({
   className,
@@ -30,12 +33,19 @@ function AvatarImage({ className, ...props }: React.ComponentProps<"img">) {
     props.src ? "loading" : "error"
   )
   return (
-    <img
+    <motion.img
       data-slot="avatar-image"
       alt={props.alt || ""}
       data-state={state}
       onLoad={() => setState("loaded")}
       onError={() => setState("error")}
+      initial={false}
+      animate={
+        state === "loaded"
+          ? { opacity: 1, scale: 1 }
+          : { opacity: 0, scale: 0.9 }
+      }
+      transition={fluidPop}
       className={cn(
         "cn-avatar-image peer aspect-square size-full object-cover data-[state=error]:hidden",
         className
@@ -47,8 +57,11 @@ function AvatarImage({ className, ...props }: React.ComponentProps<"img">) {
 
 function AvatarFallback({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div
+    <motion.div
       data-slot="avatar-fallback"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={fluidPop}
       className={cn(
         "cn-avatar-fallback flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs peer-data-[state=error]:flex peer-[*]:hidden",
         className

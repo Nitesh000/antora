@@ -3,11 +3,26 @@
 import * as React from "react"
 import { ContextMenu as ContextMenuPrimitive } from "@base-ui/react/context-menu"
 import { cn } from "cn"
+import { motion, AnimatePresence } from "motion/react"
 
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
+const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
+
+const ContextMenuContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
+
 function ContextMenu({ ...props }: ContextMenuPrimitive.Root.Props) {
-  return <ContextMenuPrimitive.Root data-slot="context-menu" {...props} />
+  const [isOpen, setIsOpen] = React.useState(false)
+
+  return (
+    <ContextMenuContext.Provider value={{ isOpen }}>
+      <ContextMenuPrimitive.Root
+        data-slot="context-menu"
+        onOpenChange={setIsOpen}
+        {...props}
+      />
+    </ContextMenuContext.Provider>
+  )
 }
 
 function ContextMenuPortal({ ...props }: ContextMenuPrimitive.Portal.Props) {
@@ -41,25 +56,39 @@ function ContextMenuContent({
     ContextMenuPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
   >) {
+  const context = React.useContext(ContextMenuContext)
+
   return (
-    <ContextMenuPrimitive.Portal>
-      <ContextMenuPrimitive.Positioner
-        className="isolate z-50 outline-none"
-        align={align}
-        alignOffset={alignOffset}
-        side={side}
-        sideOffset={sideOffset}
-      >
-        <ContextMenuPrimitive.Popup
-          data-slot="context-menu-content"
-          className={cn(
-            "cn-context-menu-content cn-context-menu-content-logical cn-menu-target cn-menu-translucent z-50 max-h-(--available-height) origin-(--transform-origin) overflow-x-hidden overflow-y-auto outline-none",
-            className
-          )}
-          {...props}
-        />
-      </ContextMenuPrimitive.Positioner>
-    </ContextMenuPrimitive.Portal>
+    <AnimatePresence>
+      {context.isOpen && (
+        <ContextMenuPrimitive.Portal>
+          <ContextMenuPrimitive.Positioner
+            className="isolate z-50 outline-none"
+            align={align}
+            alignOffset={alignOffset}
+            side={side}
+            sideOffset={sideOffset}
+          >
+            <ContextMenuPrimitive.Popup
+              data-slot="context-menu-content"
+              render={
+                <motion.div
+                  initial={{ scale: 0.95, opacity: 0, y: 4 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  exit={{ scale: 0.95, opacity: 0, y: 4 }}
+                  transition={fluidPop}
+                />
+              }
+              className={cn(
+                "cn-context-menu-content cn-context-menu-content-logical cn-menu-target cn-menu-translucent z-50 max-h-(--available-height) origin-(--transform-origin) overflow-x-hidden overflow-y-auto outline-none",
+                className
+              )}
+              {...props}
+            />
+          </ContextMenuPrimitive.Positioner>
+        </ContextMenuPrimitive.Portal>
+      )}
+    </AnimatePresence>
   )
 }
 
@@ -147,15 +176,36 @@ function ContextMenuSubTrigger({
 }
 
 function ContextMenuSubContent({
+  className,
+  align = "start",
+  alignOffset = -3,
+  side = "right",
+  sideOffset = 0,
   ...props
-}: React.ComponentProps<typeof ContextMenuContent>) {
+}: ContextMenuPrimitive.Popup.Props &
+  Pick<
+    ContextMenuPrimitive.Positioner.Props,
+    "align" | "alignOffset" | "side" | "sideOffset"
+  >) {
   return (
-    <ContextMenuContent
-      data-slot="context-menu-sub-content"
-      className="cn-context-menu-subcontent cn-menu-target cn-menu-translucent"
-      side="right"
-      {...props}
-    />
+    <ContextMenuPrimitive.Portal>
+      <ContextMenuPrimitive.Positioner
+        className="isolate z-50 outline-none"
+        align={align}
+        alignOffset={alignOffset}
+        side={side}
+        sideOffset={sideOffset}
+      >
+        <ContextMenuPrimitive.Popup
+          data-slot="context-menu-sub-content"
+          className={cn(
+            "cn-context-menu-subcontent cn-menu-target cn-menu-translucent origin-(--transform-origin) outline-none",
+            className
+          )}
+          {...props}
+        />
+      </ContextMenuPrimitive.Positioner>
+    </ContextMenuPrimitive.Portal>
   )
 }
 

@@ -32,7 +32,7 @@ import {
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
 const cellVariants = cva(
-  "group/day relative mt-2 aspect-square h-full w-full cursor-default rounded-(--cell-radius) p-0 text-center select-none [&:is(:last-child>[data-selected=true])>div]:rounded-r-(--cell-radius)",
+  "group/day relative mt-2 aspect-square h-full w-full cursor-default rounded-(--cell-radius) p-0 text-center select-none transition-transform duration-150 ease-out active:scale-90 [&:is(:last-child>[data-selected=true])>div]:rounded-r-(--cell-radius)",
   {
     variants: {
       showWeekNumber: {

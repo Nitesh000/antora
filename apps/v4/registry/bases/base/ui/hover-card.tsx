@@ -1,10 +1,38 @@
 "use client"
 
+import * as React from "react"
 import { PreviewCard as PreviewCardPrimitive } from "@base-ui/react/preview-card"
 import { cn } from "cn"
+import { motion, AnimatePresence } from "motion/react"
 
-function HoverCard({ ...props }: PreviewCardPrimitive.Root.Props) {
-  return <PreviewCardPrimitive.Root data-slot="hover-card" {...props} />
+const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
+
+const HoverCardContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
+
+function HoverCard({
+  open: controlledOpen,
+  defaultOpen,
+  onOpenChange,
+  ...props
+}: PreviewCardPrimitive.Root.Props) {
+  const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false)
+  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
+
+  return (
+    <HoverCardContext.Provider value={{ isOpen }}>
+      <PreviewCardPrimitive.Root
+        data-slot="hover-card"
+        open={isOpen}
+        onOpenChange={(val, eventDetails) => {
+          if (controlledOpen === undefined) {
+            setInternalOpen(val)
+          }
+          onOpenChange?.(val, eventDetails)
+        }}
+        {...props}
+      />
+    </HoverCardContext.Provider>
+  )
 }
 
 function HoverCardTrigger({ ...props }: PreviewCardPrimitive.Trigger.Props) {
@@ -25,25 +53,39 @@ function HoverCardContent({
     PreviewCardPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
   >) {
+  const context = React.useContext(HoverCardContext)
+
   return (
-    <PreviewCardPrimitive.Portal data-slot="hover-card-portal">
-      <PreviewCardPrimitive.Positioner
-        align={align}
-        alignOffset={alignOffset}
-        side={side}
-        sideOffset={sideOffset}
-        className="isolate z-50"
-      >
-        <PreviewCardPrimitive.Popup
-          data-slot="hover-card-content"
-          className={cn(
-            "cn-hover-card-content cn-hover-card-content-logical z-50 origin-(--transform-origin) outline-hidden",
-            className
-          )}
-          {...props}
-        />
-      </PreviewCardPrimitive.Positioner>
-    </PreviewCardPrimitive.Portal>
+    <AnimatePresence>
+      {context.isOpen && (
+        <PreviewCardPrimitive.Portal data-slot="hover-card-portal">
+          <PreviewCardPrimitive.Positioner
+            align={align}
+            alignOffset={alignOffset}
+            side={side}
+            sideOffset={sideOffset}
+            className="isolate z-50"
+          >
+            <PreviewCardPrimitive.Popup
+              data-slot="hover-card-content"
+              render={
+                <motion.div
+                  initial={{ scale: 0.95, opacity: 0, y: 4 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  exit={{ scale: 0.95, opacity: 0, y: 4 }}
+                  transition={fluidPop}
+                />
+              }
+              className={cn(
+                "cn-hover-card-content cn-hover-card-content-logical z-50 origin-(--transform-origin) outline-hidden",
+                className
+              )}
+              {...props}
+            />
+          </PreviewCardPrimitive.Positioner>
+        </PreviewCardPrimitive.Portal>
+      )}
+    </AnimatePresence>
   )
 }
 
