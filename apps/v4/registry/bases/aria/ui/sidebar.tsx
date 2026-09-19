@@ -430,11 +430,13 @@ function SidebarGroupAction({
   ...props
 }: React.ComponentProps<"button">) {
   return (
-    <button
+    <motion.button
+      whileTap={{ scale: 0.9 }}
+      transition={fluidPress}
       data-slot="sidebar-group-action"
       data-sidebar="group-action"
       className={cn(
-        "cn-sidebar-group-action flex aspect-square items-center justify-center outline-hidden transition-transform group-data-[collapsible=icon]:hidden after:absolute after:-inset-2 md:after:hidden [&>svg]:shrink-0",
+        "cn-sidebar-group-action flex aspect-square items-center justify-center outline-hidden group-data-[collapsible=icon]:hidden after:absolute after:-inset-2 md:after:hidden [&>svg]:shrink-0",
         className
       )}
       {...props}

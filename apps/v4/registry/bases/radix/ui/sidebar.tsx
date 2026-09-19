@@ -427,17 +427,30 @@ function SidebarGroupAction({
   asChild = false,
   ...props
 }: React.ComponentProps<"button"> & { asChild?: boolean }) {
-  const Comp = asChild ? Slot.Root : "button"
+  const sharedClassName = cn(
+    "cn-sidebar-group-action flex aspect-square items-center justify-center outline-hidden group-data-[collapsible=icon]:hidden after:absolute after:-inset-2 md:after:hidden [&>svg]:shrink-0",
+    className
+  )
+
+  if (asChild) {
+    return (
+      <Slot.Root
+        data-slot="sidebar-group-action"
+        data-sidebar="group-action"
+        className={sharedClassName}
+        {...props}
+      />
+    )
+  }
 
   return (
-    <Comp
+    <motion.button
+      whileTap={{ scale: 0.9 }}
+      transition={fluidPress}
       data-slot="sidebar-group-action"
       data-sidebar="group-action"
-      className={cn(
-        "cn-sidebar-group-action flex aspect-square items-center justify-center outline-hidden transition-transform group-data-[collapsible=icon]:hidden after:absolute after:-inset-2 md:after:hidden [&>svg]:shrink-0",
-        className
-      )}
-      {...props}
+      className={sharedClassName}
+      {...(props as React.ComponentProps<typeof motion.button>)}
     />
   )
 }
@@ -568,19 +581,32 @@ function SidebarMenuAction({
   asChild?: boolean
   showOnHover?: boolean
 }) {
-  const Comp = asChild ? Slot.Root : "button"
+  const sharedClassName = cn(
+    "cn-sidebar-menu-action flex items-center justify-center outline-hidden group-data-[collapsible=icon]:hidden after:absolute after:-inset-2 md:after:hidden [&>svg]:shrink-0",
+    showOnHover &&
+      "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 peer-data-active/menu-button:text-sidebar-accent-foreground aria-expanded:opacity-100 md:opacity-0",
+    className
+  )
+
+  if (asChild) {
+    return (
+      <Slot.Root
+        data-slot="sidebar-menu-action"
+        data-sidebar="menu-action"
+        className={sharedClassName}
+        {...props}
+      />
+    )
+  }
 
   return (
-    <Comp
+    <motion.button
+      whileTap={{ scale: 0.9 }}
+      transition={fluidPress}
       data-slot="sidebar-menu-action"
       data-sidebar="menu-action"
-      className={cn(
-        "cn-sidebar-menu-action flex items-center justify-center outline-hidden transition-transform group-data-[collapsible=icon]:hidden after:absolute after:-inset-2 md:after:hidden [&>svg]:shrink-0",
-        showOnHover &&
-          "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 peer-data-active/menu-button:text-sidebar-accent-foreground aria-expanded:opacity-100 md:opacity-0",
-        className
-      )}
-      {...props}
+      className={sharedClassName}
+      {...(props as React.ComponentProps<typeof motion.button>)}
     />
   )
 }

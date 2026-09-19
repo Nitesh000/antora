@@ -75,21 +75,28 @@ function ToggleGroupItem({
 }: ToggleButtonProps & VariantProps<typeof toggleVariants>) {
   const context = React.useContext(ToggleGroupContext)
 
+  const resolvedVariant = context.variant || variant
+  const seamless = context.spacing === 0 && resolvedVariant === "outline"
+
   return (
     <motion.span
       whileTap={{ scale: 0.95 }}
       transition={fluidPress}
       style={{ display: "inline-flex" }}
+      className={cn(
+        seamless &&
+          "group-data-horizontal/toggle-group:[&:not(:first-child)]:-ml-px group-data-vertical/toggle-group:[&:not(:first-child)]:-mt-px"
+      )}
     >
       <TogglePrimitive
         data-slot="toggle-group-item"
-        data-variant={context.variant || variant}
+        data-variant={resolvedVariant}
         data-size={context.size || size}
         data-spacing={context.spacing}
         className={cn(
-          "cn-toggle-group-item shrink-0 focus:z-10 focus-visible:z-10 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:border-l-0 group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:border-t-0 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-l group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-t",
+          "cn-toggle-group-item shrink-0 focus:z-10 focus-visible:z-10",
           toggleVariants({
-            variant: context.variant || variant,
+            variant: resolvedVariant,
             size: context.size || size,
           }),
           className

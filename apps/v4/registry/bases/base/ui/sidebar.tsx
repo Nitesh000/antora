@@ -437,13 +437,15 @@ function SidebarGroupAction({
     props: mergeProps<"button">(
       {
         className: cn(
-          "cn-sidebar-group-action flex aspect-square items-center justify-center outline-hidden transition-transform group-data-[collapsible=icon]:hidden after:absolute after:-inset-2 md:after:hidden [&>svg]:shrink-0",
+          "cn-sidebar-group-action flex aspect-square items-center justify-center outline-hidden group-data-[collapsible=icon]:hidden after:absolute after:-inset-2 md:after:hidden [&>svg]:shrink-0",
           className
         ),
       },
       props
     ),
-    render,
+    render: render ?? (
+      <motion.button whileTap={{ scale: 0.9 }} transition={fluidPress} />
+    ),
     state: {
       slot: "sidebar-group-action",
       sidebar: "group-action",
@@ -580,7 +582,7 @@ function SidebarMenuAction({
     props: mergeProps<"button">(
       {
         className: cn(
-          "cn-sidebar-menu-action flex items-center justify-center outline-hidden transition-transform group-data-[collapsible=icon]:hidden after:absolute after:-inset-2 md:after:hidden [&>svg]:shrink-0",
+          "cn-sidebar-menu-action flex items-center justify-center outline-hidden group-data-[collapsible=icon]:hidden after:absolute after:-inset-2 md:after:hidden [&>svg]:shrink-0",
           showOnHover &&
             "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 peer-data-active/menu-button:text-sidebar-accent-foreground aria-expanded:opacity-100 md:opacity-0",
           className
@@ -588,7 +590,9 @@ function SidebarMenuAction({
       },
       props
     ),
-    render,
+    render: render ?? (
+      <motion.button whileTap={{ scale: 0.9 }} transition={fluidPress} />
+    ),
     state: {
       slot: "sidebar-menu-action",
       sidebar: "menu-action",
