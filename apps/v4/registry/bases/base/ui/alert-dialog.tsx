@@ -18,18 +18,19 @@ function AlertDialog({
   onOpenChange,
   ...props
 }: AlertDialogPrimitive.Root.Props) {
-  const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false)
+  const [internalOpen, setInternalOpen] = React.useState(
+    controlledOpen ?? defaultOpen ?? false
+  )
   const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
 
   return (
     <AlertDialogContext.Provider value={{ isOpen }}>
       <AlertDialogPrimitive.Root
         data-slot="alert-dialog"
-        open={isOpen}
+        open={controlledOpen}
+        defaultOpen={defaultOpen}
         onOpenChange={(val, eventDetails) => {
-          if (controlledOpen === undefined) {
-            setInternalOpen(val)
-          }
+          setInternalOpen(val)
           onOpenChange?.(val, eventDetails)
         }}
         {...props}

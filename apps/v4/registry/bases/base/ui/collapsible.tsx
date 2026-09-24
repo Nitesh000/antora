@@ -18,18 +18,19 @@ function Collapsible({
   onOpenChange,
   ...props
 }: CollapsiblePrimitive.Root.Props) {
-  const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false)
+  const [internalOpen, setInternalOpen] = React.useState(
+    controlledOpen ?? defaultOpen ?? false
+  )
   const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
 
   return (
     <CollapsibleContext.Provider value={{ isOpen }}>
       <CollapsiblePrimitive.Root
         data-slot="collapsible"
-        open={isOpen}
+        open={controlledOpen}
+        defaultOpen={defaultOpen}
         onOpenChange={(val, ...rest) => {
-          if (controlledOpen === undefined) {
-            setInternalOpen(val)
-          }
+          setInternalOpen(val)
           onOpenChange?.(val, ...rest)
         }}
         {...props}

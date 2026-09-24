@@ -25,7 +25,7 @@ function Accordion({
 }: React.ComponentProps<typeof AccordionPrimitive.Root>) {
   const isMultiple = props.type === "multiple"
   const [internalValue, setInternalValue] = React.useState<string | string[]>(
-    props.defaultValue ?? (isMultiple ? [] : "")
+    props.value ?? props.defaultValue ?? (isMultiple ? [] : "")
   )
 
   const value = props.value !== undefined ? props.value : internalValue
@@ -36,11 +36,8 @@ function Accordion({
         data-slot="accordion"
         className={cn("cn-accordion flex w-full flex-col", className)}
         {...(props as any)}
-        value={value}
         onValueChange={(val: any) => {
-          if (props.value === undefined) {
-            setInternalValue(val)
-          }
+          setInternalValue(val)
           ;(props as any).onValueChange?.(val)
         }}
       />

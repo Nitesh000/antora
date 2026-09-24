@@ -15,18 +15,19 @@ function HoverCard({
   onOpenChange,
   ...props
 }: PreviewCardPrimitive.Root.Props) {
-  const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false)
+  const [internalOpen, setInternalOpen] = React.useState(
+    controlledOpen ?? defaultOpen ?? false
+  )
   const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
 
   return (
     <HoverCardContext.Provider value={{ isOpen }}>
       <PreviewCardPrimitive.Root
         data-slot="hover-card"
-        open={isOpen}
+        open={controlledOpen}
+        defaultOpen={defaultOpen}
         onOpenChange={(val, eventDetails) => {
-          if (controlledOpen === undefined) {
-            setInternalOpen(val)
-          }
+          setInternalOpen(val)
           onOpenChange?.(val, eventDetails)
         }}
         {...props}

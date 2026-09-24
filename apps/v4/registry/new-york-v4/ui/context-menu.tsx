@@ -3,25 +3,10 @@
 import * as React from "react"
 import { cn } from "cn"
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
-import { motion, AnimatePresence } from "motion/react"
 import { ContextMenu as ContextMenuPrimitive } from "radix-ui"
 
-const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
-
-const ContextMenuContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
-
 function ContextMenu({ ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Root>) {
-  const [isOpen, setIsOpen] = React.useState(false)
-
-  return (
-    <ContextMenuContext.Provider value={{ isOpen }}>
-      <ContextMenuPrimitive.Root
-        data-slot="context-menu"
-        onOpenChange={setIsOpen}
-        {...props}
-      />
-    </ContextMenuContext.Provider>
-  )
+  return <ContextMenuPrimitive.Root data-slot="context-menu" {...props} />
 }
 
 function ContextMenuTrigger({
@@ -109,32 +94,17 @@ function ContextMenuContent({
   className,
   ...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.Content>) {
-  const context = React.useContext(ContextMenuContext)
-
   return (
-    <AnimatePresence>
-      {context.isOpen && (
-        <ContextMenuPrimitive.Portal forceMount>
-          <ContextMenuPrimitive.Content
-            asChild
-            forceMount
-            data-slot="context-menu-content"
-            {...props}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 4 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 4 }}
-              transition={fluidPop}
-              className={cn(
-                "z-50 max-h-(--radix-context-menu-content-available-height) min-w-[8rem] origin-(--radix-context-menu-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
-                className
-              )}
-            />
-          </ContextMenuPrimitive.Content>
-        </ContextMenuPrimitive.Portal>
-      )}
-    </AnimatePresence>
+    <ContextMenuPrimitive.Portal>
+      <ContextMenuPrimitive.Content
+        data-slot="context-menu-content"
+        className={cn(
+          "z-50 max-h-(--radix-context-menu-content-available-height) min-w-[8rem] origin-(--radix-context-menu-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:duration-200 data-[state=open]:duration-300 data-[state=closed]:ease-in data-[state=open]:ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+          className
+        )}
+        {...props}
+      />
+    </ContextMenuPrimitive.Portal>
   )
 }
 

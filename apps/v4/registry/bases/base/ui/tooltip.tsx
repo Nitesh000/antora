@@ -28,18 +28,19 @@ function Tooltip({
   onOpenChange,
   ...props
 }: TooltipPrimitive.Root.Props) {
-  const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false)
+  const [internalOpen, setInternalOpen] = React.useState(
+    controlledOpen ?? defaultOpen ?? false
+  )
   const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
 
   return (
     <TooltipContext.Provider value={{ isOpen }}>
       <TooltipPrimitive.Root
         data-slot="tooltip"
-        open={isOpen}
+        open={controlledOpen}
+        defaultOpen={defaultOpen}
         onOpenChange={(val, eventDetails) => {
-          if (controlledOpen === undefined) {
-            setInternalOpen(val)
-          }
+          setInternalOpen(val)
           onOpenChange?.(val, eventDetails)
         }}
         {...props}

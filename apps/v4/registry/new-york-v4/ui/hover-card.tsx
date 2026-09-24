@@ -2,37 +2,12 @@
 
 import * as React from "react"
 import { cn } from "cn"
-import { motion, AnimatePresence } from "motion/react"
 import { HoverCard as HoverCardPrimitive } from "radix-ui"
 
-const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
-
-const HoverCardContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
-
 function HoverCard({
-  open: controlledOpen,
-  defaultOpen,
-  onOpenChange,
   ...props
 }: React.ComponentProps<typeof HoverCardPrimitive.Root>) {
-  const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false)
-  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
-
-  return (
-    <HoverCardContext.Provider value={{ isOpen }}>
-      <HoverCardPrimitive.Root
-        data-slot="hover-card"
-        open={isOpen}
-        onOpenChange={(val) => {
-          if (controlledOpen === undefined) {
-            setInternalOpen(val)
-          }
-          onOpenChange?.(val)
-        }}
-        {...props}
-      />
-    </HoverCardContext.Provider>
-  )
+  return <HoverCardPrimitive.Root data-slot="hover-card" {...props} />
 }
 
 function HoverCardTrigger({
@@ -49,34 +24,19 @@ function HoverCardContent({
   sideOffset = 4,
   ...props
 }: React.ComponentProps<typeof HoverCardPrimitive.Content>) {
-  const context = React.useContext(HoverCardContext)
-
   return (
-    <AnimatePresence>
-      {context.isOpen && (
-        <HoverCardPrimitive.Portal data-slot="hover-card-portal" forceMount>
-          <HoverCardPrimitive.Content
-            asChild
-            forceMount
-            data-slot="hover-card-content"
-            align={align}
-            sideOffset={sideOffset}
-            {...props}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 4 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 4 }}
-              transition={fluidPop}
-              className={cn(
-                "z-50 w-64 origin-(--radix-hover-card-content-transform-origin) rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-hidden",
-                className
-              )}
-            />
-          </HoverCardPrimitive.Content>
-        </HoverCardPrimitive.Portal>
-      )}
-    </AnimatePresence>
+    <HoverCardPrimitive.Portal data-slot="hover-card-portal">
+      <HoverCardPrimitive.Content
+        data-slot="hover-card-content"
+        align={align}
+        sideOffset={sideOffset}
+        className={cn(
+          "z-50 w-64 origin-(--radix-hover-card-content-transform-origin) rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-hidden data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:duration-200 data-[state=open]:duration-300 data-[state=closed]:ease-in data-[state=open]:ease-[cubic-bezier(0.34,1.56,0.64,1)] data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+          className
+        )}
+        {...props}
+      />
+    </HoverCardPrimitive.Portal>
   )
 }
 

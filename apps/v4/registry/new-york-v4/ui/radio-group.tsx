@@ -21,20 +21,20 @@ function RadioGroup({
   ...props
 }: React.ComponentProps<typeof RadioGroupPrimitive.Root>) {
   const [internalValue, setInternalValue] = React.useState<string | null>(
-    defaultValue ?? null
+    controlledValue ?? defaultValue ?? null
   )
-  const value = controlledValue !== undefined ? controlledValue : internalValue
+  const effectiveValue =
+    controlledValue !== undefined ? controlledValue : internalValue
 
   return (
-    <RadioGroupContext.Provider value={{ value }}>
+    <RadioGroupContext.Provider value={{ value: effectiveValue }}>
       <RadioGroupPrimitive.Root
         data-slot="radio-group"
         className={cn("grid gap-3", className)}
-        value={value}
+        value={controlledValue}
+        defaultValue={defaultValue}
         onValueChange={(val) => {
-          if (controlledValue === undefined) {
-            setInternalValue(val)
-          }
+          setInternalValue(val)
           onValueChange?.(val)
         }}
         {...props}

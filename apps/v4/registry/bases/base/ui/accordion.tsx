@@ -20,7 +20,7 @@ const AccordionItemContext = React.createContext<{ isOpen: boolean } | null>(
 
 function Accordion({ className, ...props }: AccordionPrimitive.Root.Props) {
   const [internalValue, setInternalValue] = React.useState<unknown[]>(
-    props.defaultValue ?? []
+    props.value ?? props.defaultValue ?? []
   )
   const value = props.value !== undefined ? props.value : internalValue
 
@@ -30,11 +30,8 @@ function Accordion({ className, ...props }: AccordionPrimitive.Root.Props) {
         data-slot="accordion"
         className={cn("cn-accordion flex w-full flex-col", className)}
         {...props}
-        value={value}
         onValueChange={(val, ...rest) => {
-          if (props.value === undefined) {
-            setInternalValue(val)
-          }
+          setInternalValue(val)
           props.onValueChange?.(val, ...rest)
         }}
       />

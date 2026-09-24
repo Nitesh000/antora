@@ -17,8 +17,12 @@ function Checkbox({
   onCheckedChange,
   ...props
 }: CheckboxPrimitive.Root.Props) {
+  // Mirror Base UI's own checked state locally, purely to gate
+  // AnimatePresence for the indicator icon — never fed back into Root's
+  // `checked`, so Base UI remains the single source of truth (controlled
+  // or uncontrolled) instead of us re-deriving/overriding it.
   const [internalChecked, setInternalChecked] = React.useState(
-    defaultChecked ?? false
+    controlledChecked ?? defaultChecked ?? false
   )
   const isChecked =
     controlledChecked !== undefined ? controlledChecked : internalChecked
@@ -26,11 +30,10 @@ function Checkbox({
   return (
     <CheckboxPrimitive.Root
       data-slot="checkbox"
-      checked={isChecked}
+      checked={controlledChecked}
+      defaultChecked={defaultChecked}
       onCheckedChange={(val, ...rest) => {
-        if (controlledChecked === undefined) {
-          setInternalChecked(val)
-        }
+        setInternalChecked(val)
         onCheckedChange?.(val, ...rest)
       }}
       className={cn(

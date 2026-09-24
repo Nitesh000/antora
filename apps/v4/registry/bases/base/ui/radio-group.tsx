@@ -20,19 +20,25 @@ function RadioGroup({
   onValueChange,
   ...props
 }: RadioGroupPrimitive.Props) {
-  const [internalValue, setInternalValue] = React.useState(defaultValue)
-  const value = controlledValue !== undefined ? controlledValue : internalValue
+  // Mirror Base UI's own value locally, purely to gate each item's
+  // indicator AnimatePresence — never fed back into Root's `value`, so
+  // Base UI remains the single source of truth instead of us
+  // re-deriving/overriding it.
+  const [internalValue, setInternalValue] = React.useState(
+    controlledValue !== undefined ? controlledValue : defaultValue
+  )
+  const effectiveValue =
+    controlledValue !== undefined ? controlledValue : internalValue
 
   return (
-    <RadioGroupContext.Provider value={{ value }}>
+    <RadioGroupContext.Provider value={{ value: effectiveValue }}>
       <RadioGroupPrimitive
         data-slot="radio-group"
         className={cn("cn-radio-group w-full", className)}
-        value={value}
+        value={controlledValue}
+        defaultValue={defaultValue}
         onValueChange={(val, ...rest) => {
-          if (controlledValue === undefined) {
-            setInternalValue(val)
-          }
+          setInternalValue(val)
           onValueChange?.(val, ...rest)
         }}
         {...props}

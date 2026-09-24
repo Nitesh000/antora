@@ -17,18 +17,23 @@ function Checkbox({
   onCheckedChange,
   ...props
 }: React.ComponentProps<typeof CheckboxPrimitive.Root>) {
-  const [internalChecked, setInternalChecked] = React.useState<boolean | "indeterminate">(defaultChecked ?? false)
-  const isChecked = controlledChecked !== undefined ? controlledChecked : internalChecked
+  // Mirror Radix's own checked state locally, purely to gate AnimatePresence
+  // for the indicator icon — never fed back into Root's `checked`, so Radix
+  // remains the single source of truth (controlled or uncontrolled) instead
+  // of us re-deriving/overriding it.
+  const [isChecked, setIsChecked] = React.useState<boolean | "indeterminate">(
+    controlledChecked ?? defaultChecked ?? false
+  )
+  const effectiveChecked = controlledChecked !== undefined ? controlledChecked : isChecked
 
   return (
     <CheckboxPrimitive.Root
       asChild
       data-slot="checkbox"
-      checked={isChecked}
+      checked={controlledChecked}
+      defaultChecked={defaultChecked}
       onCheckedChange={(val) => {
-        if (controlledChecked === undefined) {
-          setInternalChecked(val)
-        }
+        setIsChecked(val)
         onCheckedChange?.(val)
       }}
       {...props}
@@ -41,7 +46,7 @@ function Checkbox({
         )}
       >
         <AnimatePresence>
-          {isChecked === true && (
+          {effectiveChecked === true && (
             <CheckboxPrimitive.Indicator
               asChild
               forceMount

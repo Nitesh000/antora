@@ -18,7 +18,7 @@ function Checkbox({
 }: React.ComponentProps<typeof CheckboxPrimitive.Root>) {
   const [internalChecked, setInternalChecked] = React.useState<
     boolean | "indeterminate"
-  >(defaultChecked ?? false)
+  >(controlledChecked ?? defaultChecked ?? false)
   const isChecked =
     controlledChecked !== undefined ? controlledChecked : internalChecked
 
@@ -26,11 +26,10 @@ function Checkbox({
     <CheckboxPrimitive.Root
       asChild
       data-slot="checkbox"
-      checked={isChecked}
+      checked={controlledChecked}
+      defaultChecked={defaultChecked}
       onCheckedChange={(val) => {
-        if (controlledChecked === undefined) {
-          setInternalChecked(val)
-        }
+        setInternalChecked(val)
         onCheckedChange?.(val)
       }}
       {...props}

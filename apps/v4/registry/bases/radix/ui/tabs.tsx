@@ -22,12 +22,11 @@ function Tabs({
   children,
   ...props
 }: React.ComponentProps<typeof TabsPrimitive.Root>) {
-  const [value, setValue] = React.useState(valueProp || defaultValue)
-  const isControlled = valueProp !== undefined
-  const currentValue = isControlled ? valueProp : value
+  const [value, setValue] = React.useState(valueProp ?? defaultValue)
+  const currentValue = valueProp !== undefined ? valueProp : value
 
   const handleValueChange = (val: string) => {
-    if (!isControlled) setValue(val)
+    setValue(val)
     onValueChange?.(val)
   }
 
@@ -36,7 +35,8 @@ function Tabs({
       asChild
       data-slot="tabs"
       data-orientation={orientation}
-      value={currentValue}
+      value={valueProp}
+      defaultValue={defaultValue}
       onValueChange={handleValueChange}
       {...props}
     >

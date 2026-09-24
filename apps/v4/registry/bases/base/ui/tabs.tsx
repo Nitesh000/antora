@@ -21,7 +21,9 @@ function Tabs({
   onValueChange,
   ...props
 }: TabsPrimitive.Root.Props) {
-  const [internalValue, setInternalValue] = React.useState(defaultValue)
+  const [internalValue, setInternalValue] = React.useState(
+    valueProp !== undefined ? valueProp : defaultValue
+  )
   const currentValue = valueProp !== undefined ? valueProp : internalValue
 
   return (
@@ -29,11 +31,10 @@ function Tabs({
       <TabsPrimitive.Root
         data-slot="tabs"
         data-orientation={orientation}
-        value={currentValue}
+        value={valueProp}
+        defaultValue={defaultValue}
         onValueChange={(val, ...rest) => {
-          if (valueProp === undefined) {
-            setInternalValue(val)
-          }
+          setInternalValue(val)
           onValueChange?.(val, ...rest)
         }}
         className={cn(

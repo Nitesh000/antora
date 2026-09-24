@@ -19,21 +19,25 @@ function RadioGroup({
   onValueChange,
   ...props
 }: React.ComponentProps<typeof RadioGroupPrimitive.Root>) {
+  // Mirror Radix's own value locally, purely to gate each item's indicator
+  // AnimatePresence — never fed back into Root's `value`, so Radix remains
+  // the single source of truth (controlled or uncontrolled) instead of us
+  // re-deriving/overriding it.
   const [internalValue, setInternalValue] = React.useState<string | null>(
-    defaultValue ?? null
+    controlledValue ?? defaultValue ?? null
   )
-  const value = controlledValue !== undefined ? controlledValue : internalValue
+  const effectiveValue =
+    controlledValue !== undefined ? controlledValue : internalValue
 
   return (
-    <RadioGroupContext.Provider value={{ value }}>
+    <RadioGroupContext.Provider value={{ value: effectiveValue }}>
       <RadioGroupPrimitive.Root
         data-slot="radio-group"
         className={cn("cn-radio-group w-full", className)}
-        value={value}
+        value={controlledValue}
+        defaultValue={defaultValue}
         onValueChange={(val) => {
-          if (controlledValue === undefined) {
-            setInternalValue(val)
-          }
+          setInternalValue(val)
           onValueChange?.(val)
         }}
         {...props}

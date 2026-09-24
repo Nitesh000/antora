@@ -2,37 +2,12 @@
 
 import * as React from "react"
 import { cn } from "cn"
-import { motion, AnimatePresence } from "motion/react"
 import { Popover as PopoverPrimitive } from "radix-ui"
 
-const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
-
-const PopoverContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
-
 function Popover({
-  open: controlledOpen,
-  defaultOpen,
-  onOpenChange,
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Root>) {
-  const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false)
-  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
-
-  return (
-    <PopoverContext.Provider value={{ isOpen }}>
-      <PopoverPrimitive.Root
-        data-slot="popover"
-        open={isOpen}
-        onOpenChange={(val) => {
-          if (controlledOpen === undefined) {
-            setInternalOpen(val)
-          }
-          onOpenChange?.(val)
-        }}
-        {...props}
-      />
-    </PopoverContext.Provider>
-  )
+  return <PopoverPrimitive.Root data-slot="popover" {...props} />
 }
 
 function PopoverTrigger({
@@ -47,34 +22,19 @@ function PopoverContent({
   sideOffset = 4,
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Content>) {
-  const context = React.useContext(PopoverContext)
-
   return (
-    <AnimatePresence>
-      {context.isOpen && (
-        <PopoverPrimitive.Portal forceMount>
-          <PopoverPrimitive.Content
-            asChild
-            forceMount
-            data-slot="popover-content"
-            align={align}
-            sideOffset={sideOffset}
-            {...props}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 4 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 4 }}
-              transition={fluidPop}
-              className={cn(
-                "z-50 w-72 origin-(--radix-popover-content-transform-origin) rounded-2xl border border-border/40 bg-popover p-6 text-popover-foreground shadow-[0_4px_16px_rgba(0,0,0,0.08)] outline-hidden",
-                className
-              )}
-            />
-          </PopoverPrimitive.Content>
-        </PopoverPrimitive.Portal>
-      )}
-    </AnimatePresence>
+    <PopoverPrimitive.Portal>
+      <PopoverPrimitive.Content
+        data-slot="popover-content"
+        align={align}
+        sideOffset={sideOffset}
+        className={cn(
+          "z-50 w-72 origin-(--radix-popover-content-transform-origin) rounded-2xl border border-border/40 bg-popover p-6 text-popover-foreground shadow-[0_4px_16px_rgba(0,0,0,0.08)] outline-hidden data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:duration-200 data-[state=open]:duration-300 data-[state=closed]:ease-in data-[state=open]:ease-[cubic-bezier(0.34,1.56,0.64,1)] data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+          className
+        )}
+        {...props}
+      />
+    </PopoverPrimitive.Portal>
   )
 }
 
