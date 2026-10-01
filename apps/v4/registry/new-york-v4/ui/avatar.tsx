@@ -5,7 +5,12 @@ import { cn } from "cn"
 import { motion } from "motion/react"
 import { Avatar as AvatarPrimitive } from "radix-ui"
 
-const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
+const fluidPop = {
+  type: "spring",
+  stiffness: 400,
+  damping: 25,
+  mass: 0.9,
+} as const
 
 function Avatar({
   className,
@@ -45,6 +50,7 @@ function AvatarImage({
 
 function AvatarFallback({
   className,
+  children,
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {
   return (
@@ -57,7 +63,9 @@ function AvatarFallback({
           "flex size-full items-center justify-center rounded-full bg-muted text-sm text-muted-foreground group-data-[size=sm]/avatar:text-xs",
           className
         )}
-      />
+      >
+        {children}
+      </motion.div>
     </AvatarPrimitive.Fallback>
   )
 }

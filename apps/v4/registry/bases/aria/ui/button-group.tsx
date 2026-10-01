@@ -9,9 +9,9 @@ const buttonGroupVariants = cva(
     variants: {
       orientation: {
         horizontal:
-          "cn-button-group-orientation-horizontal **:data-slot:rounded-r-none [&>*:not(:first-child)_[data-slot]]:rounded-l-none [&>*:not(:first-child)_[data-slot]]:border-l-0",
+          "cn-button-group-orientation-horizontal [&>*:not(:first-child)_[data-slot]]:rounded-l-none [&>*:not(:first-child)_[data-slot]]:border-l-0 [&>*:not(:last-child)_[data-slot]]:rounded-r-none [&>[data-slot]:not(:first-child)]:rounded-l-none [&>[data-slot]:not(:first-child)]:border-l-0 [&>[data-slot]:not(:last-child)]:rounded-r-none",
         vertical:
-          "cn-button-group-orientation-vertical flex-col **:data-slot:rounded-b-none [&>*:not(:first-child)_[data-slot]]:rounded-t-none [&>*:not(:first-child)_[data-slot]]:border-t-0",
+          "cn-button-group-orientation-vertical flex-col [&>*:not(:first-child)_[data-slot]]:rounded-t-none [&>*:not(:first-child)_[data-slot]]:border-t-0 [&>*:not(:last-child)_[data-slot]]:rounded-b-none [&>[data-slot]:not(:first-child)]:rounded-t-none [&>[data-slot]:not(:first-child)]:border-t-0 [&>[data-slot]:not(:last-child)]:rounded-b-none",
       },
     },
     defaultVariants: {

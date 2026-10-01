@@ -2,9 +2,14 @@
 
 import * as React from "react"
 import { cn } from "cn"
-import { motion } from "motion/react"
+import { motion, type HTMLMotionProps } from "motion/react"
 
-const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
+const fluidPop = {
+  type: "spring",
+  stiffness: 400,
+  damping: 25,
+  mass: 0.9,
+} as const
 
 function Avatar({
   className,
@@ -50,7 +55,7 @@ function AvatarImage({ className, ...props }: React.ComponentProps<"img">) {
         "cn-avatar-image peer aspect-square size-full object-cover data-[state=error]:hidden",
         className
       )}
-      {...props}
+      {...(props as unknown as HTMLMotionProps<"img">)}
     />
   )
 }
@@ -66,7 +71,7 @@ function AvatarFallback({ className, ...props }: React.ComponentProps<"div">) {
         "cn-avatar-fallback flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs peer-data-[state=error]:flex peer-[*]:hidden",
         className
       )}
-      {...props}
+      {...(props as unknown as HTMLMotionProps<"div">)}
     />
   )
 }

@@ -3,11 +3,21 @@
 import * as React from "react"
 import { Radio as RadioPrimitive } from "@base-ui/react/radio"
 import { RadioGroup as RadioGroupPrimitive } from "@base-ui/react/radio-group"
-import { motion, AnimatePresence } from "motion/react"
 import { cn } from "cn"
+import { AnimatePresence, motion } from "motion/react"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
-const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
+const fluidPop = {
+  type: "spring",
+  stiffness: 400,
+  damping: 25,
+  mass: 0.9,
+} as const
 
 const RadioGroupContext = React.createContext<{ value: unknown }>({
   value: undefined,
@@ -63,6 +73,7 @@ function RadioGroupItem({
         "cn-radio-group-item group/radio-group-item peer relative aspect-square shrink-0 border outline-none after:absolute after:-inset-x-3 after:-inset-y-2 disabled:cursor-not-allowed disabled:opacity-50",
         className
       )}
+      nativeButton
       render={
         <motion.button whileTap={{ scale: 0.92 }} transition={fluidPress} />
       }

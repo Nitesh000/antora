@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { cn } from "cn"
-import { motion } from "motion/react"
+import { motion, type HTMLMotionProps } from "motion/react"
 import {
   Label as LabelPrimitive,
   ProgressBar as ProgressPrimitive,
@@ -10,7 +10,12 @@ import {
   type ProgressBarProps as ProgressPrimitiveProps,
 } from "react-aria-components"
 
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
+const fluidLayout = {
+  type: "spring",
+  stiffness: 500,
+  damping: 25,
+  mass: 1,
+} as const
 
 type ProgressContextValue = {
   percentage?: number
@@ -105,7 +110,7 @@ function ProgressIndicator({
       initial={false}
       animate={{ width: `${isIndeterminate ? 100 : (percentage ?? 0)}%` }}
       transition={fluidLayout}
-      {...props}
+      {...(props as unknown as HTMLMotionProps<"span">)}
     />
   )
 }

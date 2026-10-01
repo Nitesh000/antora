@@ -2,13 +2,23 @@
 
 import * as React from "react"
 import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox"
-import { motion, AnimatePresence } from "motion/react"
 import { cn } from "cn"
+import { AnimatePresence, motion } from "motion/react"
 
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
-const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
+const fluidPop = {
+  type: "spring",
+  stiffness: 400,
+  damping: 25,
+  mass: 0.9,
+} as const
 
 function Checkbox({
   className,
@@ -40,6 +50,7 @@ function Checkbox({
         "cn-checkbox peer relative shrink-0 outline-none after:absolute after:-inset-x-3 after:-inset-y-2 disabled:cursor-not-allowed disabled:opacity-50",
         className
       )}
+      nativeButton
       render={
         <motion.button whileTap={{ scale: 0.92 }} transition={fluidPress} />
       }

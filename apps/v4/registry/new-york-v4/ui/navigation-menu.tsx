@@ -7,8 +7,18 @@ import { ChevronDownIcon } from "lucide-react"
 import { motion } from "motion/react"
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui"
 
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
+const fluidLayout = {
+  type: "spring",
+  stiffness: 500,
+  damping: 25,
+  mass: 1,
+} as const
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
 
 function NavigationMenu({
   className,
@@ -120,24 +130,43 @@ function NavigationMenuViewport({
         "absolute top-full left-0 isolate z-50 flex justify-center"
       )}
     >
-      <NavigationMenuPrimitive.Viewport asChild data-slot="navigation-menu-viewport" {...props}>
-        <motion.div
-          layout
-          transition={fluidLayout}
-          className={cn(
-            "origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-2xl border border-border/40 bg-popover text-popover-foreground shadow-[0_4px_16px_rgba(0,0,0,0.08)] data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:zoom-in-90 md:w-[var(--radix-navigation-menu-viewport-width)]",
-            className
-          )}
-        />
-      </NavigationMenuPrimitive.Viewport>
+      <NavigationMenuPrimitive.Viewport
+        data-slot="navigation-menu-viewport"
+        className={cn(
+          "origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-2xl border border-border/40 bg-popover text-popover-foreground shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-[width,height] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:zoom-in-90 motion-reduce:transition-none md:w-[var(--radix-navigation-menu-viewport-width)]",
+          className
+        )}
+        {...props}
+      />
     </div>
   )
 }
 
 function NavigationMenuLink({
   className,
+  children,
+  asChild,
   ...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Link>) {
+  const linkClassName = cn(
+    "flex flex-col gap-1 rounded-sm p-2 text-sm transition-colors outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 data-[active=true]:bg-accent/50 data-[active=true]:text-accent-foreground data-[active=true]:hover:bg-accent data-[active=true]:focus:bg-accent [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground",
+    className
+  )
+
+  // Consumers passing their own element (e.g. a router Link) keep it untouched.
+  if (asChild) {
+    return (
+      <NavigationMenuPrimitive.Link
+        asChild
+        data-slot="navigation-menu-link"
+        className={linkClassName}
+        {...props}
+      >
+        {children}
+      </NavigationMenuPrimitive.Link>
+    )
+  }
+
   return (
     <NavigationMenuPrimitive.Link
       asChild
@@ -147,11 +176,10 @@ function NavigationMenuLink({
       <motion.a
         whileTap={{ scale: 0.98 }}
         transition={fluidPress}
-        className={cn(
-          "flex flex-col gap-1 rounded-sm p-2 text-sm transition-colors outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 data-[active=true]:bg-accent/50 data-[active=true]:text-accent-foreground data-[active=true]:hover:bg-accent data-[active=true]:focus:bg-accent [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground",
-          className
-        )}
-      />
+        className={linkClassName}
+      >
+        {children}
+      </motion.a>
     </NavigationMenuPrimitive.Link>
   )
 }
