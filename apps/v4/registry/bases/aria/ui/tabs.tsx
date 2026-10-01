@@ -3,7 +3,7 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
-import { motion, AnimatePresence } from "motion/react"
+import { AnimatePresence, motion } from "motion/react"
 import {
   TabList as TabListPrimitive,
   TabListStateContext,
@@ -12,8 +12,18 @@ import {
   Tabs as TabsPrimitive,
 } from "react-aria-components"
 
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
+const fluidLayout = {
+  type: "spring",
+  stiffness: 500,
+  damping: 25,
+  mass: 1,
+} as const
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
 
 function Tabs({
   className,
@@ -81,6 +91,7 @@ function TabsTrigger({
     >
       {(renderProps) => (
         <motion.span
+          tabIndex={-1}
           className="relative inline-flex items-center justify-center gap-1.5"
           whileTap={{ scale: 0.98 }}
           transition={fluidPress}

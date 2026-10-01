@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "cn"
-import { motion, AnimatePresence } from "motion/react"
+import { AnimatePresence, motion } from "motion/react"
 import {
   composeRenderProps,
   RadioGroup as RadioGroupPrimitive,
@@ -10,8 +10,18 @@ import {
   type RadioProps,
 } from "react-aria-components"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
-const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
+const fluidPop = {
+  type: "spring",
+  stiffness: 400,
+  damping: 25,
+  mass: 0.9,
+} as const
 
 function RadioGroup({ className, ...props }: RadioGroupProps) {
   return (
@@ -26,6 +36,7 @@ function RadioGroup({ className, ...props }: RadioGroupProps) {
 function RadioGroupItem({ className, children, ...props }: RadioProps) {
   return (
     <motion.span
+      tabIndex={-1}
       whileTap={{ scale: 0.92 }}
       transition={fluidPress}
       style={{ display: "inline-flex" }}

@@ -8,8 +8,18 @@ import {
   type SwitchProps as SwitchPrimitiveProps,
 } from "react-aria-components"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
+const fluidLayout = {
+  type: "spring",
+  stiffness: 500,
+  damping: 25,
+  mass: 1,
+} as const
 
 function Switch({
   className,
@@ -21,6 +31,7 @@ function Switch({
 }) {
   return (
     <motion.span
+      tabIndex={-1}
       whileTap={{ scale: 0.95 }}
       transition={fluidPress}
       style={{ display: "inline-flex" }}

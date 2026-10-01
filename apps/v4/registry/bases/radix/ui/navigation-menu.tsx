@@ -3,12 +3,17 @@
 import * as React from "react"
 import { cva } from "class-variance-authority"
 import { cn } from "cn"
-import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui"
 import { motion } from "motion/react"
+import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui"
 
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
+const fluidLayout = {
+  type: "spring",
+  stiffness: 500,
+  damping: 25,
+  mass: 1,
+} as const
 
 function NavigationMenu({
   className,
@@ -63,7 +68,12 @@ function NavigationMenuItem({
   )
 }
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
 
 const navigationMenuTriggerStyle = cva(
   "cn-navigation-menu-trigger group/navigation-menu-trigger inline-flex h-9 w-max items-center justify-center outline-none disabled:pointer-events-none"
@@ -126,27 +136,39 @@ function NavigationMenuViewport({
       )}
     >
       <NavigationMenuPrimitive.Viewport
-        asChild
         data-slot="navigation-menu-viewport"
+        className={cn(
+          "cn-navigation-menu-viewport origin-top-center relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden transition-[width,height] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none md:w-(--radix-navigation-menu-viewport-width)",
+          className
+        )}
         {...props}
-      >
-        <motion.div
-          layout
-          transition={fluidLayout}
-          className={cn(
-            "cn-navigation-menu-viewport origin-top-center relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden md:w-(--radix-navigation-menu-viewport-width)",
-            className
-          )}
-        />
-      </NavigationMenuPrimitive.Viewport>
+      />
     </div>
   )
 }
 
 function NavigationMenuLink({
   className,
+  children,
+  asChild,
   ...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Link>) {
+  const linkClassName = cn("cn-navigation-menu-link cursor-pointer", className)
+
+  // Consumers passing their own element (e.g. a router Link) keep it untouched.
+  if (asChild) {
+    return (
+      <NavigationMenuPrimitive.Link
+        asChild
+        data-slot="navigation-menu-link"
+        className={linkClassName}
+        {...props}
+      >
+        {children}
+      </NavigationMenuPrimitive.Link>
+    )
+  }
+
   return (
     <NavigationMenuPrimitive.Link
       asChild
@@ -155,9 +177,9 @@ function NavigationMenuLink({
     >
       <motion.a
         whileTap={{ scale: 0.98, transition: fluidPress }}
-        className={cn("cn-navigation-menu-link cursor-pointer", className)}
+        className={linkClassName}
       >
-        {props.children}
+        {children}
       </motion.a>
     </NavigationMenuPrimitive.Link>
   )

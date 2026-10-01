@@ -3,41 +3,12 @@
 import * as React from "react"
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog"
 import { cn } from "cn"
-import { motion, AnimatePresence } from "motion/react"
 
 import { Button } from "@/registry/bases/base/ui/button"
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
-const fluidSheet = { type: "spring", stiffness: 350, damping: 30, mass: 1 } as const
-const fluidOverlay = { type: "spring", stiffness: 300, damping: 30, mass: 1 } as const
-
-const SheetContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
-
-function Sheet({
-  open: controlledOpen,
-  defaultOpen,
-  onOpenChange,
-  ...props
-}: SheetPrimitive.Root.Props) {
-  const [internalOpen, setInternalOpen] = React.useState(
-    controlledOpen ?? defaultOpen ?? false
-  )
-  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
-
-  return (
-    <SheetContext.Provider value={{ isOpen }}>
-      <SheetPrimitive.Root
-        data-slot="sheet"
-        open={controlledOpen}
-        defaultOpen={defaultOpen}
-        onOpenChange={(val, eventDetails) => {
-          setInternalOpen(val)
-          onOpenChange?.(val, eventDetails)
-        }}
-        {...props}
-      />
-    </SheetContext.Provider>
-  )
+function Sheet({ ...props }: SheetPrimitive.Root.Props) {
+  return <SheetPrimitive.Root data-slot="sheet" {...props} />
 }
 
 function SheetTrigger({ ...props }: SheetPrimitive.Trigger.Props) {
@@ -49,29 +20,19 @@ function SheetClose({ ...props }: SheetPrimitive.Close.Props) {
 }
 
 function SheetPortal({ ...props }: SheetPrimitive.Portal.Props) {
-  return <SheetPrimitive.Portal data-slot="sheet-portal" keepMounted {...props} />
+  return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />
 }
 
 function SheetOverlay({ className, ...props }: SheetPrimitive.Backdrop.Props) {
-  const context = React.useContext(SheetContext)
   return (
-    <AnimatePresence>
-      {context.isOpen && (
-        <SheetPrimitive.Backdrop
-          data-slot="sheet-overlay"
-          render={
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={fluidOverlay}
-            />
-          }
-          className={cn("cn-sheet-overlay fixed inset-0 z-50", className)}
-          {...props}
-        />
+    <SheetPrimitive.Backdrop
+      data-slot="sheet-overlay"
+      className={cn(
+        "cn-sheet-overlay fixed inset-0 z-50 transition-opacity duration-300 ease-out motion-reduce:transition-none data-ending-style:opacity-0 data-ending-style:duration-200 data-starting-style:opacity-0",
+        className
       )}
-    </AnimatePresence>
+      {...props}
+    />
   )
 }
 
@@ -85,59 +46,41 @@ function SheetContent({
   side?: "top" | "right" | "bottom" | "left"
   showCloseButton?: boolean
 }) {
-  const context = React.useContext(SheetContext)
-
-  const slideVariants = {
-    top: { y: "-100%" },
-    bottom: { y: "100%" },
-    left: { x: "-100%" },
-    right: { x: "100%" },
-  }
-
   return (
     <SheetPortal>
       <SheetOverlay />
-      <AnimatePresence>
-        {context.isOpen && (
-          <SheetPrimitive.Popup
-            data-slot="sheet-content"
-            data-side={side}
+      <SheetPrimitive.Popup
+        data-slot="sheet-content"
+        data-side={side}
+        className={cn(
+          "cn-sheet-content transition-[translate,opacity] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none data-ending-style:duration-200 data-ending-style:ease-in data-ending-style:opacity-0 data-starting-style:opacity-0 data-[side=bottom]:data-ending-style:translate-y-full data-[side=bottom]:data-starting-style:translate-y-full data-[side=left]:data-ending-style:-translate-x-full data-[side=left]:data-starting-style:-translate-x-full data-[side=right]:data-ending-style:translate-x-full data-[side=right]:data-starting-style:translate-x-full data-[side=top]:data-ending-style:-translate-y-full data-[side=top]:data-starting-style:-translate-y-full",
+          className
+        )}
+        {...props}
+      >
+        {children}
+        {showCloseButton && (
+          <SheetPrimitive.Close
+            data-slot="sheet-close"
             render={
-              <motion.div
-                initial={{ ...slideVariants[side], opacity: 0 }}
-                animate={{ x: 0, y: 0, opacity: 1 }}
-                exit={{ ...slideVariants[side], opacity: 0 }}
-                transition={fluidSheet}
+              <Button
+                variant="ghost"
+                className="cn-sheet-close"
+                size="icon-sm"
               />
             }
-            className={cn("cn-sheet-content", className)}
-            {...props}
           >
-            {children}
-            {showCloseButton && (
-              <SheetPrimitive.Close
-                data-slot="sheet-close"
-                render={
-                  <Button
-                    variant="ghost"
-                    className="cn-sheet-close"
-                    size="icon-sm"
-                  />
-                }
-              >
-                <IconPlaceholder
-                  lucide="XIcon"
-                  tabler="IconX"
-                  hugeicons="Cancel01Icon"
-                  phosphor="XIcon"
-                  remixicon="RiCloseLine"
-                />
-                <span className="sr-only">Close</span>
-              </SheetPrimitive.Close>
-            )}
-          </SheetPrimitive.Popup>
+            <IconPlaceholder
+              lucide="XIcon"
+              tabler="IconX"
+              hugeicons="Cancel01Icon"
+              phosphor="XIcon"
+              remixicon="RiCloseLine"
+            />
+            <span className="sr-only">Close</span>
+          </SheetPrimitive.Close>
         )}
-      </AnimatePresence>
+      </SheetPrimitive.Popup>
     </SheetPortal>
   )
 }

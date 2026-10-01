@@ -3,7 +3,7 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
-import { motion } from "motion/react"
+import { motion, type HTMLMotionProps } from "motion/react"
 import {
   Button as ButtonPrimitive,
   Link as LinkPrimitive,
@@ -25,7 +25,12 @@ import { Skeleton } from "@/registry/bases/aria/ui/skeleton"
 import { Tooltip, TooltipTrigger } from "@/registry/bases/aria/ui/tooltip"
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -439,7 +444,7 @@ function SidebarGroupAction({
         "cn-sidebar-group-action flex aspect-square items-center justify-center outline-hidden group-data-[collapsible=icon]:hidden after:absolute after:-inset-2 md:after:hidden [&>svg]:shrink-0",
         className
       )}
-      {...props}
+      {...(props as unknown as HTMLMotionProps<"button">)}
     />
   )
 }
@@ -515,6 +520,7 @@ function SidebarMenuButton({
   const { isMobile, state } = useSidebar()
   const comp = (
     <motion.div
+      tabIndex={-1}
       whileTap={{ scale: 0.98 }}
       transition={fluidPress}
       style={{ display: "flex", width: "100%" }}
