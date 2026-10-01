@@ -3,40 +3,11 @@
 import * as React from "react"
 import { AlertDialog as AlertDialogPrimitive } from "@base-ui/react/alert-dialog"
 import { cn } from "cn"
-import { motion, AnimatePresence } from "motion/react"
 
 import { Button } from "@/registry/bases/base/ui/button"
 
-const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
-const fluidOverlay = { type: "spring", stiffness: 300, damping: 30, mass: 1 } as const
-
-const AlertDialogContext = React.createContext<{ isOpen: boolean }>({ isOpen: false })
-
-function AlertDialog({
-  open: controlledOpen,
-  defaultOpen,
-  onOpenChange,
-  ...props
-}: AlertDialogPrimitive.Root.Props) {
-  const [internalOpen, setInternalOpen] = React.useState(
-    controlledOpen ?? defaultOpen ?? false
-  )
-  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
-
-  return (
-    <AlertDialogContext.Provider value={{ isOpen }}>
-      <AlertDialogPrimitive.Root
-        data-slot="alert-dialog"
-        open={controlledOpen}
-        defaultOpen={defaultOpen}
-        onOpenChange={(val, eventDetails) => {
-          setInternalOpen(val)
-          onOpenChange?.(val, eventDetails)
-        }}
-        {...props}
-      />
-    </AlertDialogContext.Provider>
-  )
+function AlertDialog({ ...props }: AlertDialogPrimitive.Root.Props) {
+  return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />
 }
 
 function AlertDialogTrigger({ ...props }: AlertDialogPrimitive.Trigger.Props) {
@@ -47,11 +18,7 @@ function AlertDialogTrigger({ ...props }: AlertDialogPrimitive.Trigger.Props) {
 
 function AlertDialogPortal({ ...props }: AlertDialogPrimitive.Portal.Props) {
   return (
-    <AlertDialogPrimitive.Portal
-      data-slot="alert-dialog-portal"
-      keepMounted
-      {...props}
-    />
+    <AlertDialogPrimitive.Portal data-slot="alert-dialog-portal" {...props} />
   )
 }
 
@@ -59,25 +26,15 @@ function AlertDialogOverlay({
   className,
   ...props
 }: AlertDialogPrimitive.Backdrop.Props) {
-  const context = React.useContext(AlertDialogContext)
   return (
-    <AnimatePresence>
-      {context.isOpen && (
-        <AlertDialogPrimitive.Backdrop
-          data-slot="alert-dialog-overlay"
-          render={
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={fluidOverlay}
-            />
-          }
-          className={cn("cn-alert-dialog-overlay fixed inset-0 isolate z-50", className)}
-          {...props}
-        />
+    <AlertDialogPrimitive.Backdrop
+      data-slot="alert-dialog-overlay"
+      className={cn(
+        "cn-alert-dialog-overlay fixed inset-0 isolate z-50 data-open:animate-in data-open:fade-in-0 data-open:duration-200 data-open:ease-out data-closed:animate-out data-closed:fade-out-0 data-closed:duration-150 data-closed:ease-in motion-reduce:animate-none motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
+        className
       )}
-    </AnimatePresence>
+      {...props}
+    />
   )
 }
 
@@ -88,32 +45,18 @@ function AlertDialogContent({
 }: AlertDialogPrimitive.Popup.Props & {
   size?: "default" | "sm"
 }) {
-  const context = React.useContext(AlertDialogContext)
-
   return (
     <AlertDialogPortal>
       <AlertDialogOverlay />
-      <AnimatePresence>
-        {context.isOpen && (
-          <AlertDialogPrimitive.Popup
-            data-slot="alert-dialog-content"
-            data-size={size}
-            render={
-              <motion.div
-                initial={{ scale: 0.95, opacity: 0, y: "-50%", x: "-50%" }}
-                animate={{ scale: 1, opacity: 1, y: "-50%", x: "-50%" }}
-                exit={{ scale: 0.95, opacity: 0, y: "-50%", x: "-50%" }}
-                transition={fluidPop}
-              />
-            }
-            className={cn(
-              "cn-alert-dialog-content group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 outline-none",
-              className
-            )}
-            {...props}
-          />
+      <AlertDialogPrimitive.Popup
+        data-slot="alert-dialog-content"
+        data-size={size}
+        className={cn(
+          "cn-alert-dialog-content group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 outline-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-open:duration-200 data-open:ease-[cubic-bezier(0.32,0.72,0,1)] data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-closed:duration-150 data-closed:ease-in motion-reduce:animate-none motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
+          className
         )}
-      </AnimatePresence>
+        {...props}
+      />
     </AlertDialogPortal>
   )
 }
