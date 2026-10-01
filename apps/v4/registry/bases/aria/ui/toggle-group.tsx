@@ -11,9 +11,14 @@ import {
   type ToggleButtonProps,
 } from "react-aria-components"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
-
 import { toggleVariants } from "@/registry/bases/aria/ui/toggle"
+
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
 
 const ToggleGroupContext = React.createContext<
   VariantProps<typeof toggleVariants> & {
@@ -80,6 +85,7 @@ function ToggleGroupItem({
 
   return (
     <motion.span
+      tabIndex={-1}
       whileTap={{ scale: 0.95 }}
       transition={fluidPress}
       style={{ display: "inline-flex" }}

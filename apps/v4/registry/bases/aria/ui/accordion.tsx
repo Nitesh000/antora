@@ -2,14 +2,14 @@
 
 import * as React from "react"
 import { cn } from "cn"
-import { motion, AnimatePresence } from "motion/react"
+import { AnimatePresence, motion } from "motion/react"
 import {
   DisclosurePanel as AccordionContentPrimitive,
   Heading as AccordionHeaderPrimitive,
   Disclosure as AccordionItemPrimitive,
   DisclosureGroup as AccordionPrimitive,
-  DisclosureStateContext,
   Button as AccordionTriggerPrimitive,
+  DisclosureStateContext,
   type ButtonProps,
   type DisclosureGroupProps,
   type DisclosurePanelProps,
@@ -18,9 +18,24 @@ import {
 
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
-const fluidHeight = { type: "spring", stiffness: 500, damping: 45, mass: 1 } as const
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
+const fluidLayout = {
+  type: "spring",
+  stiffness: 500,
+  damping: 25,
+  mass: 1,
+} as const
+const fluidHeight = {
+  type: "spring",
+  stiffness: 500,
+  damping: 45,
+  mass: 1,
+} as const
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
 
 function Accordion({ className, ...props }: DisclosureGroupProps) {
   return (
@@ -57,6 +72,7 @@ function AccordionTrigger({
   return (
     <AccordionHeaderPrimitive className="flex flex-1">
       <motion.div
+        tabIndex={-1}
         className="flex flex-1"
         whileTap={{ scale: 0.98 }}
         transition={fluidPress}

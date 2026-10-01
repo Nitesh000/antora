@@ -97,4 +97,27 @@ describe("overlay motion guards", () => {
     )
     expect(offenders.map((o) => o.id)).toEqual([])
   })
+  it("keeps Motion press wrappers out of the tab order in the aria base", () => {
+    // Motion's whileTap makes a non-focusable element tabbable (tabindex=0)
+    // unless a tabindex is already present. The aria wrappers sit around a
+    // React Aria control that is itself focusable, so they would add a second
+    // tab stop (and a square focus outline) per control.
+    const offenders = sources.filter(({ id, code }) => {
+      if (!id.startsWith("bases/aria/")) return false
+      for (const match of code.matchAll(/<motion\.(?:span|div)\b/g)) {
+        let depth = 0
+        let end = match.index! + match[0].length
+        for (; end < code.length; end++) {
+          const char = code[end]
+          if (char === "{") depth++
+          else if (char === "}") depth--
+          else if (char === ">" && depth === 0 && code[end - 1] !== "=") break
+        }
+        const tag = code.slice(match.index!, end)
+        if (tag.includes("whileTap") && !tag.includes("tabIndex")) return true
+      }
+      return false
+    })
+    expect(offenders.map((o) => o.id)).toEqual([])
+  })
 })

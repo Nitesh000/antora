@@ -520,6 +520,7 @@ function SidebarMenuButton({
   const { isMobile, state } = useSidebar()
   const comp = (
     <motion.div
+      tabIndex={-1}
       whileTap={{ scale: 0.98 }}
       transition={fluidPress}
       style={{ display: "flex", width: "100%" }}
