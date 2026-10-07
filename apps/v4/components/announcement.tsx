@@ -1,8 +1,8 @@
 "use client"
 
-import { motion } from "motion/react"
 import Link from "next/link"
 import { ArrowRightIcon } from "lucide-react"
+import { motion } from "motion/react"
 
 import { Badge } from "@/registry/new-york-v4/ui/badge"
 
@@ -19,7 +19,7 @@ export function Announcement() {
       initial={{ opacity: 0, y: -8, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ ...fluidPop, delay: 0.05 }}
-      whileHover={{ scale: 1.04 }}
+      tabIndex={-1}
       whileTap={{ scale: 0.96 }}
     >
       <Badge asChild variant="secondary" className="bg-muted">

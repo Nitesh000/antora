@@ -25,6 +25,19 @@ import { Skeleton } from "@/registry/bases/aria/ui/skeleton"
 import { Tooltip, TooltipTrigger } from "@/registry/bases/aria/ui/tooltip"
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
+
 const fluidPress = {
   type: "spring",
   stiffness: 600,
@@ -436,6 +449,7 @@ function SidebarGroupAction({
 }: React.ComponentProps<"button">) {
   return (
     <motion.button
+      onPointerDownCapture={setPressOrigin}
       whileTap={{ scale: 0.9 }}
       transition={fluidPress}
       data-slot="sidebar-group-action"
@@ -520,6 +534,7 @@ function SidebarMenuButton({
   const { isMobile, state } = useSidebar()
   const comp = (
     <motion.div
+      onPointerDownCapture={setPressOrigin}
       tabIndex={-1}
       whileTap={{ scale: 0.98 }}
       transition={fluidPress}

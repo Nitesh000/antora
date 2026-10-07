@@ -7,8 +7,6 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
 import { motion } from "motion/react"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
-
 import { useIsMobile } from "@/registry/bases/base/hooks/use-mobile"
 import { Button } from "@/registry/bases/base/ui/button"
 import { Input } from "@/registry/bases/base/ui/input"
@@ -27,6 +25,26 @@ import {
   TooltipTrigger,
 } from "@/registry/bases/base/ui/tooltip"
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
+
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
+
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -444,7 +462,11 @@ function SidebarGroupAction({
       props
     ),
     render: render ?? (
-      <motion.button whileTap={{ scale: 0.9 }} transition={fluidPress} />
+      <motion.button
+        onPointerDownCapture={setPressOrigin}
+        whileTap={{ scale: 0.9 }}
+        transition={fluidPress}
+      />
     ),
     state: {
       slot: "sidebar-group-action",
@@ -532,11 +554,17 @@ function SidebarMenuButton({
       },
       props
     ),
-    render: !tooltip
-      ? render ?? (
-          <motion.button whileTap={{ scale: 0.98 }} transition={fluidPress} />
-        )
-      : <TooltipTrigger render={render} />,
+    render: !tooltip ? (
+      (render ?? (
+        <motion.button
+          onPointerDownCapture={setPressOrigin}
+          whileTap={{ scale: 0.98 }}
+          transition={fluidPress}
+        />
+      ))
+    ) : (
+      <TooltipTrigger render={render} />
+    ),
     state: {
       slot: "sidebar-menu-button",
       sidebar: "menu-button",
@@ -591,7 +619,11 @@ function SidebarMenuAction({
       props
     ),
     render: render ?? (
-      <motion.button whileTap={{ scale: 0.9 }} transition={fluidPress} />
+      <motion.button
+        onPointerDownCapture={setPressOrigin}
+        whileTap={{ scale: 0.9 }}
+        transition={fluidPress}
+      />
     ),
     state: {
       slot: "sidebar-menu-action",

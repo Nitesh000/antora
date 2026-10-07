@@ -6,7 +6,25 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
 import { motion } from "motion/react"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
+
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
 
 const badgeVariants = cva(
   "cn-badge group/badge inline-flex w-fit shrink-0 items-center justify-center overflow-hidden whitespace-nowrap focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none",
@@ -46,7 +64,11 @@ function Badge({
     render:
       render ??
       (isInteractive ? (
-        <motion.span whileTap={{ scale: 0.96 }} transition={fluidPress} />
+        <motion.span
+          onPointerDownCapture={setPressOrigin}
+          whileTap={{ scale: 0.96 }}
+          transition={fluidPress}
+        />
       ) : undefined),
     state: {
       slot: "badge",

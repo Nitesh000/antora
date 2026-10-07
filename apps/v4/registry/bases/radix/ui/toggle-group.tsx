@@ -3,12 +3,30 @@
 import * as React from "react"
 import { type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
-import { ToggleGroup as ToggleGroupPrimitive } from "radix-ui"
 import { motion } from "motion/react"
+import { ToggleGroup as ToggleGroupPrimitive } from "radix-ui"
 
 import { toggleVariants } from "@/registry/bases/radix/ui/toggle"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
+
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
 
 const ToggleGroupContext = React.createContext<
   VariantProps<typeof toggleVariants> & {
@@ -78,6 +96,7 @@ function ToggleGroupItem({
       {...props}
     >
       <motion.button
+        onPointerDownCapture={setPressOrigin}
         whileTap={{ scale: 0.95, transition: fluidPress }}
         className={cn(
           "cn-toggle-group-item shrink-0 focus:z-10 focus-visible:z-10 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:border-l-0 group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:border-t-0 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-l group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-t",

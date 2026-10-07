@@ -7,8 +7,6 @@ import { PanelLeftIcon } from "lucide-react"
 import { motion } from "motion/react"
 import { Slot } from "radix-ui"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
-
 import { useIsMobile } from "@/registry/new-york-v4/hooks/use-mobile"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import { Input } from "@/registry/new-york-v4/ui/input"
@@ -27,6 +25,26 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/registry/new-york-v4/ui/tooltip"
+
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
+
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -443,6 +461,7 @@ function SidebarGroupAction({
 
   return (
     <motion.button
+      onPointerDownCapture={setPressOrigin}
       whileTap={{ scale: 0.9 }}
       transition={fluidPress}
       data-slot="sidebar-group-action"
@@ -537,6 +556,7 @@ function SidebarMenuButton({
     />
   ) : (
     <motion.button
+      onPointerDownCapture={setPressOrigin}
       whileTap={{ scale: 0.98 }}
       transition={fluidPress}
       data-slot="sidebar-menu-button"
@@ -606,6 +626,7 @@ function SidebarMenuAction({
 
   return (
     <motion.button
+      onPointerDownCapture={setPressOrigin}
       whileTap={{ scale: 0.9 }}
       transition={fluidPress}
       data-slot="sidebar-menu-action"

@@ -3,12 +3,40 @@
 import * as React from "react"
 import { cn } from "cn"
 import { ChevronDownIcon } from "lucide-react"
-import { motion, AnimatePresence } from "motion/react"
+import { AnimatePresence, motion } from "motion/react"
 import { Accordion as AccordionPrimitive } from "radix-ui"
 
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
-const fluidHeight = { type: "spring", stiffness: 500, damping: 45, mass: 1 } as const
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
+
+const fluidLayout = {
+  type: "spring",
+  stiffness: 500,
+  damping: 25,
+  mass: 1,
+} as const
+const fluidHeight = {
+  type: "spring",
+  stiffness: 500,
+  damping: 45,
+  mass: 1,
+} as const
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
 
 const AccordionContext = React.createContext<{
   value: string | string[]
@@ -57,14 +85,12 @@ function AccordionItem({
   return (
     <AccordionItemContext.Provider value={{ isOpen }}>
       <AccordionPrimitive.Item asChild value={value} {...props}>
-        <motion.div
-          layout
-          transition={fluidLayout}
+        <div
           data-slot="accordion-item"
-          className={cn("overflow-hidden border-b last:border-b-0", className)}
+          className={cn("border-b last:border-b-0", className)}
         >
           {props.children}
-        </motion.div>
+        </div>
       </AccordionPrimitive.Item>
     </AccordionItemContext.Provider>
   )
@@ -82,7 +108,7 @@ function AccordionTrigger({
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger asChild {...props}>
         <motion.button
-          layout
+          onPointerDownCapture={setPressOrigin}
           whileTap={{ scale: 0.98 }}
           transition={fluidPress}
           data-slot="accordion-trigger"
@@ -93,7 +119,6 @@ function AccordionTrigger({
         >
           {children}
           <motion.div
-            layout
             animate={{ rotate: isOpen ? 180 : 0 }}
             transition={fluidLayout}
             className="pointer-events-none shrink-0 translate-y-0.5"

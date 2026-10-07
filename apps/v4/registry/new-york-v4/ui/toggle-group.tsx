@@ -8,7 +8,25 @@ import { ToggleGroup as ToggleGroupPrimitive } from "radix-ui"
 
 import { toggleVariants } from "@/registry/new-york-v4/ui/toggle"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
+
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
 
 const ToggleGroupContext = React.createContext<
   VariantProps<typeof toggleVariants> & {
@@ -71,6 +89,7 @@ function ToggleGroupItem({
       {...props}
     >
       <motion.button
+        onPointerDownCapture={setPressOrigin}
         whileTap={{ scale: 0.95 }}
         transition={fluidPress}
         className={cn(

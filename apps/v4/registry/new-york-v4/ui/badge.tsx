@@ -6,7 +6,25 @@ import { cn } from "cn"
 import { motion } from "motion/react"
 import { Slot } from "radix-ui"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
+
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
 
 const badgeVariants = cva(
   "inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3",
@@ -53,6 +71,7 @@ function Badge({
   if (isInteractive) {
     return (
       <motion.span
+        onPointerDownCapture={setPressOrigin}
         whileTap={{ scale: 0.96 }}
         transition={fluidPress}
         data-slot="badge"

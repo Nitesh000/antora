@@ -91,7 +91,7 @@ function SelectContent({
           data-slot="select-content"
           data-align-trigger={alignItemWithTrigger}
           className={cn(
-            "cn-select-content cn-select-content-logical cn-menu-target cn-menu-translucent relative isolate z-50 max-h-(--available-height) w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto data-[align-trigger=true]:animate-none",
+            "cn-select-content cn-select-content-logical cn-menu-target cn-menu-translucent relative isolate z-50 max-h-(--available-height) w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto data-[align-trigger=true]:duration-150 data-[align-trigger=true]:slide-in-from-bottom-0! data-[align-trigger=true]:slide-in-from-left-0! data-[align-trigger=true]:slide-in-from-right-0! data-[align-trigger=true]:slide-in-from-top-0! data-[align-trigger=true]:zoom-in-100! data-[align-trigger=true]:zoom-out-100!",
             className
           )}
           {...props}

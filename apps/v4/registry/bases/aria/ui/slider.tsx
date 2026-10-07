@@ -47,7 +47,19 @@ function Slider<T extends SliderValue = SliderValue>({
                 data-slot="slider-thumb"
                 key={index}
                 index={index}
-                className="cn-slider-thumb block shrink-0 scale-100 select-none transition-transform duration-200 ease-out group-data-horizontal:top-[50%] group-data-vertical:left-[50%] hover:scale-110 active:scale-125 disabled:pointer-events-none disabled:opacity-50"
+                className="cn-slider-thumb block shrink-0 select-none group-data-horizontal:top-[50%] group-data-vertical:left-[50%] disabled:pointer-events-none disabled:opacity-50"
+                // React Aria centers the thumb with an inline `transform:
+                // translate(-50%, ...)`. A CSS `scale` utility is applied before
+                // that transform, so it scaled the translation too and the thumb
+                // slid ~2.5px up-left on hover/press. Compose it in one transform.
+                style={({ isHovered, isDragging, state }) => ({
+                  transform: `${
+                    state.orientation === "vertical"
+                      ? "translate(-50%, 50%)"
+                      : "translate(-50%, -50%)"
+                  } scale(${isDragging ? 1.25 : isHovered ? 1.1 : 1})`,
+                  transition: "transform 200ms cubic-bezier(0.32, 0.72, 0, 1)",
+                })}
               />
             ))}
           </>

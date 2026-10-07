@@ -3,11 +3,28 @@
 import * as React from "react"
 import { Tabs as TabsPrimitive } from "@base-ui/react/tabs"
 import { cva, type VariantProps } from "class-variance-authority"
-import { motion, AnimatePresence } from "motion/react"
 import { cn } from "cn"
+import { motion } from "motion/react"
 
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
+
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
 
 const TabsContext = React.createContext<{ value: unknown }>({
   value: undefined,
@@ -41,7 +58,6 @@ function Tabs({
           "cn-tabs group/tabs flex data-horizontal:flex-col",
           className
         )}
-        render={<motion.div layout transition={fluidLayout} />}
         {...props}
       />
     </TabsContext.Provider>
@@ -94,44 +110,30 @@ function TabsTrigger({ className, value, ...props }: TabsPrimitive.Tab.Props) {
         className
       )}
       render={
-        <motion.button whileTap={{ scale: 0.98 }} transition={fluidPress} />
+        <motion.button
+          onPointerDownCapture={setPressOrigin}
+          whileTap={{ scale: 0.98 }}
+          transition={fluidPress}
+        />
       }
       {...props}
     />
   )
 }
 
-function TabsContent({
-  className,
-  value,
-  children,
-  ...props
-}: TabsPrimitive.Panel.Props) {
-  const { value: activeValue } = React.useContext(TabsContext)
-  const isActive = activeValue === value
-
+function TabsContent({ className, ...props }: TabsPrimitive.Panel.Props) {
+  // Base UI unmounts inactive panels, so a mount keyframe is enough: no
+  // AnimatePresence/popLayout (which pulls the leaving panel out of flow and
+  // makes everything below it jump) and no blur filter.
   return (
-    <AnimatePresence mode="popLayout">
-      {isActive && (
-        <TabsPrimitive.Panel
-          data-slot="tabs-content"
-          value={value}
-          keepMounted
-          className="cn-tabs-content flex-1 outline-none"
-          render={
-            <motion.div
-              initial={{ opacity: 0, filter: "blur(4px)", y: 4 }}
-              animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-              exit={{ opacity: 0, filter: "blur(4px)", y: 4 }}
-              transition={fluidLayout}
-            />
-          }
-          {...props}
-        >
-          {children}
-        </TabsPrimitive.Panel>
+    <TabsPrimitive.Panel
+      data-slot="tabs-content"
+      className={cn(
+        "cn-tabs-content flex-1 animate-in duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] fade-in-0 outline-none slide-in-from-bottom-1 motion-reduce:animate-none",
+        className
       )}
-    </AnimatePresence>
+      {...props}
+    />
   )
 }
 

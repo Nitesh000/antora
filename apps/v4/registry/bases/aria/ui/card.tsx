@@ -1,20 +1,13 @@
-"use client"
-
 import * as React from "react"
 import { cn } from "cn"
-import { motion } from "motion/react"
-
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
 
 function Card({
   className,
   size = "default",
   ...props
-}: React.ComponentProps<typeof motion.div> & { size?: "default" | "sm" }) {
+}: React.ComponentProps<"div"> & { size?: "default" | "sm" }) {
   return (
-    <motion.div
-      layout
-      transition={fluidLayout}
+    <div
       data-slot="card"
       data-size={size}
       className={cn("cn-card group/card flex flex-col", className)}
@@ -23,11 +16,9 @@ function Card({
   )
 }
 
-function CardHeader({ className, ...props }: React.ComponentProps<typeof motion.div>) {
+function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <motion.div
-      layout
-      transition={fluidLayout}
+    <div
       data-slot="card-header"
       className={cn(
         "cn-card-header group/card-header @container/card-header grid auto-rows-min items-start has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto]",
@@ -38,11 +29,9 @@ function CardHeader({ className, ...props }: React.ComponentProps<typeof motion.
   )
 }
 
-function CardTitle({ className, ...props }: React.ComponentProps<typeof motion.div>) {
+function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <motion.div
-      layout
-      transition={fluidLayout}
+    <div
       data-slot="card-title"
       className={cn("cn-card-title cn-font-heading", className)}
       {...props}
@@ -50,11 +39,9 @@ function CardTitle({ className, ...props }: React.ComponentProps<typeof motion.d
   )
 }
 
-function CardDescription({ className, ...props }: React.ComponentProps<typeof motion.div>) {
+function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <motion.div
-      layout
-      transition={fluidLayout}
+    <div
       data-slot="card-description"
       className={cn("cn-card-description", className)}
       {...props}
@@ -62,11 +49,9 @@ function CardDescription({ className, ...props }: React.ComponentProps<typeof mo
   )
 }
 
-function CardAction({ className, ...props }: React.ComponentProps<typeof motion.div>) {
+function CardAction({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <motion.div
-      layout
-      transition={fluidLayout}
+    <div
       data-slot="card-action"
       className={cn(
         "cn-card-action col-start-2 row-span-2 row-start-1 self-start justify-self-end",
@@ -77,11 +62,9 @@ function CardAction({ className, ...props }: React.ComponentProps<typeof motion.
   )
 }
 
-function CardContent({ className, ...props }: React.ComponentProps<typeof motion.div>) {
+function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <motion.div
-      layout
-      transition={fluidLayout}
+    <div
       data-slot="card-content"
       className={cn("cn-card-content", className)}
       {...props}
@@ -89,11 +72,9 @@ function CardContent({ className, ...props }: React.ComponentProps<typeof motion
   )
 }
 
-function CardFooter({ className, ...props }: React.ComponentProps<typeof motion.div>) {
+function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <motion.div
-      layout
-      transition={fluidLayout}
+    <div
       data-slot="card-footer"
       className={cn("cn-card-footer flex items-center", className)}
       {...props}

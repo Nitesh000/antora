@@ -7,6 +7,19 @@ import { AnimatePresence, motion } from "motion/react"
 
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
+
 const fluidPress = {
   type: "spring",
   stiffness: 600,
@@ -52,7 +65,11 @@ function Checkbox({
       )}
       nativeButton
       render={
-        <motion.button whileTap={{ scale: 0.92 }} transition={fluidPress} />
+        <motion.button
+          onPointerDownCapture={setPressOrigin}
+          whileTap={{ scale: 0.92 }}
+          transition={fluidPress}
+        />
       }
       {...props}
     >

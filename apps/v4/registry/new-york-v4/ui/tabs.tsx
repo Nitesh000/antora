@@ -6,8 +6,9 @@ import { cn } from "cn"
 import { motion } from "motion/react"
 import { Tabs as TabsPrimitive } from "radix-ui"
 
-const TabsContext = React.createContext<{ value?: string }>({
+const TabsContext = React.createContext<{ value?: string; id: string }>({
   value: undefined,
+  id: "",
 })
 
 function Tabs({
@@ -27,6 +28,10 @@ function Tabs({
     onValueChange?.(val)
   }
 
+  // Scope the sliding indicator to this Tabs instance. A shared layoutId makes
+  // every Tabs on the page fly its indicator between lists.
+  const id = React.useId()
+
   return (
     <TabsPrimitive.Root
       data-slot="tabs"
@@ -41,7 +46,7 @@ function Tabs({
       )}
       {...props}
     >
-      <TabsContext.Provider value={{ value: currentValue }}>
+      <TabsContext.Provider value={{ value: currentValue, id }}>
         {children}
       </TabsContext.Provider>
     </TabsPrimitive.Root>
@@ -85,7 +90,7 @@ function TabsTrigger({
   value,
   ...props
 }: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
-  const { value: activeValue } = React.useContext(TabsContext)
+  const { value: activeValue, id } = React.useContext(TabsContext)
   const isActive = activeValue === value
 
   return (
@@ -101,7 +106,7 @@ function TabsTrigger({
     >
       {isActive && (
         <motion.div
-          layoutId="activeTabIndicator"
+          layoutId={`${id}-tab-indicator`}
           className="absolute inset-0 z-[-1] rounded-xl border border-border/30 bg-background shadow-sm"
           transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
         />
@@ -118,7 +123,10 @@ function TabsContent({
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
-      className={cn("mt-2 flex-1 outline-none", className)}
+      className={cn(
+        "mt-2 flex-1 outline-none data-[state=active]:animate-in data-[state=active]:duration-200 data-[state=active]:ease-[cubic-bezier(0.16,1,0.3,1)] data-[state=active]:fade-in-0 data-[state=active]:slide-in-from-bottom-1 motion-reduce:animate-none",
+        className
+      )}
       {...props}
     />
   )

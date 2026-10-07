@@ -2,13 +2,36 @@
 
 import * as React from "react"
 import { cn } from "cn"
+import { AnimatePresence, motion } from "motion/react"
 import { Checkbox as CheckboxPrimitive } from "radix-ui"
-import { motion, AnimatePresence } from "motion/react"
 
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
-const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
+
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
+const fluidPop = {
+  type: "spring",
+  stiffness: 400,
+  damping: 25,
+  mass: 0.9,
+} as const
 
 function Checkbox({
   className,
@@ -24,7 +47,8 @@ function Checkbox({
   const [isChecked, setIsChecked] = React.useState<boolean | "indeterminate">(
     controlledChecked ?? defaultChecked ?? false
   )
-  const effectiveChecked = controlledChecked !== undefined ? controlledChecked : isChecked
+  const effectiveChecked =
+    controlledChecked !== undefined ? controlledChecked : isChecked
 
   return (
     <CheckboxPrimitive.Root
@@ -39,6 +63,7 @@ function Checkbox({
       {...props}
     >
       <motion.button
+        onPointerDownCapture={setPressOrigin}
         whileTap={{ scale: 0.92, transition: fluidPress }}
         className={cn(
           "cn-checkbox peer relative shrink-0 outline-none after:absolute after:-inset-x-3 after:-inset-y-2 disabled:cursor-not-allowed disabled:opacity-50",

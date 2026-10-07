@@ -83,6 +83,17 @@ Reproduced every item below with a Playwright harness that renders the registry 
 - **base**: `nativeButton` on checkbox/switch/radio roots (Base UI warned about role/aria attributes); base `dialog.tsx` referenced `Button` while only importing `buttonVariants` (a ReferenceError for `DialogFooter showCloseButton`), fixed by the restore. new-york `dropdown-menu` label/checkbox/radio/sub-trigger now share the item's `px-4 py-2 rounded-xl` rhythm.
 - `registry/motion-guards.test.ts` statically guards the classes of bug above (double centering, elastic easing, AnimatePresence around Base UI popups, `transition-[transform]` with `translate-*`, dropped asChild children, aria tab stops).
 
+## Bug fix pass 7: click loss, layout jitter, base-to-base parity (all measured with Playwright against `examples/*`)
+A hover scan over every example page in all three bases (~1500 pages, comparing every element's layout box before/after hovering each control) found **no** hover-driven layout shifts in the registry components (only the nav menu, which opens on hover by design). The real culprits for "layout changes / jitter / click bugs" were:
+- **Lost clicks near a control's left/right edge (all 3 bases)**: a centered `whileTap` scale shrinks the hit area under the pointer, so mouseup landed on the parent and the click was dropped (`left+1` / `right-1` presses on a 106px button: LOST). Every pressed Motion element now sets `transform-origin` to the press point (`setPressOrigin`), so the point under the cursor never leaves the element. Verified `left+1 / right-1 / top+1 / bottom-1` all fire.
+- **aria Slider thumb slid ~2.5px up-left on hover/press**: a CSS `scale` utility composes before React Aria's inline `translate(-50%, -50%)`, scaling the translation too. Scale is now composed into one `transform`.
+- **Tabs (radix/new-york)**: the sliding indicator used a constant `layoutId`, shared by every Tabs on the page (indicators flew between lists); now scoped with `useId`. **Tabs content (radix/base/aria)** used `AnimatePresence mode="popLayout"` + a blur filter, which pulls the leaving panel out of flow so everything below jumped; now a mount keyframe. Tabs root no longer has Motion `layout`.
+- **Accordion**: removed `layout` on the item/trigger (the content height already animates, so the layout projection double-animated and squashed text) and `overflow-hidden` on the item (it clipped the trigger's focus ring).
+- **Card (all bases)**: every Card part was a `motion.div layout`, turning each card subtree into a layout-projection node that re-animated on any nearby layout change. They are plain elements again (no `"use client"` needed). Radix Badge lost its stray `layout` too.
+- **Select**: radix/base item-aligned selects appeared instantly while aria and every other popup animated; they now fade in (zoom/slide neutralised for item-aligned). new-york select uses the shared popup curves.
+- **Site chrome**: `SpringWrap`/`Announcement`/`MainNav` used `whileTap` on non-focusable wrappers (a second tab stop each) and a hover scale that visibly resized the header buttons; chart-tooltip examples had `hover:-translate-y-0.5 transition-all`, nudging the tooltip under the cursor.
+- Guards added to `motion-guards.test.ts` for press origin, scoped tabs indicator / no popLayout, and Card layout.
+
 ## Phase 4: Data & Display
 | Component | base | aria | radix | ny |
 |---|---|---|---|---|

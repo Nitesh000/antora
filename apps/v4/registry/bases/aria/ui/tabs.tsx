@@ -3,21 +3,27 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
-import { AnimatePresence, motion } from "motion/react"
+import { motion } from "motion/react"
 import {
   TabList as TabListPrimitive,
-  TabListStateContext,
   TabPanel as TabPanelPrimitive,
   Tab as TabPrimitive,
   Tabs as TabsPrimitive,
 } from "react-aria-components"
 
-const fluidLayout = {
-  type: "spring",
-  stiffness: 500,
-  damping: 25,
-  mass: 1,
-} as const
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
+
 const fluidPress = {
   type: "spring",
   stiffness: 600,
@@ -91,6 +97,7 @@ function TabsTrigger({
     >
       {(renderProps) => (
         <motion.span
+          onPointerDownCapture={setPressOrigin}
           tabIndex={-1}
           className="relative inline-flex items-center justify-center gap-1.5"
           whileTap={{ scale: 0.98 }}
@@ -105,34 +112,22 @@ function TabsTrigger({
 
 function TabsContent({
   className,
-  id,
-  children,
   ...props
-}: React.ComponentProps<typeof TabPanelPrimitive>) {
-  const state = React.useContext(TabListStateContext)
-  const isActive = state?.selectedKey === id
-
+}: Omit<React.ComponentProps<typeof TabPanelPrimitive>, "className"> & {
+  className?: string
+}) {
+  // React Aria only renders the selected panel, so a mount keyframe is enough:
+  // no AnimatePresence/popLayout (which pulls the leaving panel out of flow and
+  // makes everything below it jump) and no blur filter.
   return (
-    <AnimatePresence mode="popLayout">
-      {isActive && (
-        <TabPanelPrimitive
-          data-slot="tabs-content"
-          id={id}
-          shouldForceMount
-          className="cn-tabs-content flex-1 outline-none"
-          {...props}
-        >
-          <motion.div
-            initial={{ opacity: 0, filter: "blur(4px)", y: 4 }}
-            animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-            exit={{ opacity: 0, filter: "blur(4px)", y: 4 }}
-            transition={fluidLayout}
-          >
-            {children as React.ReactNode}
-          </motion.div>
-        </TabPanelPrimitive>
+    <TabPanelPrimitive
+      data-slot="tabs-content"
+      className={cn(
+        "cn-tabs-content flex-1 animate-in duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] fade-in-0 outline-none slide-in-from-bottom-1 motion-reduce:animate-none",
+        className
       )}
-    </AnimatePresence>
+      {...props}
+    />
   )
 }
 

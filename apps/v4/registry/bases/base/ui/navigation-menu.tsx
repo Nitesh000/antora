@@ -2,12 +2,30 @@
 
 import { NavigationMenu as NavigationMenuPrimitive } from "@base-ui/react/navigation-menu"
 import { cva } from "class-variance-authority"
-import { motion } from "motion/react"
 import { cn } from "cn"
+import { motion } from "motion/react"
 
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
+
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
 
 function NavigationMenu({
   align = "start",
@@ -74,7 +92,11 @@ function NavigationMenuTrigger({
       data-slot="navigation-menu-trigger"
       className={cn(navigationMenuTriggerStyle(), "group", className)}
       render={
-        <motion.button whileTap={{ scale: 0.98 }} transition={fluidPress} />
+        <motion.button
+          onPointerDownCapture={setPressOrigin}
+          whileTap={{ scale: 0.98 }}
+          transition={fluidPress}
+        />
       }
       {...props}
     >
@@ -146,7 +168,11 @@ function NavigationMenuLink({
       data-slot="navigation-menu-link"
       className={cn("cn-navigation-menu-link", className)}
       render={
-        <motion.a whileTap={{ scale: 0.98 }} transition={fluidPress} />
+        <motion.a
+          onPointerDownCapture={setPressOrigin}
+          whileTap={{ scale: 0.98 }}
+          transition={fluidPress}
+        />
       }
       {...props}
     />

@@ -120,4 +120,50 @@ describe("overlay motion guards", () => {
     })
     expect(offenders.map((o) => o.id)).toEqual([])
   })
+
+  it("scales pressed Motion elements about the pointer (no lost edge clicks)", () => {
+    // A centered whileTap scale shrinks the hit area under the pointer, so a
+    // press within ~2px of the left/right edge ended on the parent and the
+    // click was dropped. setPressOrigin pins transform-origin to the press.
+    const offenders = sources.filter(({ id, code }) => {
+      if (id.endsWith("/slider.tsx")) return false
+      for (const match of code.matchAll(/<motion\.\w+/g)) {
+        let depth = 0
+        let end = match.index! + match[0].length
+        for (; end < code.length; end++) {
+          const char = code[end]
+          if (char === "{") depth++
+          else if (char === "}") depth--
+          else if (char === ">" && depth === 0 && code[end - 1] !== "=") break
+        }
+        const tag = code.slice(match.index!, end)
+        if (tag.includes("whileTap") && !tag.includes("setPressOrigin")) {
+          return true
+        }
+      }
+      return false
+    })
+    expect(offenders.map((o) => o.id)).toEqual([])
+  })
+
+  it("scopes the Tabs sliding indicator to its instance and keeps panels in flow", () => {
+    // A constant layoutId is shared by every Tabs on the page (the indicator
+    // flies between lists), and AnimatePresence popLayout + a blur filter pulls
+    // the leaving panel out of flow so everything below it jumps.
+    const tabs = sources.filter(({ id }) => id.endsWith("/tabs.tsx"))
+    const offenders = tabs.filter(
+      ({ code }) =>
+        /layoutId="[^"]+"/.test(code) ||
+        code.includes(`mode="popLayout"`) ||
+        code.includes("blur(")
+    )
+    expect(offenders.map((o) => o.id)).toEqual([])
+  })
+
+  it("does not put Motion layout projection on static Card containers", () => {
+    const offenders = sources.filter(
+      ({ id, code }) => id.endsWith("/card.tsx") && /\blayout\b/.test(code)
+    )
+    expect(offenders.map((o) => o.id)).toEqual([])
+  })
 })

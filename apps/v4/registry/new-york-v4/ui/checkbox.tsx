@@ -3,11 +3,34 @@
 import * as React from "react"
 import { cn } from "cn"
 import { CheckIcon } from "lucide-react"
-import { motion, AnimatePresence } from "motion/react"
+import { AnimatePresence, motion } from "motion/react"
 import { Checkbox as CheckboxPrimitive } from "radix-ui"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
-const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
+
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 20,
+  mass: 1,
+} as const
+const fluidPop = {
+  type: "spring",
+  stiffness: 400,
+  damping: 25,
+  mass: 0.9,
+} as const
 
 function Checkbox({
   className,
@@ -35,6 +58,7 @@ function Checkbox({
       {...props}
     >
       <motion.button
+        onPointerDownCapture={setPressOrigin}
         whileTap={{ scale: 0.94 }}
         transition={fluidPress}
         className={cn(

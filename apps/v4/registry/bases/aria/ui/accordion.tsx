@@ -18,6 +18,19 @@ import {
 
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
+
 const fluidLayout = {
   type: "spring",
   stiffness: 500,
@@ -54,9 +67,7 @@ function AccordionItem({ className, children, ...props }: DisclosureProps) {
       className={cn("cn-accordion-item", className)}
       {...props}
     >
-      <motion.div layout transition={fluidLayout}>
-        {children as React.ReactNode}
-      </motion.div>
+      {children as React.ReactNode}
     </AccordionItemPrimitive>
   )
 }
@@ -72,6 +83,7 @@ function AccordionTrigger({
   return (
     <AccordionHeaderPrimitive className="flex flex-1">
       <motion.div
+        onPointerDownCapture={setPressOrigin}
         tabIndex={-1}
         className="flex flex-1"
         whileTap={{ scale: 0.98 }}
@@ -88,7 +100,6 @@ function AccordionTrigger({
         >
           {children}
           <motion.div
-            layout
             animate={{ rotate: isOpen ? 180 : 0 }}
             transition={fluidLayout}
             className="pointer-events-none shrink-0"
