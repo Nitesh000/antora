@@ -16,7 +16,7 @@ import smooth from "./logo_smooth.json";
 
 // JetBrains Mono (variable, OFL) bundled locally so renders work offline
 const MONO = "JetBrains Mono Local";
-const fontHandle = delayRender("Loading JetBrains Mono");
+const fontHandle = delayRender("Loading JetBrains Mono", { timeoutInMilliseconds: 120000, retries: 2 });
 const face = new FontFace(MONO, `url(${staticFile("fonts/JetBrainsMono-latin-var.woff2")}) format("woff2")`, {
   weight: "100 800",
 });
