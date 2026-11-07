@@ -92,7 +92,7 @@ function RadioGroupItem({
           className
         )}
       >
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {isChecked && (
             <RadioGroupPrimitive.Indicator
               asChild

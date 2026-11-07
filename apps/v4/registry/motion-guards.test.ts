@@ -166,4 +166,15 @@ describe("overlay motion guards", () => {
     )
     expect(offenders.map((o) => o.id)).toEqual([])
   })
+
+  it("does not replay the enter animation of already-checked controls on mount", () => {
+    // AnimatePresence defaults to initial={true}, so a pre-checked checkbox or
+    // radio popped in (opacity 0 -> 1) on every page load / hydration.
+    const offenders = sources.filter(
+      ({ id, code }) =>
+        /\/(checkbox|radio-group)\.tsx$/.test(id) &&
+        /<AnimatePresence>/.test(code)
+    )
+    expect(offenders.map((o) => o.id)).toEqual([])
+  })
 })

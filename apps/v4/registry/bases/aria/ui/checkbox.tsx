@@ -61,7 +61,7 @@ function Checkbox({ className, children, ...props }: CheckboxProps) {
                 data-slot="checkbox-indicator"
                 className="cn-checkbox-indicator grid place-content-center text-current transition-none"
               >
-                <AnimatePresence>
+                <AnimatePresence initial={false}>
                   {(isSelected || isIndeterminate) && (
                     <motion.span
                       initial={{ scale: 0.5, opacity: 0 }}

@@ -94,6 +94,8 @@ A hover scan over every example page in all three bases (~1500 pages, comparing 
 - **Site chrome**: `SpringWrap`/`Announcement`/`MainNav` used `whileTap` on non-focusable wrappers (a second tab stop each) and a hover scale that visibly resized the header buttons; chart-tooltip examples had `hover:-translate-y-0.5 transition-all`, nudging the tooltip under the cursor.
 - Guards added to `motion-guards.test.ts` for press origin, scoped tabs indicator / no popLayout, and Card layout.
 
+- **Pass 7 follow-ups**: pre-checked checkbox/radio (radix/base/ny) popped in on every page load because `AnimatePresence` defaulted to `initial` (now `initial={false}`); avatar fallbacks no longer start at opacity 0 (invisible in SSR HTML until hydration); radix `SidebarProvider` now mounts a `TooltipProvider` like new-york (Radix tooltips throw without one, so a collapsed radix sidebar crashed standalone); `StarsCount` swallows a blocked/rate-limited GitHub API instead of throwing out of Suspense (which discarded the server HTML and re-rendered the header on the client). Not verifiable here: the docs-site preview pane (`next dev` exhausts the 16 GB limit compiling the registry-wide chunks).
+
 ## Phase 4: Data & Display
 | Component | base | aria | radix | ny |
 |---|---|---|---|---|

@@ -69,7 +69,7 @@ function RadioGroupItem({ className, children, ...props }: RadioProps) {
               data-slot="radio-group-indicator"
               className="cn-radio-group-indicator"
             >
-              <AnimatePresence>
+              <AnimatePresence initial={false}>
                 {isSelected && (
                   <motion.span
                     initial={{ scale: 0.5, opacity: 0 }}

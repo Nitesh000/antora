@@ -66,7 +66,7 @@ function Checkbox({
           className
         )}
       >
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {isChecked === true && (
             <CheckboxPrimitive.Indicator
               asChild

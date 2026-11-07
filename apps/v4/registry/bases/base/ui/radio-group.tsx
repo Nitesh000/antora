@@ -96,7 +96,7 @@ function RadioGroupItem({
       }
       {...props}
     >
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {isChecked && (
           <RadioPrimitive.Indicator
             keepMounted

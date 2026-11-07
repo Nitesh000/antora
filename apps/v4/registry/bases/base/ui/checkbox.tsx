@@ -73,7 +73,7 @@ function Checkbox({
       }
       {...props}
     >
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {isChecked && (
           <CheckboxPrimitive.Indicator
             keepMounted
