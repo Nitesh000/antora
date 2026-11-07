@@ -96,6 +96,9 @@ A hover scan over every example page in all three bases (~1500 pages, comparing 
 
 - **Pass 7 follow-ups**: pre-checked checkbox/radio (radix/base/ny) popped in on every page load because `AnimatePresence` defaulted to `initial` (now `initial={false}`); avatar fallbacks no longer start at opacity 0 (invisible in SSR HTML until hydration); radix `SidebarProvider` now mounts a `TooltipProvider` like new-york (Radix tooltips throw without one, so a collapsed radix sidebar crashed standalone); `StarsCount` swallows a blocked/rate-limited GitHub API instead of throwing out of Suspense (which discarded the server HTML and re-rendered the header on the client). Not verifiable here: the docs-site preview pane (`next dev` exhausts the 16 GB limit compiling the registry-wide chunks).
 
+## Refinement pass 8: one sliding Tabs indicator in every base
+- Base UI and React Aria tabs had no sliding indicator at all: the active tab's background just appeared on the new tab. Radix and new-york had one, but always drew it as a pill (even with `variant="line"`). Their trigger was `z-10` with the pill at `z-[-1]`, so the pill painted over the neighbouring label mid-slide. Now all four draw the same instance-scoped `layoutId` indicator at `z-0`, under a `z-10` label wrapper. It is a pill for `default` and a 2px underline for `line`, on either orientation. It uses a near-critically damped spring (`stiffness 420 / damping 34`), so it glides into place without ringing. Styles no longer put `z-10` on `.cn-tabs-trigger`. The active trigger forces `shadow-none!` so a style's `data-active:shadow-sm` cannot double the indicator's shadow. Guard: every `tabs.tsx` must render a variant-aware `tabs-indicator` and must not use `z-[-1]`.
+
 ## Phase 4: Data & Display
 | Component | base | aria | radix | ny |
 |---|---|---|---|---|

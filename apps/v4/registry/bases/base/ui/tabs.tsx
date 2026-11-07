@@ -19,6 +19,14 @@ function setPressOrigin(event: {
   el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
 }
 
+// Near-critically damped: the indicator glides into place with only a hint of
+// settle instead of ringing back and forth across the label.
+const fluidIndicator = {
+  type: "spring",
+  stiffness: 420,
+  damping: 34,
+  mass: 0.9,
+} as const
 const fluidPress = {
   type: "spring",
   stiffness: 600,
@@ -26,8 +34,9 @@ const fluidPress = {
   mass: 1,
 } as const
 
-const TabsContext = React.createContext<{ value: unknown }>({
+const TabsContext = React.createContext<{ value: unknown; id: string }>({
   value: undefined,
+  id: "",
 })
 
 function Tabs({
@@ -43,8 +52,11 @@ function Tabs({
   )
   const currentValue = valueProp !== undefined ? valueProp : internalValue
 
+  // Scope the sliding indicator to this Tabs instance.
+  const id = React.useId()
+
   return (
-    <TabsContext.Provider value={{ value: currentValue }}>
+    <TabsContext.Provider value={{ value: currentValue, id }}>
       <TabsPrimitive.Root
         data-slot="tabs"
         data-orientation={orientation}
@@ -94,8 +106,13 @@ function TabsList({
   )
 }
 
-function TabsTrigger({ className, value, ...props }: TabsPrimitive.Tab.Props) {
-  const { value: activeValue } = React.useContext(TabsContext)
+function TabsTrigger({
+  className,
+  value,
+  children,
+  ...props
+}: TabsPrimitive.Tab.Props) {
+  const { value: activeValue, id } = React.useContext(TabsContext)
   const isActive = activeValue === value
 
   return (
@@ -104,9 +121,8 @@ function TabsTrigger({ className, value, ...props }: TabsPrimitive.Tab.Props) {
       value={value}
       className={cn(
         "cn-tabs-trigger relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center whitespace-nowrap text-foreground/60 group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 dark:text-muted-foreground dark:hover:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0",
-        "group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent",
-        "data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground",
-        "after:absolute after:bg-foreground after:opacity-0 group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:bottom-[-5px] group-data-horizontal/tabs:after:h-0.5 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100",
+        // The active surface is the sliding indicator below, not the trigger.
+        "data-active:bg-transparent data-active:text-foreground data-active:shadow-none! dark:data-active:text-foreground",
         className
       )}
       render={
@@ -117,7 +133,23 @@ function TabsTrigger({ className, value, ...props }: TabsPrimitive.Tab.Props) {
         />
       }
       {...props}
-    />
+    >
+      {/* One indicator per Tabs instance, slid between triggers. It sits at
+          z-0 under every label (z-10), so it never covers the text of the
+          triggers it travels across, and it is a pill or an underline
+          depending on the list variant. */}
+      {isActive && (
+        <motion.span
+          layoutId={`${id}-tab-indicator`}
+          data-slot="tabs-indicator"
+          className="pointer-events-none absolute z-0 rounded-[inherit] group-data-[variant=default]/tabs-list:inset-0 group-data-[variant=default]/tabs-list:border group-data-[variant=default]/tabs-list:border-transparent group-data-[variant=default]/tabs-list:bg-background group-data-[variant=default]/tabs-list:shadow-sm group-data-[variant=line]/tabs-list:rounded-full group-data-[variant=line]/tabs-list:bg-foreground group-data-horizontal/tabs:group-data-[variant=line]/tabs-list:inset-x-0 group-data-horizontal/tabs:group-data-[variant=line]/tabs-list:-bottom-[5px] group-data-horizontal/tabs:group-data-[variant=line]/tabs-list:h-0.5 group-data-vertical/tabs:group-data-[variant=line]/tabs-list:inset-y-0 group-data-vertical/tabs:group-data-[variant=line]/tabs-list:-right-1 group-data-vertical/tabs:group-data-[variant=line]/tabs-list:w-0.5 dark:group-data-[variant=default]/tabs-list:border-input dark:group-data-[variant=default]/tabs-list:bg-input/30"
+          transition={fluidIndicator}
+        />
+      )}
+      <span className="relative z-10 inline-flex items-center justify-center [gap:inherit]">
+        {children}
+      </span>
+    </TabsPrimitive.Tab>
   )
 }
 

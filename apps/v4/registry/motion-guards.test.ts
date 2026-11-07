@@ -160,6 +160,22 @@ describe("overlay motion guards", () => {
     expect(offenders.map((o) => o.id)).toEqual([])
   })
 
+  it("layers the Tabs indicator under the labels in every base", () => {
+    // A z-10 trigger with a z-[-1] indicator let the sliding pill paint over
+    // the neighbouring trigger's label mid-flight, and the line variant still
+    // rendered a pill. Every base must draw a variant-aware indicator below a
+    // z-10 label wrapper instead.
+    const tabs = sources.filter(({ id }) => id.endsWith("/tabs.tsx"))
+    const offenders = tabs.filter(
+      ({ code }) =>
+        !code.includes(`data-slot="tabs-indicator"`) ||
+        !/group-data-\[variant=line\]\/tabs-list:/.test(code) ||
+        code.includes("z-[-1]")
+    )
+    expect(tabs.length).toBe(4)
+    expect(offenders.map((o) => o.id)).toEqual([])
+  })
+
   it("does not put Motion layout projection on static Card containers", () => {
     const offenders = sources.filter(
       ({ id, code }) => id.endsWith("/card.tsx") && /\blayout\b/.test(code)
