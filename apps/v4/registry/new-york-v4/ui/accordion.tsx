@@ -56,15 +56,22 @@ function Accordion({
 
   const value = props.value !== undefined ? props.value : internalValue
 
+  // Root's props are a single/multiple union; the value is a string or an
+  // array accordingly, so forward it with the matching union type.
+  const handleValueChange: ((value: string) => void) &
+    ((value: string[]) => void) = (val: string | string[]) => {
+    setInternalValue(val)
+    ;(
+      props.onValueChange as ((value: string | string[]) => void) | undefined
+    )?.(val)
+  }
+
   return (
     <AccordionContext.Provider value={{ value }}>
       <AccordionPrimitive.Root
         data-slot="accordion"
-        {...(props as any)}
-        onValueChange={(val: any) => {
-          setInternalValue(val)
-          ;(props as any).onValueChange?.(val)
-        }}
+        {...props}
+        onValueChange={handleValueChange}
       />
     </AccordionContext.Provider>
   )
