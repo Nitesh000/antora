@@ -238,6 +238,21 @@ describe("overlay motion guards", () => {
     expect(offenders).toEqual([])
   })
 
+  it("never references a cn-* marker class inside a style utility", () => {
+    // The registry build strips every `cn-[a-z-]+` word from class strings, so
+    // `[&>[data-slot]:not(.cn-button)]` shipped as `:not(.)`: invalid CSS that
+    // made the docs site's globals.css fail to compile.
+    const offenders: string[] = []
+    for (const { id, code } of styleCss) {
+      for (const m of code.matchAll(/@apply\s+([^;}]*)/g)) {
+        for (const token of m[1].split(/\s+/)) {
+          if (/cn-[a-z-]+/.test(token)) offenders.push(`${id}: ${token}`)
+        }
+      }
+    }
+    expect(offenders).toEqual([])
+  })
+
   it("does not put Motion layout projection on static Card containers", () => {
     const offenders = sources.filter(
       ({ id, code }) => id.endsWith("/card.tsx") && /\blayout\b/.test(code)
