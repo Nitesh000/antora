@@ -4,6 +4,7 @@ export const ui: Registry["items"] = [
   {
     name: "accordion",
     type: "registry:ui",
+    dependencies: ["motion"],
     files: [
       {
         path: "ui/accordion.tsx",
@@ -75,6 +76,7 @@ export const ui: Registry["items"] = [
   {
     name: "avatar",
     type: "registry:ui",
+    dependencies: ["motion"],
     files: [
       {
         path: "ui/avatar.tsx",
@@ -93,6 +95,7 @@ export const ui: Registry["items"] = [
   {
     name: "badge",
     type: "registry:ui",
+    dependencies: ["motion"],
     files: [
       {
         path: "ui/badge.tsx",
@@ -127,6 +130,7 @@ export const ui: Registry["items"] = [
   {
     name: "button",
     type: "registry:ui",
+    dependencies: ["motion"],
     files: [
       {
         path: "ui/button.tsx",
@@ -238,6 +242,7 @@ export const ui: Registry["items"] = [
   {
     name: "checkbox",
     type: "registry:ui",
+    dependencies: ["motion"],
     files: [
       {
         path: "ui/checkbox.tsx",
@@ -256,6 +261,7 @@ export const ui: Registry["items"] = [
   {
     name: "collapsible",
     type: "registry:ui",
+    dependencies: ["motion"],
     files: [
       {
         path: "ui/collapsible.tsx",
@@ -554,6 +560,7 @@ export const ui: Registry["items"] = [
   {
     name: "navigation-menu",
     type: "registry:ui",
+    dependencies: ["motion"],
     files: [
       {
         path: "ui/navigation-menu.tsx",
@@ -626,6 +633,7 @@ export const ui: Registry["items"] = [
   {
     name: "radio-group",
     type: "registry:ui",
+    dependencies: ["motion"],
     files: [
       {
         path: "ui/radio-group.tsx",
@@ -736,6 +744,7 @@ export const ui: Registry["items"] = [
   {
     name: "sidebar",
     type: "registry:ui",
+    dependencies: ["motion"],
     registryDependencies: [
       "button",
       "input",
@@ -779,6 +788,7 @@ export const ui: Registry["items"] = [
   {
     name: "slider",
     type: "registry:ui",
+    dependencies: ["motion"],
     files: [
       {
         path: "ui/slider.tsx",
@@ -833,6 +843,7 @@ export const ui: Registry["items"] = [
   {
     name: "switch",
     type: "registry:ui",
+    dependencies: ["motion"],
     files: [
       {
         path: "ui/switch.tsx",
@@ -868,6 +879,7 @@ export const ui: Registry["items"] = [
   {
     name: "tabs",
     type: "registry:ui",
+    dependencies: ["motion"],
     files: [
       {
         path: "ui/tabs.tsx",
@@ -923,6 +935,7 @@ export const ui: Registry["items"] = [
   {
     name: "toggle",
     type: "registry:ui",
+    dependencies: ["motion"],
     files: [
       {
         path: "ui/toggle.tsx",
@@ -941,6 +954,7 @@ export const ui: Registry["items"] = [
   {
     name: "toggle-group",
     type: "registry:ui",
+    dependencies: ["motion"],
     registryDependencies: ["toggle"],
     files: [
       {

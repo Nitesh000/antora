@@ -253,6 +253,31 @@ describe("overlay motion guards", () => {
     expect(offenders).toEqual([])
   })
 
+  it("declares the motion dependency for every component that imports it", () => {
+    // Without it, `shadcn add button` installs a file importing motion/react
+    // into a project that doesn't have it, and the project fails to typecheck.
+    const offenders: string[] = []
+    for (const dir of uiDirs) {
+      const registry = readFileSync(
+        path.join(registryRoot, dir, "_registry.ts"),
+        "utf8"
+      )
+      for (const { id, code } of sources) {
+        if (!id.startsWith(`${dir}/`) || !code.includes("motion/react")) {
+          continue
+        }
+        const name = id.slice(dir.length + 1, -".tsx".length)
+        const entry = new RegExp(
+          `\\n    name: "${name}",([\\s\\S]*?)\\n  \\},`
+        ).exec(registry)
+        if (!entry || !/\n    dependencies: \[[^\]]*"motion"/.test(entry[1])) {
+          offenders.push(id)
+        }
+      }
+    }
+    expect(offenders).toEqual([])
+  })
+
   it("does not put Motion layout projection on static Card containers", () => {
     const offenders = sources.filter(
       ({ id, code }) => id.endsWith("/card.tsx") && /\blayout\b/.test(code)
