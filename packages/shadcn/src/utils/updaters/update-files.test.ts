@@ -4,7 +4,15 @@ import { getFixturesDir } from "@/src/test-helpers"
 import { getConfig, type Config } from "@/src/utils/get-config"
 import prompts from "prompts"
 import { Project } from "ts-morph"
-import { afterAll, afterEach, describe, expect, it, vi } from "vitest"
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest"
 
 import {
   findCommonRoot,
@@ -1139,6 +1147,27 @@ describe("resolveNestedFilePath", () => {
 })
 
 describe("updateFiles", () => {
+  // The first updateFiles call pays ~1s of one-time setup (transformer and
+  // compiler initialisation), several times more on a loaded CI runner. Pay it
+  // here, under its own timeout, so each test's 8s budget covers its own work.
+  beforeAll(async () => {
+    const config = (await getConfig(getFixturesDir("vite-with-tailwind")))!
+    await updateFiles(
+      [
+        {
+          path: "src/components/warm-up.tsx",
+          type: "registry:component",
+          content: `export function WarmUp() {
+  return <div />
+}`,
+        },
+      ],
+      config,
+      { overwrite: false, silent: true }
+    )
+    vi.clearAllMocks()
+  }, 60_000)
+
   it("should create missing files", async () => {
     const config = (await getConfig(getFixturesDir("vite-with-tailwind")))!
     expect(
