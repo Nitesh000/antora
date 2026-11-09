@@ -1,10 +1,15 @@
 "use client"
 
 import { Slider as SliderPrimitive } from "@base-ui/react/slider"
-import { motion } from "motion/react"
 import { cn } from "cn"
+import { motion } from "motion/react"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 38,
+  mass: 1,
+} as const
 
 function Slider({
   className,

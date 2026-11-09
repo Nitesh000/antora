@@ -3,9 +3,9 @@ import Link from "next/link"
 
 import { siteConfig } from "@/lib/config"
 import { Icons } from "@/components/icons"
+import { SpringWrap } from "@/components/spring-wrap"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import { Skeleton } from "@/registry/new-york-v4/ui/skeleton"
-import { SpringWrap } from "@/components/spring-wrap"
 
 export function GitHubLink() {
   return (
@@ -23,18 +23,34 @@ export function GitHubLink() {
 }
 
 export async function StarsCount() {
-  const data = await fetch("https://api.github.com/repos/Nitesh000/antora", {
-    next: { revalidate: 86400 },
-  })
-  const json = await data.json()
+  // The star count is decoration: a blocked/rate-limited GitHub API must not
+  // throw out of the Suspense boundary (that forces React to discard the server
+  // HTML and re-render the whole header on the client, which reads as a flash).
+  let stars: number | undefined
+  try {
+    const data = await fetch("https://api.github.com/repos/Nitesh000/antora", {
+      next: { revalidate: 86400 },
+    })
+    if (data.ok) {
+      const json = await data.json()
+      stars =
+        typeof json.stargazers_count === "number"
+          ? json.stargazers_count
+          : undefined
+    }
+  } catch {
+    stars = undefined
+  }
+
+  if (stars === undefined) {
+    return null
+  }
 
   const formattedCount =
-    json.stargazers_count >= 1000
-      ? `${Math.round(json.stargazers_count / 1000)}k`
-      : json.stargazers_count?.toLocaleString()
+    stars >= 1000 ? `${Math.round(stars / 1000)}k` : stars.toLocaleString()
 
   return (
-    <span className="text-xs tabular-nums w-fit text-muted-foreground">
+    <span className="w-fit text-xs text-muted-foreground tabular-nums">
       {formattedCount}
     </span>
   )

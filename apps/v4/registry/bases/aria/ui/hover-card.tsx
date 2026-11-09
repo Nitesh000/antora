@@ -27,6 +27,7 @@ function HoverCard({
 }) {
   return (
     <PopoverPrimitive
+      containerPadding={8}
       data-slot="hover-card-content"
       placement={placement}
       offset={offset}

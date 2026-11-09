@@ -117,9 +117,22 @@ function ComboboxInput({
   showTrigger?: boolean
   showClear?: boolean
 }) {
+  // React Aria only opens on typing; Base UI and Radix open on click, so a
+  // click on the field opens the list here too (keyboard focus still doesn't).
+  const state = React.useContext(ComboBoxStateContext)
+
   return (
     <InputGroup className={cn("cn-combobox-input w-auto", className)}>
-      <InputGroupInput disabled={disabled} {...props} />
+      <InputGroupInput
+        disabled={disabled}
+        {...props}
+        onClick={(event) => {
+          props.onClick?.(event)
+          if (!event.defaultPrevented && !disabled && state && !state.isOpen) {
+            state.open(null, "manual")
+          }
+        }}
+      />
       <InputGroupAddon align="inline-end">
         {showTrigger && (
           <InputGroupButton
@@ -163,6 +176,7 @@ function ComboboxContent({
 }) {
   return (
     <PopoverPrimitive
+      containerPadding={8}
       data-slot="combobox-content"
       placement={placement}
       offset={offset}

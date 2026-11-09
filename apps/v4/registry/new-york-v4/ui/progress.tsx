@@ -5,7 +5,12 @@ import { cn } from "cn"
 import { motion } from "motion/react"
 import { Progress as ProgressPrimitive } from "radix-ui"
 
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
+const fluidLayout = {
+  type: "spring",
+  stiffness: 500,
+  damping: 40,
+  mass: 1,
+} as const
 
 function Progress({
   className,

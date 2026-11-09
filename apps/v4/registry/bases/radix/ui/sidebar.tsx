@@ -6,8 +6,6 @@ import { cn } from "cn"
 import { motion } from "motion/react"
 import { Slot } from "radix-ui"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
-
 import { useIsMobile } from "@/registry/bases/radix/hooks/use-mobile"
 import { Button } from "@/registry/bases/radix/ui/button"
 import { Input } from "@/registry/bases/radix/ui/input"
@@ -23,9 +21,30 @@ import { Skeleton } from "@/registry/bases/radix/ui/skeleton"
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@/registry/bases/radix/ui/tooltip"
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
+
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 38,
+  mass: 1,
+} as const
+
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -130,23 +149,27 @@ function SidebarProvider({
 
   return (
     <SidebarContext.Provider value={contextValue}>
-      <div
-        data-slot="sidebar-wrapper"
-        style={
-          {
-            "--sidebar-width": SIDEBAR_WIDTH,
-            "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
-            ...style,
-          } as React.CSSProperties
-        }
-        className={cn(
-          "group/sidebar-wrapper flex min-h-svh w-full has-data-[variant=inset]:bg-sidebar",
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </div>
+      {/* Radix tooltips throw without a provider; the collapsed-icon menu uses
+          them, so the sidebar must not depend on the app mounting one. */}
+      <TooltipProvider delayDuration={0}>
+        <div
+          data-slot="sidebar-wrapper"
+          style={
+            {
+              "--sidebar-width": SIDEBAR_WIDTH,
+              "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
+              ...style,
+            } as React.CSSProperties
+          }
+          className={cn(
+            "group/sidebar-wrapper flex min-h-svh w-full has-data-[variant=inset]:bg-sidebar",
+            className
+          )}
+          {...props}
+        >
+          {children}
+        </div>
+      </TooltipProvider>
     </SidebarContext.Provider>
   )
 }
@@ -445,6 +468,7 @@ function SidebarGroupAction({
 
   return (
     <motion.button
+      onPointerDownCapture={setPressOrigin}
       whileTap={{ scale: 0.9 }}
       transition={fluidPress}
       data-slot="sidebar-group-action"
@@ -538,6 +562,7 @@ function SidebarMenuButton({
     />
   ) : (
     <motion.button
+      onPointerDownCapture={setPressOrigin}
       whileTap={{ scale: 0.98 }}
       transition={fluidPress}
       data-slot="sidebar-menu-button"
@@ -601,6 +626,7 @@ function SidebarMenuAction({
 
   return (
     <motion.button
+      onPointerDownCapture={setPressOrigin}
       whileTap={{ scale: 0.9 }}
       transition={fluidPress}
       data-slot="sidebar-menu-action"

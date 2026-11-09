@@ -1,9 +1,9 @@
 "use client"
 
-import { motion } from "motion/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "cn"
+import { motion } from "motion/react"
 
 import { PAGES_NEW } from "@/lib/docs"
 import { Button } from "@/registry/new-york-v4/ui/button"
@@ -11,7 +11,7 @@ import { Button } from "@/registry/new-york-v4/ui/button"
 const fluidPop = {
   type: "spring",
   stiffness: 400,
-  damping: 25,
+  damping: 30,
   mass: 0.9,
 } as const
 
@@ -51,13 +51,16 @@ export function MainNav({
       {...props}
     >
       {items.map((item) => (
-        <motion.div key={item.href} variants={navItem} whileTap={{ scale: 0.94, transition: { type: "spring", stiffness: 600, damping: 20 } }}>
-          <Button
-            variant="ghost"
-            asChild
-            size="sm"
-            className="px-2.5"
-          >
+        <motion.div
+          key={item.href}
+          variants={navItem}
+          tabIndex={-1}
+          whileTap={{
+            scale: 0.94,
+            transition: { type: "spring", stiffness: 600, damping: 38 },
+          }}
+        >
+          <Button variant="ghost" asChild size="sm" className="px-2.5">
             <Link
               href={item.href}
               data-active={pathname === item.href}

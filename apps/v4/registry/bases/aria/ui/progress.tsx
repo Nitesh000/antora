@@ -13,7 +13,7 @@ import {
 const fluidLayout = {
   type: "spring",
   stiffness: 500,
-  damping: 25,
+  damping: 40,
   mass: 1,
 } as const
 

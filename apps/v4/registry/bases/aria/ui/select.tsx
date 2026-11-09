@@ -148,6 +148,7 @@ function SelectPopover({
 }) {
   return (
     <PopoverPrimitive
+      containerPadding={8}
       data-slot="select-content"
       placement={placement}
       offset={offset}

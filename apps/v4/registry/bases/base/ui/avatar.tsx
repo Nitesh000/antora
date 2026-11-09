@@ -5,7 +5,12 @@ import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar"
 import { cn } from "cn"
 import { motion } from "motion/react"
 
-const fluidPop = { type: "spring", stiffness: 400, damping: 25, mass: 0.9 } as const
+const fluidPop = {
+  type: "spring",
+  stiffness: 400,
+  damping: 30,
+  mass: 0.9,
+} as const
 
 function Avatar({
   className,
@@ -56,7 +61,7 @@ function AvatarFallback({
       data-slot="avatar-fallback"
       render={
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={false}
           animate={{ opacity: 1, scale: 1 }}
           transition={fluidPop}
         />

@@ -118,6 +118,7 @@ function ComboboxContent({
       <ComboboxPrimitive.Positioner
         side={side}
         sideOffset={sideOffset}
+        collisionPadding={8}
         align={align}
         alignOffset={alignOffset}
         anchor={anchor}

@@ -10,16 +10,29 @@ import {
   type RadioProps,
 } from "react-aria-components"
 
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
+
 const fluidPress = {
   type: "spring",
   stiffness: 600,
-  damping: 20,
+  damping: 38,
   mass: 1,
 } as const
 const fluidPop = {
   type: "spring",
   stiffness: 400,
-  damping: 25,
+  damping: 30,
   mass: 0.9,
 } as const
 
@@ -36,10 +49,13 @@ function RadioGroup({ className, ...props }: RadioGroupProps) {
 function RadioGroupItem({ className, children, ...props }: RadioProps) {
   return (
     <motion.span
+      onPointerDownCapture={setPressOrigin}
       tabIndex={-1}
       whileTap={{ scale: 0.92 }}
       transition={fluidPress}
-      style={{ display: "inline-flex" }}
+      // Block-level like the Radix/Base root (`.cn-radio-group-item` is `flex`), so a
+      // table cell or flex row centres it instead of sitting it on the baseline.
+      style={{ display: "flex", width: "fit-content", flexShrink: 0 }}
     >
       <RadioPrimitive
         data-slot="radio-group-item"
@@ -55,7 +71,7 @@ function RadioGroupItem({ className, children, ...props }: RadioProps) {
               data-slot="radio-group-indicator"
               className="cn-radio-group-indicator"
             >
-              <AnimatePresence>
+              <AnimatePresence initial={false}>
                 {isSelected && (
                   <motion.span
                     initial={{ scale: 0.5, opacity: 0 }}

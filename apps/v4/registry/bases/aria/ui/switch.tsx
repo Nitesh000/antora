@@ -8,16 +8,29 @@ import {
   type SwitchProps as SwitchPrimitiveProps,
 } from "react-aria-components"
 
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
+
 const fluidPress = {
   type: "spring",
   stiffness: 600,
-  damping: 20,
+  damping: 38,
   mass: 1,
 } as const
 const fluidLayout = {
   type: "spring",
   stiffness: 500,
-  damping: 25,
+  damping: 40,
   mass: 1,
 } as const
 
@@ -31,6 +44,7 @@ function Switch({
 }) {
   return (
     <motion.span
+      onPointerDownCapture={setPressOrigin}
       tabIndex={-1}
       whileTap={{ scale: 0.95 }}
       transition={fluidPress}

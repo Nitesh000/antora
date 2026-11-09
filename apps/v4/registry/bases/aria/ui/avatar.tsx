@@ -7,7 +7,7 @@ import { motion, type HTMLMotionProps } from "motion/react"
 const fluidPop = {
   type: "spring",
   stiffness: 400,
-  damping: 25,
+  damping: 30,
   mass: 0.9,
 } as const
 
@@ -64,7 +64,7 @@ function AvatarFallback({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <motion.div
       data-slot="avatar-fallback"
-      initial={{ opacity: 0, scale: 0.9 }}
+      initial={false}
       animate={{ opacity: 1, scale: 1 }}
       transition={fluidPop}
       className={cn(

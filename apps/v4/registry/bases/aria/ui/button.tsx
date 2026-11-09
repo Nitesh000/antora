@@ -11,10 +11,23 @@ import {
   type LinkProps as LinkPrimitiveProps,
 } from "react-aria-components"
 
+// Scale the pressed element about the pointer: with a centered whileTap scale
+// the shrinking hit area slid out from under a press near the left/right edge,
+// so mouseup landed on the parent and the click was lost.
+function setPressOrigin(event: {
+  currentTarget: HTMLElement
+  clientX: number
+  clientY: number
+}) {
+  const el = event.currentTarget
+  const rect = el.getBoundingClientRect()
+  el.style.transformOrigin = `${event.clientX - rect.left}px ${event.clientY - rect.top}px`
+}
+
 const fluidPress = {
   type: "spring",
   stiffness: 600,
-  damping: 20,
+  damping: 38,
   mass: 1,
 } as const
 
@@ -57,15 +70,20 @@ function isFullWidth(className?: string) {
 // positioned button (e.g. a dialog close button, carousel arrow) visually
 // drifts from where its own position classes say it should be, since the
 // wrapper's transform applies around its own (unrelated) box.
+// Classes that place the button in its parent's layout belong on the Motion
+// wrapper (the actual flex/grid child), not on the inner <button>: margins
+// (`ml-auto` pushing a toolbar button right), self/order/grid placement and
+// z-index. Matched on the utility after any variant prefix (`sm:ml-auto`).
 const POSITION_CLASS =
-  /^-?(absolute|relative|fixed|sticky|static|inset(-|$)|top-|right-|bottom-|left-|translate-x-|translate-y-|rotate-|my-auto$|mx-auto$)/
+  /^-?(absolute|relative|fixed|sticky|static|inset(-|$)|top-|right-|bottom-|left-|start-|end-|translate-x-|translate-y-|rotate-|m[trblxyse]?-|self-|justify-self-|place-self-|order-|col-(span|start|end)-|row-(span|start|end)-|z-)/
 
 function splitPositionClasses(className?: string) {
   const classes = (className ?? "").split(/\s+/).filter(Boolean)
   const position: string[] = []
   const rest: string[] = []
   for (const cls of classes) {
-    ;(POSITION_CLASS.test(cls) ? position : rest).push(cls)
+    const utility = cls.replace(/^(?:[^:[\]]*:|\[[^\]]*\]:)*/, "")
+    ;(POSITION_CLASS.test(utility) ? position : rest).push(cls)
   }
   return { position: position.join(" "), rest: rest.join(" ") }
 }
@@ -74,6 +92,8 @@ function splitPositionClasses(className?: string) {
 // button it stands in for: stretched wrappers (w-full / flex-1) fill their
 // row, and an absolutely positioned wrapper stretched by `inset-y-0 my-auto`
 // (carousel arrows, dialog close) must keep its button centered.
+const SELF_POSITIONED = /(^|\s)cn-[\w-]+-close(\s|$)/
+
 function wrapperStyle(
   position: string,
   fullWidth: boolean
@@ -103,8 +123,30 @@ function Button({
   const { position, rest } = splitPositionClasses(className)
   const fullWidth = isFullWidth(rest)
 
+  // A style class that positions the button itself (`cn-dialog-close`,
+  // `cn-sheet-close`: `absolute top-4 right-4 ...`) can't move to the wrapper
+  // with its visuals. Wrapped, the empty in-flow span took a flex slot (an
+  // extra gap under the footer) and, once pressed, its transform made it the
+  // containing block, so the close button jumped to the bottom of the panel
+  // mid-press and the click never landed. Press it with CSS instead.
+  if (SELF_POSITIONED.test(rest)) {
+    return (
+      <ButtonPrimitive
+        data-slot="button"
+        data-variant={variant}
+        data-size={size}
+        className={cn(
+          buttonVariants({ variant, size, className: rest }),
+          "transition-[color,background-color,border-color,box-shadow,scale] duration-150 ease-out data-pressed:scale-96 motion-reduce:transition-none"
+        )}
+        {...props}
+      />
+    )
+  }
+
   return (
     <motion.span
+      onPointerDownCapture={setPressOrigin}
       tabIndex={-1}
       whileTap={{ scale: 0.96 }}
       transition={fluidPress}
@@ -141,6 +183,7 @@ function LinkButton({
 
   return (
     <motion.span
+      onPointerDownCapture={setPressOrigin}
       tabIndex={-1}
       whileTap={{ scale: 0.96 }}
       transition={fluidPress}
