@@ -26,6 +26,10 @@ describe("AI SDK transport", () => {
       })
 
     const [userMessage] = chat.get(1)
+    // Start the clock before the stream exists: the producer begins its
+    // 100ms sleep as soon as it has enqueued the tool input, which can be
+    // well before the test reads that chunk on a loaded CI runner.
+    const startedAt = Date.now()
     const stream = await chat.transport().sendMessages({
       trigger: "submit-message",
       chatId: "chat-1",
@@ -38,7 +42,6 @@ describe("AI SDK transport", () => {
     expect((await reader.read()).value?.type).toBe("start")
     expect((await reader.read()).value?.type).toBe("tool-input-available")
 
-    const startedAt = Date.now()
     const outputChunk = await reader.read()
 
     expect(outputChunk.value?.type).toBe("tool-output-available")
