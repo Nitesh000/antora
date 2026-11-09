@@ -1,12 +1,12 @@
 "use client"
 
-import { motion } from "motion/react"
 import { cn } from "cn"
+import { motion } from "motion/react"
 
 const fluidPop = {
   type: "spring",
   stiffness: 400,
-  damping: 25,
+  damping: 30,
   mass: 0.9,
 } as const
 

@@ -9,7 +9,7 @@ import { Badge } from "@/registry/new-york-v4/ui/badge"
 const fluidPop = {
   type: "spring",
   stiffness: 400,
-  damping: 25,
+  damping: 30,
   mass: 0.9,
 } as const
 

@@ -82,6 +82,7 @@ function SelectContent({
       <SelectPrimitive.Positioner
         side={side}
         sideOffset={sideOffset}
+        collisionPadding={8}
         align={align}
         alignOffset={alignOffset}
         alignItemWithTrigger={alignItemWithTrigger}

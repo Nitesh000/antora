@@ -46,6 +46,7 @@ function Tooltip({
 }) {
   return (
     <TooltipPrimitive
+      containerPadding={8}
       data-slot="tooltip-content"
       placement={placement}
       offset={offset}

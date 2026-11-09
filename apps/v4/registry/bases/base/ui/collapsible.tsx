@@ -2,15 +2,23 @@
 
 import * as React from "react"
 import { Collapsible as CollapsiblePrimitive } from "@base-ui/react/collapsible"
-import { motion, AnimatePresence } from "motion/react"
 import { cn } from "cn"
+import { AnimatePresence, motion } from "motion/react"
 
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
-const fluidHeight = { type: "spring", stiffness: 500, damping: 45, mass: 1 } as const
+const fluidLayout = {
+  type: "spring",
+  stiffness: 500,
+  damping: 40,
+  mass: 1,
+} as const
+const fluidHeight = {
+  type: "spring",
+  stiffness: 500,
+  damping: 45,
+  mass: 1,
+} as const
 
-const CollapsibleContext = React.createContext<{ isOpen: boolean } | null>(
-  null
-)
+const CollapsibleContext = React.createContext<{ isOpen: boolean } | null>(null)
 
 function Collapsible({
   open: controlledOpen,
@@ -39,9 +47,7 @@ function Collapsible({
   )
 }
 
-function CollapsibleTrigger({
-  ...props
-}: CollapsiblePrimitive.Trigger.Props) {
+function CollapsibleTrigger({ ...props }: CollapsiblePrimitive.Trigger.Props) {
   return (
     <CollapsiblePrimitive.Trigger data-slot="collapsible-trigger" {...props} />
   )

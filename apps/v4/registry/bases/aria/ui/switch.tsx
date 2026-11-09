@@ -24,13 +24,13 @@ function setPressOrigin(event: {
 const fluidPress = {
   type: "spring",
   stiffness: 600,
-  damping: 20,
+  damping: 38,
   mass: 1,
 } as const
 const fluidLayout = {
   type: "spring",
   stiffness: 500,
-  damping: 25,
+  damping: 40,
   mass: 1,
 } as const
 

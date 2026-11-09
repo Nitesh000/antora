@@ -12,7 +12,7 @@ import { toggleVariants } from "@/registry/bases/base/ui/toggle"
 const fluidPress = {
   type: "spring",
   stiffness: 600,
-  damping: 20,
+  damping: 38,
   mass: 1,
 } as const
 

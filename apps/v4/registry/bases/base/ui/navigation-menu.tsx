@@ -23,7 +23,7 @@ function setPressOrigin(event: {
 const fluidPress = {
   type: "spring",
   stiffness: 600,
-  damping: 20,
+  damping: 38,
   mass: 1,
 } as const
 
@@ -143,6 +143,7 @@ function NavigationMenuPositioner({
       <NavigationMenuPrimitive.Positioner
         side={side}
         sideOffset={sideOffset}
+        collisionPadding={8}
         align={align}
         alignOffset={alignOffset}
         className={cn(

@@ -4,23 +4,36 @@ import * as React from "react"
 import { cn } from "cn"
 import { Tooltip as TooltipPrimitive } from "radix-ui"
 
+// Radix throws when a Tooltip has no TooltipProvider above it. Base UI and
+// React Aria tooltips work standalone, so this one does too: it mounts its own
+// provider only when none exists, keeping an app-level provider's shared
+// open/skip delay intact.
+const HasTooltipProvider = React.createContext(false)
+
 function TooltipProvider({
   delayDuration = 0,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Provider>) {
   return (
-    <TooltipPrimitive.Provider
-      data-slot="tooltip-provider"
-      delayDuration={delayDuration}
-      {...props}
-    />
+    <HasTooltipProvider.Provider value={true}>
+      <TooltipPrimitive.Provider
+        data-slot="tooltip-provider"
+        delayDuration={delayDuration}
+        {...props}
+      />
+    </HasTooltipProvider.Provider>
   )
 }
 
 function Tooltip({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Root>) {
-  return <TooltipPrimitive.Root data-slot="tooltip" {...props} />
+  const root = <TooltipPrimitive.Root data-slot="tooltip" {...props} />
+  return React.useContext(HasTooltipProvider) ? (
+    root
+  ) : (
+    <TooltipProvider>{root}</TooltipProvider>
+  )
 }
 
 function TooltipTrigger({
@@ -40,8 +53,9 @@ function TooltipContent({
       <TooltipPrimitive.Content
         data-slot="tooltip-content"
         sideOffset={sideOffset}
+        collisionPadding={8}
         className={cn(
-          "cn-tooltip-content z-50 w-fit max-w-xs origin-(--radix-tooltip-content-transform-origin) bg-foreground text-background motion-reduce:animate-none motion-reduce:data-[state=closed]:animate-none data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 animate-in fade-in-0 zoom-in-95 data-[state=closed]:duration-150 duration-200 data-[state=closed]:ease-[cubic-bezier(0.4,0,1,1)] ease-[cubic-bezier(0.16,1,0.3,1)] data-[side=bottom]:slide-in-from-top-1 data-[side=left]:slide-in-from-right-1 data-[side=right]:slide-in-from-left-1 data-[side=top]:slide-in-from-bottom-1",
+          "cn-tooltip-content z-50 w-fit max-w-xs origin-(--radix-tooltip-content-transform-origin) animate-in bg-foreground text-background duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-1 data-[side=left]:slide-in-from-right-1 data-[side=right]:slide-in-from-left-1 data-[side=top]:slide-in-from-bottom-1 data-[state=closed]:animate-out data-[state=closed]:duration-150 data-[state=closed]:ease-[cubic-bezier(0.4,0,1,1)] data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 motion-reduce:animate-none motion-reduce:data-[state=closed]:animate-none",
           className
         )}
         {...props}

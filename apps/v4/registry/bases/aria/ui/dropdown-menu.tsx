@@ -47,6 +47,7 @@ function DropdownMenu({
   }) {
   return (
     <PopoverPrimitive
+      containerPadding={8}
       data-slot={dataSlot}
       placement={placement}
       offset={offset}

@@ -38,7 +38,9 @@ function ScrollBar({
       data-orientation={orientation}
       orientation={orientation}
       className={cn(
-        "cn-scroll-area-scrollbar flex touch-none p-px transition-colors select-none",
+        // Overlay scrollbar like Radix `type="hover"` and native macOS: hidden at
+        // rest, shown while the pointer is over the area or it is scrolling.
+        "cn-scroll-area-scrollbar flex touch-none p-px opacity-0 transition-opacity duration-200 select-none data-hovering:opacity-100 data-scrolling:opacity-100 data-scrolling:duration-0",
         className
       )}
       {...props}

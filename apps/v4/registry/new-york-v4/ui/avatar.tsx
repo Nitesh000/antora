@@ -8,7 +8,7 @@ import { Avatar as AvatarPrimitive } from "radix-ui"
 const fluidPop = {
   type: "spring",
   stiffness: 400,
-  damping: 25,
+  damping: 30,
   mass: 0.9,
 } as const
 

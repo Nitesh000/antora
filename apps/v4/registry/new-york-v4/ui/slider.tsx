@@ -5,7 +5,12 @@ import { cn } from "cn"
 import { motion } from "motion/react"
 import { Slider as SliderPrimitive } from "radix-ui"
 
-const fluidPress = { type: "spring", stiffness: 600, damping: 20, mass: 1 } as const
+const fluidPress = {
+  type: "spring",
+  stiffness: 600,
+  damping: 38,
+  mass: 1,
+} as const
 
 function Slider({
   className,

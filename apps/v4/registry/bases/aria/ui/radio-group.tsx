@@ -26,13 +26,13 @@ function setPressOrigin(event: {
 const fluidPress = {
   type: "spring",
   stiffness: 600,
-  damping: 20,
+  damping: 38,
   mass: 1,
 } as const
 const fluidPop = {
   type: "spring",
   stiffness: 400,
-  damping: 25,
+  damping: 30,
   mass: 0.9,
 } as const
 
@@ -53,7 +53,9 @@ function RadioGroupItem({ className, children, ...props }: RadioProps) {
       tabIndex={-1}
       whileTap={{ scale: 0.92 }}
       transition={fluidPress}
-      style={{ display: "inline-flex" }}
+      // Block-level like the Radix/Base root (`.cn-radio-group-item` is `flex`), so a
+      // table cell or flex row centres it instead of sitting it on the baseline.
+      style={{ display: "flex", width: "fit-content", flexShrink: 0 }}
     >
       <RadioPrimitive
         data-slot="radio-group-item"

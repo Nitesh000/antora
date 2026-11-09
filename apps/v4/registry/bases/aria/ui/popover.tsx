@@ -29,6 +29,7 @@ function Popover({
 }) {
   return (
     <PopoverPrimitive
+      containerPadding={8}
       data-slot="popover-content"
       placement={placement}
       offset={offset}

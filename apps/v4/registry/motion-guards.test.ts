@@ -176,6 +176,68 @@ describe("overlay motion guards", () => {
     expect(offenders.map((o) => o.id)).toEqual([])
   })
 
+  it("keeps every spring near critical damping (no wobble past the target)", () => {
+    // damping / (2 * sqrt(stiffness * mass)) below ~0.75 rings visibly: the
+    // 500/25 spring threw a switch thumb 12% past its end and swung the
+    // accordion chevron ~20 degrees past 180 before settling.
+    const offenders: string[] = []
+    for (const { id, code } of sources) {
+      for (const m of code.matchAll(/\{\s*type:\s*"spring",([^}]*)\}/g)) {
+        const read = (key: string) =>
+          Number(new RegExp(`${key}:\\s*([0-9.]+)`).exec(m[1])?.[1] ?? NaN)
+        const stiffness = read("stiffness")
+        const damping = read("damping")
+        const mass = Number.isNaN(read("mass")) ? 1 : read("mass")
+        if (Number.isNaN(stiffness) || Number.isNaN(damping)) continue
+        const ratio = damping / (2 * Math.sqrt(stiffness * mass))
+        if (ratio < 0.75) offenders.push(`${id} (${ratio.toFixed(2)})`)
+      }
+    }
+    expect(offenders).toEqual([])
+  })
+
+  it("keeps React Aria overlays visually identical to the shared style", () => {
+    // The aria overlays use only their `-aria` class, so any visual drift from
+    // the shared rule (radius, padding, shadow, scrim) shows up as a different-
+    // looking hover card / tooltip / dialog in the aria base alone.
+    const overlays = [
+      "alert-dialog-content",
+      "alert-dialog-overlay",
+      "combobox-content",
+      "context-menu-content",
+      "context-menu-sub-content",
+      "dialog-content",
+      "dialog-overlay",
+      "dropdown-menu-content",
+      "dropdown-menu-sub-content",
+      "hover-card-content",
+      "popover-content",
+      "select-content",
+      "tooltip-content",
+    ]
+    const motion =
+      /animate|fade-|zoom-|slide-|duration|ease|origin|data-entering|data-exiting|placement|data-\[side|data-side|data-open|data-closed|data-\[state|starting|ending|motion-/
+    const offenders: string[] = []
+    for (const { id, code } of styleCss) {
+      const rules = new Map<string, Set<string>>()
+      for (const m of code.matchAll(/\.([\w-]+)\s*\{\s*@apply\s+([^;]*);/g)) {
+        rules.set(
+          m[1],
+          new Set(m[2].split(/\s+/).filter((t) => t && !motion.test(t)))
+        )
+      }
+      for (const name of overlays) {
+        const shared = rules.get(`cn-${name}`)
+        const aria = rules.get(`cn-${name}-aria`)
+        if (!shared || !aria) continue
+        const same =
+          shared.size === aria.size && [...shared].every((t) => aria.has(t))
+        if (!same) offenders.push(`${id} cn-${name}-aria`)
+      }
+    }
+    expect(offenders).toEqual([])
+  })
+
   it("does not put Motion layout projection on static Card containers", () => {
     const offenders = sources.filter(
       ({ id, code }) => id.endsWith("/card.tsx") && /\blayout\b/.test(code)

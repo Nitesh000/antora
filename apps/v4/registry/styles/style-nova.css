@@ -225,11 +225,11 @@
   }
 
   .cn-button-group-orientation-horizontal {
-    @apply [&>[data-slot]:not(:has(~[data-slot]))]:rounded-r-lg!;
+    @apply [&>[data-slot]:not(.cn-button):not(:has(~[data-slot]))]:rounded-r-lg! [&>[data-slot].cn-button:not(:has(~[data-slot]))]:rounded-r-full!;
   }
 
   .cn-button-group-orientation-vertical {
-    @apply [&>[data-slot]:not(:has(~[data-slot]))]:rounded-b-lg!;
+    @apply [&>[data-slot]:not(.cn-button):not(:has(~[data-slot]))]:rounded-b-lg! [&>[data-slot].cn-button:not(:has(~[data-slot]))]:rounded-b-full!;
   }
 
   .cn-button-group-text {
@@ -294,7 +294,7 @@
 
   /* MARK: Checkbox */
   .cn-checkbox {
-    @apply border-border bg-background data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 focus-visible:border-primary focus-visible:ring-primary/20 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 flex size-5 items-center justify-center rounded-[6px] border-2 transition-colors duration-200 group-has-disabled/field:opacity-50 focus-visible:ring-4 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-border group-has-[:focus-visible]/field-label:data-checked:border-primary;
+    @apply border-muted-foreground/45 bg-background data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 focus-visible:border-primary focus-visible:ring-primary/20 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 flex size-5 items-center justify-center rounded-[6px] border-2 transition-colors duration-200 group-has-disabled/field:opacity-50 focus-visible:ring-4 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-muted-foreground/45 group-has-[:focus-visible]/field-label:data-checked:border-primary;
   }
 
   .cn-checkbox-aria {
@@ -983,7 +983,7 @@
   }
 
   .cn-radio-group-item {
-    @apply border-border bg-background data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive focus-visible:border-primary focus-visible:ring-primary/20 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/50 flex size-5 rounded-full border-2 transition-colors duration-200 focus-visible:ring-4 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-border group-has-[:focus-visible]/field-label:data-checked:border-primary;
+    @apply border-muted-foreground/45 bg-background data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive focus-visible:border-primary focus-visible:ring-primary/20 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/50 flex size-5 rounded-full border-2 transition-colors duration-200 focus-visible:ring-4 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-muted-foreground/45 group-has-[:focus-visible]/field-label:data-checked:border-primary;
   }
 
   .cn-radio-group-item-aria {
@@ -1740,7 +1740,7 @@
   }
 
   .cn-hover-card-content-aria {
-    @apply data-entering:animate-in data-exiting:animate-out data-exiting:fade-out-0 data-entering:fade-in-0 data-exiting:zoom-out-95 data-entering:zoom-in-95 data-[placement=bottom]:slide-in-from-top-1 data-[placement=left]:slide-in-from-right-1 data-[placement=right]:slide-in-from-left-1 data-[placement=top]:slide-in-from-bottom-1 ring-foreground/10 bg-popover text-popover-foreground w-64 rounded-lg p-2.5 text-sm shadow-md ring-1 data-entering:duration-200 data-exiting:duration-120 data-entering:ease-[cubic-bezier(0.16,1,0.3,1)] data-exiting:ease-[cubic-bezier(0.4,0,1,1)] motion-reduce:data-entering:animate-none motion-reduce:data-exiting:animate-none;
+    @apply border-border/40 bg-popover text-popover-foreground w-64 rounded-2xl p-4 text-sm shadow-[0_4px_16px_rgba(0,0,0,0.08)] border data-entering:animate-in data-exiting:animate-out data-exiting:fade-out-0 data-entering:fade-in-0 data-exiting:zoom-out-95 data-entering:zoom-in-95 data-[placement=bottom]:slide-in-from-top-1 data-[placement=left]:slide-in-from-right-1 data-[placement=right]:slide-in-from-left-1 data-[placement=top]:slide-in-from-bottom-1 data-entering:duration-200 data-exiting:duration-120 data-entering:ease-[cubic-bezier(0.16,1,0.3,1)] data-exiting:ease-[cubic-bezier(0.4,0,1,1)] motion-reduce:data-entering:animate-none motion-reduce:data-exiting:animate-none;
   }
 
   .cn-select-content-aria {
@@ -1748,7 +1748,7 @@
   }
 
   .cn-tooltip-content-aria {
-    @apply data-entering:animate-in data-entering:fade-in-0 data-entering:zoom-in-95 data-exiting:animate-out data-exiting:fade-out-0 data-exiting:zoom-out-95 data-[placement=bottom]:slide-in-from-top-1 data-[placement=left]:slide-in-from-right-1 data-[placement=right]:slide-in-from-left-1 data-[placement=top]:slide-in-from-bottom-1 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm data-entering:duration-200 data-exiting:duration-120 data-entering:ease-[cubic-bezier(0.16,1,0.3,1)] data-exiting:ease-[cubic-bezier(0.4,0,1,1)] motion-reduce:data-entering:animate-none motion-reduce:data-exiting:animate-none;
+    @apply inline-flex items-center gap-2 rounded-xl bg-foreground text-background px-4 py-2 text-sm font-medium shadow-[0_4px_16px_rgba(0,0,0,0.12)] has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm data-entering:animate-in data-entering:fade-in-0 data-entering:zoom-in-95 data-exiting:animate-out data-exiting:fade-out-0 data-exiting:zoom-out-95 data-[placement=bottom]:slide-in-from-top-1 data-[placement=left]:slide-in-from-right-1 data-[placement=right]:slide-in-from-left-1 data-[placement=top]:slide-in-from-bottom-1 data-entering:duration-200 data-exiting:duration-120 data-entering:ease-[cubic-bezier(0.16,1,0.3,1)] data-exiting:ease-[cubic-bezier(0.4,0,1,1)] motion-reduce:data-entering:animate-none motion-reduce:data-exiting:animate-none;
   }
 
   .cn-context-menu-sub-content-aria {

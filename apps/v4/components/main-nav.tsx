@@ -11,7 +11,7 @@ import { Button } from "@/registry/new-york-v4/ui/button"
 const fluidPop = {
   type: "spring",
   stiffness: 400,
-  damping: 25,
+  damping: 30,
   mass: 0.9,
 } as const
 
@@ -57,7 +57,7 @@ export function MainNav({
           tabIndex={-1}
           whileTap={{
             scale: 0.94,
-            transition: { type: "spring", stiffness: 600, damping: 20 },
+            transition: { type: "spring", stiffness: 600, damping: 38 },
           }}
         >
           <Button variant="ghost" asChild size="sm" className="px-2.5">

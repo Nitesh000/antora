@@ -74,6 +74,7 @@ function SelectContent({
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
+        collisionPadding={8}
         data-slot="select-content"
         data-align-trigger={position === "item-aligned"}
         className={cn(

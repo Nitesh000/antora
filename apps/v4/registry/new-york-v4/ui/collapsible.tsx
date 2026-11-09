@@ -1,16 +1,24 @@
 "use client"
 
 import * as React from "react"
-import { Collapsible as CollapsiblePrimitive } from "radix-ui"
-import { motion, AnimatePresence } from "motion/react"
 import { cn } from "cn"
+import { AnimatePresence, motion } from "motion/react"
+import { Collapsible as CollapsiblePrimitive } from "radix-ui"
 
-const fluidLayout = { type: "spring", stiffness: 500, damping: 25, mass: 1 } as const
-const fluidHeight = { type: "spring", stiffness: 500, damping: 45, mass: 1 } as const
+const fluidLayout = {
+  type: "spring",
+  stiffness: 500,
+  damping: 40,
+  mass: 1,
+} as const
+const fluidHeight = {
+  type: "spring",
+  stiffness: 500,
+  damping: 45,
+  mass: 1,
+} as const
 
-const CollapsibleContext = React.createContext<{ isOpen: boolean } | null>(
-  null
-)
+const CollapsibleContext = React.createContext<{ isOpen: boolean } | null>(null)
 
 function Collapsible({
   open: controlledOpen,
