@@ -13,9 +13,9 @@ export function SiteFooter() {
       viewport={{ once: true, margin: "-20px" }}
       transition={{ type: "spring", stiffness: 300, damping: 28, mass: 0.8 }}
     >
-      <div className="px-4 xl:px-6 container-wrapper">
-        <div className="flex justify-between items-center h-(--footer-height)">
-          <div className="px-1 w-full text-xs leading-loose text-center sm:text-sm text-muted-foreground">
+      <div className="container-wrapper px-4 xl:px-6">
+        <div className="flex h-(--footer-height) items-center justify-between">
+          <div className="w-full px-1 text-center text-xs leading-loose text-muted-foreground sm:text-sm">
             Built on top of{" "}
             <a
               href="https://ui.shadcn.com"

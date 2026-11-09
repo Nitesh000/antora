@@ -21,44 +21,44 @@ export function SiteHeader() {
 
   return (
     <AnimatedHeader>
-    <header className="sticky top-0 z-50 w-full bg-background">
-      <div className="container-wrapper px-6 group-has-data-[slot=designer]/layout:max-w-none 3xl:fixed:px-0">
-        <div className="flex h-(--header-height) items-center **:data-[slot=separator]:h-4! group-has-data-[slot=designer]/layout:fixed:max-w-none 3xl:fixed:container">
-          <MobileNav
-            tree={pageTree}
-            items={siteConfig.navItems}
-            className="flex lg:hidden"
-          />
-          <MainNav items={siteConfig.navItems} className="hidden lg:flex" />
-          <div className="ml-auto flex items-center gap-2 md:flex-1 md:justify-end">
-            <div className="hidden w-full flex-1 md:flex md:w-auto md:flex-none">
-              <CommandMenu
-                tree={pageTree}
-                colors={colors}
-                navItems={siteConfig.navItems}
-              />
-            </div>
-            <Separator
-              orientation="vertical"
-              className="ml-2 hidden lg:block"
+      <header className="sticky top-0 z-50 w-full bg-background">
+        <div className="container-wrapper px-6 group-has-data-[slot=designer]/layout:max-w-none 3xl:fixed:px-0">
+          <div className="flex h-(--header-height) items-center **:data-[slot=separator]:h-4! group-has-data-[slot=designer]/layout:fixed:max-w-none 3xl:fixed:container">
+            <MobileNav
+              tree={pageTree}
+              items={siteConfig.navItems}
+              className="flex lg:hidden"
             />
-            <GitHubLink />
-            <Separator orientation="vertical" />
-            <ModeSwitcher />
-            <DesignerActions />
-            <div className="flex items-center gap-2 group-has-data-[slot=designer]/layout:hidden">
+            <MainNav items={siteConfig.navItems} className="hidden lg:flex" />
+            <div className="ml-auto flex items-center gap-2 md:flex-1 md:justify-end">
+              <div className="hidden w-full flex-1 md:flex md:w-auto md:flex-none">
+                <CommandMenu
+                  tree={pageTree}
+                  colors={colors}
+                  navItems={siteConfig.navItems}
+                />
+              </div>
+              <Separator
+                orientation="vertical"
+                className="ml-2 hidden lg:block"
+              />
+              <GitHubLink />
               <Separator orientation="vertical" />
-              <Button asChild size="sm" className="h-[31px] rounded-lg">
-                <Link href="/create">
-                  <HugeiconsIcon icon={PlusSignIcon} />
-                  New
-                </Link>
-              </Button>
+              <ModeSwitcher />
+              <DesignerActions />
+              <div className="flex items-center gap-2 group-has-data-[slot=designer]/layout:hidden">
+                <Separator orientation="vertical" />
+                <Button asChild size="sm" className="h-[31px] rounded-lg">
+                  <Link href="/create">
+                    <HugeiconsIcon icon={PlusSignIcon} />
+                    New
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
     </AnimatedHeader>
   )
 }

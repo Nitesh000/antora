@@ -31,7 +31,7 @@ function DialogOverlay({
     <DialogPrimitive.Backdrop
       data-slot="dialog-overlay"
       className={cn(
-        "cn-dialog-overlay fixed inset-0 isolate z-50 data-open:animate-in data-open:fade-in-0 data-open:duration-200 data-open:ease-out data-closed:animate-out data-closed:fade-out-0 data-closed:duration-150 data-closed:ease-in motion-reduce:animate-none motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
+        "cn-dialog-overlay fixed inset-0 isolate z-50 motion-reduce:animate-none data-open:animate-in data-open:duration-200 data-open:ease-out data-open:fade-in-0 motion-reduce:data-open:animate-none data-closed:animate-out data-closed:duration-150 data-closed:ease-in data-closed:fade-out-0 motion-reduce:data-closed:animate-none",
         className
       )}
       {...props}
@@ -53,7 +53,7 @@ function DialogContent({
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(
-          "cn-dialog-content fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 outline-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-open:duration-200 data-open:ease-[cubic-bezier(0.32,0.72,0,1)] data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-closed:duration-150 data-closed:ease-in motion-reduce:animate-none motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
+          "cn-dialog-content fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 outline-none motion-reduce:animate-none data-open:animate-in data-open:duration-200 data-open:ease-[cubic-bezier(0.32,0.72,0,1)] data-open:fade-in-0 data-open:zoom-in-95 motion-reduce:data-open:animate-none data-closed:animate-out data-closed:duration-150 data-closed:ease-in data-closed:fade-out-0 data-closed:zoom-out-95 motion-reduce:data-closed:animate-none",
           className
         )}
         {...props}

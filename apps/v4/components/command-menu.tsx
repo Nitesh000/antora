@@ -7,7 +7,7 @@ import { cn } from "cn"
 import { useDocsSearch } from "fumadocs-core/search/client"
 import { CornerDownLeftIcon, SquareDashedIcon } from "lucide-react"
 import { Dialog as DialogPrimitive } from "radix-ui"
-import { encodePreset } from "shadcn/preset"
+import { encodePreset, type PresetConfig } from "shadcn/preset"
 
 import { type Color, type ColorPalette } from "@/lib/colors"
 import { trackEvent } from "@/lib/events"
@@ -228,7 +228,7 @@ export function CommandMenu({
             onSelect={() => {
               runCommand(() =>
                 router.push(
-                  `/create?preset=${encodePreset({ style: style.name })}`
+                  `/create?preset=${encodePreset({ style: style.name as PresetConfig["style"] })}`
                 )
               )
             }}
