@@ -238,6 +238,46 @@ describe("overlay motion guards", () => {
     expect(offenders).toEqual([])
   })
 
+  it("never references a cn-* marker class inside a style utility", () => {
+    // The registry build strips every `cn-[a-z-]+` word from class strings, so
+    // `[&>[data-slot]:not(.cn-button)]` shipped as `:not(.)`: invalid CSS that
+    // made the docs site's globals.css fail to compile.
+    const offenders: string[] = []
+    for (const { id, code } of styleCss) {
+      for (const m of code.matchAll(/@apply\s+([^;}]*)/g)) {
+        for (const token of m[1].split(/\s+/)) {
+          if (/cn-[a-z-]+/.test(token)) offenders.push(`${id}: ${token}`)
+        }
+      }
+    }
+    expect(offenders).toEqual([])
+  })
+
+  it("declares the motion dependency for every component that imports it", () => {
+    // Without it, `shadcn add button` installs a file importing motion/react
+    // into a project that doesn't have it, and the project fails to typecheck.
+    const offenders: string[] = []
+    for (const dir of uiDirs) {
+      const registry = readFileSync(
+        path.join(registryRoot, dir, "_registry.ts"),
+        "utf8"
+      )
+      for (const { id, code } of sources) {
+        if (!id.startsWith(`${dir}/`) || !code.includes("motion/react")) {
+          continue
+        }
+        const name = id.slice(dir.length + 1, -".tsx".length)
+        const entry = new RegExp(
+          `\\n    name: "${name}",([\\s\\S]*?)\\n  \\},`
+        ).exec(registry)
+        if (!entry || !/\n    dependencies: \[[^\]]*"motion"/.test(entry[1])) {
+          offenders.push(id)
+        }
+      }
+    }
+    expect(offenders).toEqual([])
+  })
+
   it("does not put Motion layout projection on static Card containers", () => {
     const offenders = sources.filter(
       ({ id, code }) => id.endsWith("/card.tsx") && /\blayout\b/.test(code)

@@ -44,7 +44,10 @@ export function CardsDemo() {
       animate="show"
       className="md:grids-col-2 grid **:data-[slot=card]:shadow-none md:gap-4 lg:grid-cols-10 xl:grid-cols-11"
     >
-      <motion.div variants={gridColumn} className="grid gap-4 lg:col-span-4 xl:col-span-6">
+      <motion.div
+        variants={gridColumn}
+        className="grid gap-4 lg:col-span-4 xl:col-span-6"
+      >
         <CardsStats />
         <div className="grid gap-1 sm:grid-cols-[auto_1fr] md:hidden">
           <CardsCalendar />
@@ -70,7 +73,10 @@ export function CardsDemo() {
           </div>
         </div>
       </motion.div>
-      <motion.div variants={gridColumn} className="flex flex-col gap-4 lg:col-span-6 xl:col-span-5">
+      <motion.div
+        variants={gridColumn}
+        className="flex flex-col gap-4 lg:col-span-6 xl:col-span-5"
+      >
         <div className="hidden gap-1 sm:grid-cols-[auto_1fr] md:grid">
           <CardsCalendar />
           <div className="pt-3 sm:pt-0 sm:pl-2 xl:pl-3">

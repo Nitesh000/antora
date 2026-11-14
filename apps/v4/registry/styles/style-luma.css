@@ -139,11 +139,11 @@
   }
 
   .cn-button-group-orientation-horizontal {
-    @apply [&>[data-slot]:not(.cn-button):not(:has(~[data-slot]))]:rounded-r-3xl! [&>[data-slot].cn-button:not(:has(~[data-slot]))]:rounded-r-4xl!;
+    @apply [&>[data-slot]:not([data-variant]):not(:has(~[data-slot]))]:rounded-r-3xl! [&>[data-slot][data-variant]:not(:has(~[data-slot]))]:rounded-r-4xl!;
   }
 
   .cn-button-group-orientation-vertical {
-    @apply [&>[data-slot]:not(.cn-button):not(:has(~[data-slot]))]:rounded-b-3xl! [&>[data-slot].cn-button:not(:has(~[data-slot]))]:rounded-b-4xl!;
+    @apply [&>[data-slot]:not([data-variant]):not(:has(~[data-slot]))]:rounded-b-3xl! [&>[data-slot][data-variant]:not(:has(~[data-slot]))]:rounded-b-4xl!;
   }
 
   .cn-button-group-text {

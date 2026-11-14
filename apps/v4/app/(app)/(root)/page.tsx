@@ -1,8 +1,10 @@
 import { type Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
+
 import { siteConfig } from "@/lib/config"
 import { Announcement } from "@/components/announcement"
+import { HeroSection } from "@/components/hero-section"
 import {
   PageActions,
   PageHeader,
@@ -10,8 +12,6 @@ import {
   PageHeaderHeading,
 } from "@/components/page-header"
 import { Button } from "@/styles/radix-luma/ui/button"
-
-import { HeroSection } from "@/components/hero-section"
 
 import { CardsDemo } from "./cards"
 

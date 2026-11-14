@@ -2,6 +2,7 @@
   {
     "name": "accordion",
     "type": "registry:ui",
+    "dependencies": ["motion"],
     "files": [
       {
         "path": "ui/accordion.tsx",
@@ -133,6 +134,7 @@
   {
     "name": "avatar",
     "type": "registry:ui",
+    "dependencies": ["motion"],
     "files": [
       {
         "path": "ui/avatar.tsx",
@@ -161,6 +163,7 @@
   {
     "name": "badge",
     "type": "registry:ui",
+    "dependencies": ["motion"],
     "files": [
       {
         "path": "ui/badge.tsx",
@@ -232,6 +235,7 @@
   {
     "name": "button",
     "type": "registry:ui",
+    "dependencies": ["motion"],
     "files": [
       {
         "path": "ui/button.tsx",
@@ -402,6 +406,7 @@
   {
     "name": "checkbox",
     "type": "registry:ui",
+    "dependencies": ["motion"],
     "files": [
       {
         "path": "ui/checkbox.tsx",
@@ -431,6 +436,7 @@
   {
     "name": "collapsible",
     "type": "registry:ui",
+    "dependencies": ["motion"],
     "files": [
       {
         "path": "ui/collapsible.tsx",
@@ -1028,6 +1034,7 @@
   {
     "name": "navigation-menu",
     "type": "registry:ui",
+    "dependencies": ["motion"],
     "files": [
       {
         "path": "ui/navigation-menu.tsx",
@@ -1165,6 +1172,7 @@
   {
     "name": "radio-group",
     "type": "registry:ui",
+    "dependencies": ["motion"],
     "files": [
       {
         "path": "ui/radio-group.tsx",
@@ -1340,6 +1348,7 @@
   {
     "name": "sidebar",
     "type": "registry:ui",
+    "dependencies": ["motion"],
     "registryDependencies": [
       "button",
       "input",
@@ -1401,6 +1410,7 @@
   {
     "name": "slider",
     "type": "registry:ui",
+    "dependencies": ["motion"],
     "files": [
       {
         "path": "ui/slider.tsx",
@@ -1486,6 +1496,7 @@
   {
     "name": "switch",
     "type": "registry:ui",
+    "dependencies": ["motion"],
     "files": [
       {
         "path": "ui/switch.tsx",
@@ -1542,6 +1553,7 @@
   {
     "name": "tabs",
     "type": "registry:ui",
+    "dependencies": ["motion"],
     "files": [
       {
         "path": "ui/tabs.tsx",
@@ -1619,6 +1631,7 @@
   {
     "name": "toggle",
     "type": "registry:ui",
+    "dependencies": ["motion"],
     "files": [
       {
         "path": "ui/toggle.tsx",
@@ -1648,6 +1661,7 @@
   {
     "name": "toggle-group",
     "type": "registry:ui",
+    "dependencies": ["motion"],
     "registryDependencies": ["toggle"],
     "files": [
       {
